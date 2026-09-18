@@ -1,0 +1,44 @@
+# Studio Veritas — robots.txt
+# Standard search engines: full access.
+User-agent: *
+Allow: /
+
+# AI / LLM crawlers — explicitly allowed since the goal is visibility
+# in AI-generated answers and assistant search, not just classic SERPs.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+Sitemap: https://REPLACE-WITH-YOUR-DOMAIN.com/sitemap.xml

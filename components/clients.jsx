@@ -79,7 +79,6 @@ export function Clients() {
       style={{ background: '#0f0f3d', cursor: `url("${cursorSvg}") 4 2, auto` }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap');
         .sv-clients-root * { cursor: url("${cursorSvg}") 4 2, auto !important; }
         .sv-clients-container { min-height: 100vh; }
         @supports (min-height: 100dvh) { .sv-clients-container { min-height: 100dvh; } }
@@ -114,7 +113,7 @@ export function Clients() {
         </section>
 
         {/* BACKGROUND */}
-        <div className="absolute inset-0 overflow-hidden" style={{ background: '#0f0f3d', zIndex: -1 }}>
+        <div className="absolute inset-0 overflow-hidden" style={{ background: '#0f0f3d', zIndex: 0 }}>
           <div
             className="absolute inset-0 hidden md:block"
             style={{ backgroundImage: `url(${LANDING_IMG_DESKTOP})`, backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
@@ -206,7 +205,7 @@ export function Clients() {
         </AnimatePresence>
 
         {/* CLIENTS GRID */}
-        <div className="min-h-screen flex items-start md:items-center justify-center px-4 pt-24 pb-36 md:py-32">
+        <div className="relative min-h-screen flex items-start md:items-center justify-center px-4 pt-24 pb-36 md:py-32" style={{ zIndex: 1 }}>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl w-full">
             {CLIENTS.map((client) => (
               <div

@@ -113,7 +113,6 @@ export function Team() {
         }}
       />
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap');
         .sv-team-root * { cursor: url("${cursorSvg}") 4 2, auto !important; }
         .sv-team-container { min-height: 100vh; }
         @supports (min-height: 100dvh) { .sv-team-container { min-height: 100dvh; } }
@@ -151,7 +150,7 @@ export function Team() {
         </section>
 
         {/* BACKGROUND */}
-        <div className="absolute inset-0 overflow-hidden" style={{ background: '#0f0f3d', zIndex: -1 }}>
+        <div className="absolute inset-0 overflow-hidden" style={{ background: '#0f0f3d', zIndex: 0 }}>
           <div
             className="absolute inset-0 hidden md:block"
             style={{ backgroundImage: `url(${LANDING_IMG_DESKTOP})`, backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
@@ -247,7 +246,7 @@ export function Team() {
             the photo itself, in the same rounded/bordered/shadowed style
             with spring entrance + typewriter reveal used everywhere else
             on the site (info popup, contact panel, process step pop-outs). */}
-        <div className="min-h-screen flex items-start md:items-center justify-center px-4 pt-24 pb-36 md:py-32">
+        <div className="relative min-h-screen flex items-start md:items-center justify-center px-4 pt-24 pb-36 md:py-32" style={{ zIndex: 1 }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12 max-w-[900px] w-full">
             {TEAM.map((member) => {
               const open = !!openIds[member.id]

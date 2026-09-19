@@ -42,7 +42,12 @@
   }
   body {
     @apply bg-background text-foreground;
-    overflow: hidden;
+    /* Only lock horizontal scroll globally. Vertical scroll is opted OUT of
+       per-page: Home and Principles are fixed-viewport experiences and lock
+       it themselves via overflow-hidden on their own container; Team and
+       Experience need real page scroll for content taller than one screen,
+       so the body must never blanket-lock vertical overflow. */
+    overflow-x: hidden;
   }
 }
 

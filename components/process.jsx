@@ -191,7 +191,6 @@ export function Process() {
         }}
       />
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap');
         .sv-process-root * { cursor: url("${cursorSvg}") 4 2, auto !important; }
         .sv-process-container { height: 100vh; }
         @supports (height: 100dvh) { .sv-process-container { height: 100dvh; } }

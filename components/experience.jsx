@@ -65,6 +65,7 @@ function Wordmark({ max = 60, className = '', src = LOGO_SRC }) {
         width: 'auto',
         height: 'auto',
         display: 'block',
+        margin: '0 auto',
         objectFit: 'contain',
         userSelect: 'none',
       }}
@@ -362,7 +363,6 @@ export function Experience() {
         }}
       />
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap');
         .sv-root * { cursor: url("${cursorSvg}") 4 2, auto !important; }
         .sv-container { height: 100vh; }
         @supports (height: 100dvh) { .sv-container { height: 100dvh; } }

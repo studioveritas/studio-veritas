@@ -320,7 +320,7 @@ export function Experience() {
       ref={rootRef}
       className="sv-container relative w-full overflow-hidden text-white"
       style={{
-        background: '#0f0f3d',
+        background: '#D8FF00',
         cursor: `url("${cursorSvg}") 4 2, auto`,
       }}
     >
@@ -426,7 +426,7 @@ export function Experience() {
         {/* BACKGROUND */}
         <div className="absolute inset-0">
           {mode === 'home' ? (
-            <div className="absolute inset-0 overflow-hidden" style={{ background: '#0f0f3d' }}>
+            <div className="absolute inset-0 overflow-hidden" style={{ background: '#D8FF00' }}>
               <div
                 className="absolute inset-0 hidden md:block"
                 style={{

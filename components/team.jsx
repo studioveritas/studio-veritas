@@ -95,7 +95,7 @@ export function Team() {
   return (
     <main
       className="sv-team-container relative w-full overflow-hidden text-white"
-      style={{ background: '#0f0f3d', cursor: `url("${cursorSvg}") 4 2, auto` }}
+      style={{ background: '#D8FF00', cursor: `url("${cursorSvg}") 4 2, auto` }}
     >
       <script
         type="application/ld+json"
@@ -150,7 +150,7 @@ export function Team() {
         </section>
 
         {/* BACKGROUND */}
-        <div className="absolute inset-0 overflow-hidden" style={{ background: '#0f0f3d', zIndex: 0 }}>
+        <div className="absolute inset-0 overflow-hidden" style={{ background: '#D8FF00', zIndex: 0 }}>
           <div
             className="absolute inset-0 hidden md:block"
             style={{ backgroundImage: `url(${LANDING_IMG_DESKTOP})`, backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}

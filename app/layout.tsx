@@ -8,7 +8,7 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 1,
   viewportFit: 'cover',
-  themeColor: '#0f0f3d',
+  themeColor: '#D8FF00',
 }
 
 // TODO: replace with your real production domain before deploying.

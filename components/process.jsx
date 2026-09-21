@@ -23,11 +23,24 @@ const MENU_ITEMS = [
 // (Veritas_Website_Design-Process_page.png, 1920x1080) — every coordinate
 // below is measured directly from that file's pixels, so using the same
 // aspect ratio means these percentages map 1:1 with no approximation error.
+//
+// IMPORTANT: bl.x/br.x define the WIDTH of the wrapper box the triangle PNG
+// renders inside, and that wrapper uses object-contain — so its own aspect
+// ratio must exactly match the source image's real aspect ratio (767x500 =
+// 1.534), or object-contain letterboxes the image inward, leaving the
+// visual triangle narrower than this box and detaching the corner labels
+// from the actual ink. width% is derived from height% * (9/16) * imageAspect
+// rather than hand-typed, so this can never drift out of sync again.
 const TRIANGLE_ASPECT = 16 / 9
+const TRIANGLE_IMG_ASPECT = 767 / 500 // PROCESS_ICON_SRC's real pixel aspect ratio
+const TRIANGLE_APEX_X = 49.95
+const TRIANGLE_APEX_Y = 37.04
+const TRIANGLE_BASE_Y = 68.8
+const TRIANGLE_HALF_WIDTH = ((TRIANGLE_BASE_Y - TRIANGLE_APEX_Y) * (9 / 16) * TRIANGLE_IMG_ASPECT) / 2
 const TRIANGLE = {
-  apex: { x: 49.95, y: 37.04 },
-  bl: { x: 32.6, y: 68.8 },
-  br: { x: 67.34, y: 68.8 },
+  apex: { x: TRIANGLE_APEX_X, y: TRIANGLE_APEX_Y },
+  bl: { x: 50 - TRIANGLE_HALF_WIDTH, y: TRIANGLE_BASE_Y },
+  br: { x: 50 + TRIANGLE_HALF_WIDTH, y: TRIANGLE_BASE_Y },
 }
 
 const STEPS = [
@@ -41,14 +54,14 @@ const STEPS = [
   {
     id: 'noticable',
     label: 'Noticeable',
-    x: 32.87,
+    x: TRIANGLE.bl.x + 0.27,
     y: 72.36,
     body: 'Noticeable work that cuts through today and builds memory for tomorrow.',
   },
   {
     id: 'memorable',
     label: 'Memorable',
-    x: 66.85,
+    x: TRIANGLE.br.x - 0.49,
     y: 72.36,
     body: 'Memorable ideas and experiences that build lasting connections.',
   },
@@ -172,7 +185,7 @@ export function Process() {
   return (
     <main
       className="sv-process-container relative w-full overflow-hidden text-white"
-      style={{ background: '#0f0f3d', cursor: `url("${cursorSvg}") 4 2, auto` }}
+      style={{ background: '#D8FF00', cursor: `url("${cursorSvg}") 4 2, auto` }}
     >
       <script
         type="application/ld+json"
@@ -237,7 +250,7 @@ export function Process() {
         </section>
 
         {/* BACKGROUND — same atmospheric photo as the homepage */}
-        <div className="absolute inset-0 overflow-hidden" style={{ background: '#0f0f3d', zIndex: 0 }}>
+        <div className="absolute inset-0 overflow-hidden" style={{ background: '#D8FF00', zIndex: 0 }}>
           <div
             className="absolute inset-0 hidden md:block"
             style={{

@@ -1,5 +1,6 @@
 import './globals.css'
 import { ChunkLoadErrorHandler } from '@/components/chunk-load-error-handler'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 export const dynamic = 'force-dynamic'
 
@@ -71,6 +72,7 @@ export default function RootLayout({
       <body>
         {children}
         <ChunkLoadErrorHandler />
+        <SpeedInsights />
       </body>
     </html>
   )

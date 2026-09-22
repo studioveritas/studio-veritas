@@ -474,14 +474,24 @@ export function Process() {
 
               {/* Fixed labels — do not rotate with the triangle. Positioned
                   from dynamicSteps (measured from the real image), not the
-                  static fallback STEPS used for the SEO-only text above. */}
+                  static fallback STEPS used for the SEO-only text above.
+                  IMPORTANT: the centering transform lives on this OUTER,
+                  plain div — never on the same element as a Framer Motion
+                  animate/initial that touches x/y/scale/rotate. Framer
+                  Motion takes full ownership of an element's `transform`
+                  CSS property the moment any transform-affecting value
+                  appears in animate/initial, and silently overwrites
+                  whatever was set via style.transform — so a manual
+                  translate(-50%,-50%) placed on the same motion.div as
+                  `animate={{ y: 0 }}` gets discarded outright, leaving the
+                  label's top-left corner (not its center) sitting at the
+                  anchor point. That's precisely why every label rendered
+                  shifted right/down by exactly half its own width/height.
+                  Splitting the two concerns across parent/child fixes it. */}
               {dynamicSteps.map((s, i) => (
-                <motion.div
+                <div
                   key={s.id}
                   data-id={s.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 + i * 0.15 }}
                   className="absolute"
                   style={{
                     left: `${s.x}%`,
@@ -490,6 +500,11 @@ export function Process() {
                     zIndex: 20,
                   }}
                 >
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.4 + i * 0.15 }}
+                  >
                     <button
                       ref={(el) => { btnRefs.current[s.id] = el }}
                       onClick={() => handleStepClick(s.id)}
@@ -502,7 +517,8 @@ export function Process() {
                     >
                       {s.label}
                     </button>
-                </motion.div>
+                  </motion.div>
+                </div>
               ))}
             </div>
           </div>

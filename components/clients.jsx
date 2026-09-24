@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC, ICON_SRC, ICON_SRC_BLACK, CLIENT_LOGOS, LANDING_IMG_DESKTOP, LANDING_IMG_MOBILE } from './media'
 
-const CONTACT_EMAIL = 'gfurminger@gmail.com'
+const CONTACT_EMAIL = 'info@studio-veritas.com'
 
 const CONTACT_PANELS = {
   companies: { heading: 'For companies', body: 'We work directly with brand, marketing, innovation and\ndesign teams on strategic and creative projects.' },
@@ -15,6 +15,7 @@ const MENU_ITEMS = [
   { label: 'Team', href: '/team' },
   { label: 'Principles', href: '/process' },
   { label: 'Experience', href: '/clients' },
+  { label: 'Contact', href: 'mailto:info@studio-veritas.com' },
 ]
 
 const CLIENTS = [
@@ -283,6 +284,13 @@ export function Clients() {
                 {CONTACT_PANELS[contactPanel].body.slice(0, contactRevealed)}
                 {contactRevealed < CONTACT_PANELS[contactPanel].body.length && <span className="sv-typewriter-cursor" />}
               </p>
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                className="inline-block mt-6 text-[13px] md:text-sm text-white underline underline-offset-4 decoration-white/40 hover:decoration-white hover:text-[#5683DD] transition-colors"
+              >
+                Contact Us →
+              </a>
             </motion.div>
           )}
         </AnimatePresence>

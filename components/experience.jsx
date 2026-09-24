@@ -8,9 +8,10 @@ const MENU_ITEMS = [
   { label: 'Team', href: '/team' },
   { label: 'Principles', href: '/process' },
   { label: 'Experience', href: '/clients' },
+  { label: 'Contact', href: 'mailto:info@studio-veritas.com' },
 ]
 
-const CONTACT_EMAIL = 'gfurminger@gmail.com'
+const CONTACT_EMAIL = 'info@studio-veritas.com'
 
 const CONTACT_PANELS = {
   companies: {
@@ -27,7 +28,7 @@ const POPUP_PARAGRAPHS = [
   'Good strategy starts with hard questions.\nThe kind that get under the brief to find the truth.\nThe real problem. The deeper need.',
   "We look at the company, the category and at culture.\nAt what's changing and emerging.\nWhat's working and what's not.\nAnd what all that means for the brand.",
   "Then we find the tension. Truths pulling against each other.\nThat's where big ideas are born. And where growth happens.",
-  "We work with companies and agencies that need clear thinking,\na sharp point of view, and creative that's built on truth\nand made to work in the real world.",
+  "We work with companies and agencies that need clear thinking,\na sharp point of view, and creative that's built on truth and\nmade to work in the real world.",
 ]
 
 /*
@@ -619,7 +620,7 @@ export function Experience() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.98 }}
               transition={{ type: 'spring', damping: 26, stiffness: 300 }}
-              className="absolute top-12 left-4 md:top-20 md:left-10 w-[calc(100%-2rem)] max-w-[560px] max-h-[min(75vh,560px)] rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl"
+              className="absolute top-12 left-4 md:top-20 md:left-10 w-[calc(100%-2rem)] max-w-[560px] max-h-[min(85vh,620px)] rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl"
               style={{ zIndex: 50, background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}
             >
               <button

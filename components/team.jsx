@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC, ICON_SRC, ICON_SRC_BLACK, LANDING_IMG_DESKTOP, LANDING_IMG_MOBILE, TEAM_PHOTO_GUILLAUME, TEAM_PHOTO_ALI } from './media'
 
-const CONTACT_EMAIL = 'gfurminger@gmail.com'
+const CONTACT_EMAIL = 'info@studio-veritas.com'
 
 const CONTACT_PANELS = {
   companies: { heading: 'For companies', body: 'We work directly with brand, marketing, innovation and\ndesign teams on strategic and creative projects.' },
@@ -15,6 +15,7 @@ const MENU_ITEMS = [
   { label: 'Team', href: '/team' },
   { label: 'Principles', href: '/process' },
   { label: 'Experience', href: '/clients' },
+  { label: 'Contact', href: 'mailto:info@studio-veritas.com' },
 ]
 
 const TEAM = [
@@ -24,7 +25,7 @@ const TEAM = [
     photo: TEAM_PHOTO_GUILLAUME,
     bio: "Born in the the UK, I'm a Amsterdam-based Senior Creative Director and Global Brand Lead, bringing over 20 years of expertise to brand transformation and creative innovation.\n\nWith deep experience across sports, lifestyle, technology, and mobility, I shape global campaigns for iconic brands including ASICS, Uber, adidas, and Volvo.\n\nA collaborative brand and commercial thinker, I'll bridge overarching brand strategy with hands-on execution to deliver impactful, purpose-led storytelling.",
     linkedin: 'https://www.linkedin.com/in/gfurminger/',
-    contactEmail: 'gfurminger@gmail.com',
+    contactEmail: 'guillaume@studio-veritas.com',
   },
   {
     id: 'ali',
@@ -32,7 +33,7 @@ const TEAM = [
     photo: TEAM_PHOTO_ALI,
     bio: "Born and raised in Portland, Oregon, I'm interested in how things really work, especially when they don't.\n\nI started in journalism and international development, then spent 13 years at global design, advertising and PR agencies, solving problems that rarely stayed neatly inside the brief. I dig into systems, clarify the complex, and look for what others have missed. I believe the best work starts with asking questions most people would rather avoid.\n\nStudio Veritas is my way of working with people who want to get to the heart of problems and finding real solutions, in whatever form.",
     linkedin: 'https://www.linkedin.com/in/alimarmaduke/',
-    contactEmail: 'amarmaduke@gmail.com',
+    contactEmail: 'ali@studio-veritas.com',
   },
 ]
 
@@ -371,6 +372,13 @@ export function Team() {
                 {CONTACT_PANELS[contactPanel].body.slice(0, contactRevealed)}
                 {contactRevealed < CONTACT_PANELS[contactPanel].body.length && <span className="sv-typewriter-cursor" />}
               </p>
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                className="inline-block mt-6 text-[13px] md:text-sm text-white underline underline-offset-4 decoration-white/40 hover:decoration-white hover:text-[#5683DD] transition-colors"
+              >
+                Contact Us →
+              </a>
             </motion.div>
           )}
         </AnimatePresence>

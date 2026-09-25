@@ -15,7 +15,7 @@ const MENU_ITEMS = [
   { label: 'Team', href: '/team' },
   { label: 'Principles', href: '/process' },
   { label: 'Experience', href: '/clients' },
-  { label: 'Contact', href: 'mailto:info@studio-veritas.com' },
+  { label: 'Contact', href: '/contact' },
 ]
 
 const CLIENTS = [
@@ -24,7 +24,7 @@ const CLIENTS = [
   { id: 'puma', name: 'Puma', logo: CLIENT_LOGOS.puma },
   { id: 'jde', name: 'JACOBS DOUWE EGBERTS', logo: CLIENT_LOGOS.jde },
   { id: 'beamsuntory', name: 'Beam Suntory', logo: CLIENT_LOGOS.beamsuntory },
-  { id: 'shell', name: 'Shell', logo: CLIENT_LOGOS.shell },
+  { id: 'allbirds', name: 'Allbirds', logo: CLIENT_LOGOS.allbirds },
   { id: 'asics', name: 'Asics', logo: CLIENT_LOGOS.asics },
   { id: 'ppg', name: 'PPG Industries', logo: CLIENT_LOGOS.ppg },
   { id: 'cocacola', name: 'Coca-Cola', logo: CLIENT_LOGOS.cocacola },

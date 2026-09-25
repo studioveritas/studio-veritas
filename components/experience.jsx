@@ -8,7 +8,7 @@ const MENU_ITEMS = [
   { label: 'Team', href: '/team' },
   { label: 'Principles', href: '/process' },
   { label: 'Experience', href: '/clients' },
-  { label: 'Contact', href: 'mailto:info@studio-veritas.com' },
+  { label: 'Contact', href: '/contact' },
 ]
 
 const CONTACT_EMAIL = 'info@studio-veritas.com'

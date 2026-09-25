@@ -15,7 +15,7 @@ const MENU_ITEMS = [
   { label: 'Team', href: '/team' },
   { label: 'Principles', href: '/process' },
   { label: 'Experience', href: '/clients' },
-  { label: 'Contact', href: 'mailto:info@studio-veritas.com' },
+  { label: 'Contact', href: '/contact' },
 ]
 
 // Positions are relative to a fixed-aspect bounding box (not the viewport),

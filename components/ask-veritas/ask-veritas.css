@@ -1,0 +1,212 @@
+/* Ask Veritas: styled to the Studio Veritas pop-out modules.
+   Site tokens: black panel, 1px rgba(255,255,255,.1) border, 6px radius, IBM Plex Mono 13px/14px,
+   headings #5683DD uppercase with .2em tracking, ✕ close, █ typewriter cursor, custom arrow cursor.
+   Layering matches every page: bottom bars 40 · trigger 45 · pop-outs 50 · panel 55 · footer 60 · grain 100.
+   So the grain still washes over it and the slide-up footer still covers it, like every other control. */
+
+.av-trigger,
+.av-tri,
+.av-panel,
+.av-panel *,
+.av-entry,
+.av-entry * {
+  font-family: var(--font-plex-mono, "IBM Plex Mono"), ui-monospace, SFMono-Regular, Menlo, monospace;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* the site's own arrow cursor (same SVG as components/experience.jsx) */
+.av-tri,
+.av-trigger,
+.av-panel,
+.av-panel *,
+.av-entry,
+.av-entry * {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='24' viewBox='0 0 18 24' fill='none'><path d='M1 1L1 18.5L5.5 14L10 22L13 20.5L8.5 12.5L14.5 12L1 1Z' fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='round'/></svg>") 4 2, auto;
+}
+.av-panel textarea { cursor: text; }
+
+/* ---------- bottom-centre triangle ---------- */
+.av-tri {
+  position: fixed;
+  z-index: 45;
+  left: 50%;
+  transform: translateX(-50%);
+  /* one step above the bottom bar, so the opened WORK list never runs under it */
+  bottom: max(46px, calc(env(safe-area-inset-bottom, 0px) + 30px));
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #000;
+  background: transparent;
+  border: 0;
+  touch-action: manipulation;
+  transition: color 0.2s;
+}
+.av-tri-icon { display: block; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.av-tri-open .av-tri-icon { transform: rotate(180deg); } /* points down when open, like the footer's close triangle */
+.av-tri:focus-visible { outline: none; color: #5683dd; } /* keyboard focus: accent colour + label, no box */
+.av-tri-label {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50%, 4px);
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #000; /* black like WORK / FOR COMPANIES: the blue accent disappears into the sky imagery */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+@media (hover: hover) {
+  .av-tri:hover { color: #5683dd; }
+  .av-tri:hover:not(.av-tri-open) .av-tri-label { opacity: 1; transform: translate(-50%, 0); }
+}
+.av-tri:focus-visible:not(.av-tri-open) .av-tri-label { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- optional floating pill ---------- */
+.av-trigger {
+  position: fixed;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 45;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  color: #fff;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.av-trigger.av-left { left: calc(16px + env(safe-area-inset-left, 0px)); }
+.av-trigger.av-right { right: calc(76px + env(safe-area-inset-right, 0px)); }
+.av-trigger.av-center { left: 50%; transform: translateX(-50%); }
+.av-trigger:hover, .av-trigger:focus-visible { color: #5683dd; outline: none; }
+.av-dot { width: 6px; height: 6px; border-radius: 50%; background: #5683dd; }
+
+/* ---------- panel ---------- */
+.av-panel {
+  --av-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  position: fixed;
+  z-index: 55;
+  bottom: var(--av-bottom);
+  width: min(400px, calc(100vw - 32px));
+  height: min(600px, calc(100dvh - var(--av-bottom) - 72px));
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+.av-panel.av-right { right: calc(16px + env(safe-area-inset-right, 0px)); transform-origin: bottom right; }
+.av-panel.av-left { left: calc(16px + env(safe-area-inset-left, 0px)); transform-origin: bottom left; }
+.av-panel.av-center {
+  --av-bottom: calc(max(46px, calc(env(safe-area-inset-bottom, 0px) + 30px)) + 52px);
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  transform-origin: bottom center;
+}
+
+.av-head { display: flex; align-items: center; gap: 10px; padding: 18px 20px 12px; }
+.av-title { font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: #5683dd; }
+.av-badge { font-size: 9px; padding: 1px 5px; border: 1px solid rgba(255, 255, 255, 0.35); color: rgba(255, 255, 255, 0.75); border-radius: 3px; letter-spacing: 0.12em; vertical-align: middle; }
+.av-close { margin-left: auto; padding: 8px; margin-right: -8px; background: none; border: 0; color: rgba(255, 255, 255, 0.7); font-size: 13px; line-height: 1; transition: color 0.2s; }
+.av-close:hover, .av-close:focus-visible { color: #fff; outline: none; }
+
+/* ---------- mode tabs: text buttons, like FOR COMPANIES / FOR AGENCIES ---------- */
+.av-tabs { display: flex; gap: 18px; padding: 0 20px 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+.av-tab { padding: 4px 0; background: none; border: 0; color: rgba(255, 255, 255, 0.55); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.2s; }
+.av-tab:hover, .av-tab:focus-visible { color: #fff; outline: none; }
+.av-tab[aria-pressed="true"] { color: #5683dd; }
+
+/* ---------- log & messages ---------- */
+.av-log { flex: 1; min-height: 0; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.av-msg { margin: 0; font-size: 13px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
+.av-bot { color: rgba(255, 255, 255, 0.9); }
+.av-user { color: #5683dd; align-self: flex-end; text-align: right; max-width: 88%; }
+
+/* █ cursor, as in the site's typewriter reveals */
+.av-caret::after { content: "\2588"; margin-left: 2px; animation: av-blink 0.8s step-end infinite; }
+@keyframes av-blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+.av-chips { display: flex; flex-direction: column; gap: 8px; margin-top: 2px; }
+.av-chip { text-align: left; color: rgba(255, 255, 255, 0.9); background: transparent; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 4px; padding: 9px 12px; font-size: 12px; transition: border-color 0.2s, color 0.2s; }
+.av-chip-alt { border-style: dashed; color: rgba(255, 255, 255, 0.75); }
+.av-chip:hover, .av-chip:focus-visible { border-color: #5683dd; color: #5683dd; outline: none; }
+
+/* ---------- Truth Test ---------- */
+.av-result { display: flex; flex-direction: column; gap: 10px; }
+.av-claim { margin: 0; align-self: flex-end; max-width: 92%; text-align: right; color: #5683dd; font-size: 13px; line-height: 1.5; }
+.av-card { display: flex; flex-direction: column; gap: 12px; padding: 14px; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 4px; }
+.av-v { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.4; color: #fff; }
+.av-mark { display: flex; flex-direction: column; gap: 4px; padding-top: 10px; border-top: 1px dashed rgba(255, 255, 255, 0.2); }
+.av-mark p { margin: 0; font-size: 12px; line-height: 1.55; color: rgba(255, 255, 255, 0.85); }
+.av-mark-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.av-mark-name { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
+.av-rate { font-size: 9px; letter-spacing: 0.14em; padding: 2px 6px; border-radius: 3px; border: 1px solid; }
+.av-rate-strong { color: #000; background: #5683dd; border-color: #5683dd; }
+.av-rate-mixed { color: #fff; border-color: rgba(255, 255, 255, 0.6); }
+.av-rate-weak { color: rgba(255, 255, 255, 0.55); border-color: rgba(255, 255, 255, 0.25); border-style: dashed; }
+.av-sharper p { color: #5683dd; }
+.av-cta { margin: 0; padding-top: 10px; border-top: 1px dashed rgba(255, 255, 255, 0.2); font-size: 11px; line-height: 1.5; color: rgba(255, 255, 255, 0.6); }
+.av-cta a, .av-limit a { color: #fff; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(255, 255, 255, 0.4); }
+.av-cta a:hover, .av-limit a:hover { color: #5683dd; }
+
+/* ---------- Process guide ---------- */
+.av-step-count { margin: 0; font-size: 10px; letter-spacing: 0.2em; color: rgba(255, 255, 255, 0.5); }
+.av-step-name { margin: 0; font-size: 20px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+.av-step-nav { display: flex; gap: 6px; padding: 12px 20px 6px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+.av-step-btn { flex: 1; color: #fff; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 4px; padding: 8px 6px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+.av-step-btn:hover:not(:disabled), .av-step-btn:focus-visible { color: #5683dd; border-color: #5683dd; outline: none; }
+.av-step-btn:disabled { opacity: 0.3; }
+
+/* ---------- input ---------- */
+.av-form { display: flex; align-items: flex-end; gap: 10px; padding: 12px 20px 6px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+.av-form textarea { flex: 1; resize: none; max-height: 96px; color: #fff; background: transparent; border: 0; outline: 0; font-size: 16px; /* 16px stops iOS zoom-on-focus */ line-height: 1.4; padding: 6px 0; }
+.av-form textarea::placeholder { color: rgba(255, 255, 255, 0.35); }
+.av-send { flex: none; height: 32px; min-width: 32px; padding: 0 6px; color: #fff; background: transparent; border: 0; font-size: 16px; transition: color 0.2s; }
+.av-send-wide { font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; }
+.av-send:hover:not(:disabled), .av-send:focus-visible { color: #5683dd; outline: none; }
+.av-send:disabled { opacity: 0.3; }
+.av-limit { margin: 0; font-size: 12px; line-height: 1.5; color: rgba(255, 255, 255, 0.8); }
+.av-fine { margin: 0; padding: 4px 20px 14px; font-size: 9px; line-height: 1.45; color: rgba(255, 255, 255, 0.4); }
+
+/* ---------- footer entry (optional, for a light-grey slide-up footer) ---------- */
+.av-entry { display: flex; flex-direction: column; gap: 6px; padding: 16px; color: #fff; background: #000; }
+.av-entry-title { margin: 0 0 6px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #5683dd; }
+.av-entry-link { display: flex; justify-content: space-between; align-items: center; gap: 14px; width: 100%; padding: 8px 0; color: #fff; background: none; border: 0; border-top: 1px solid rgba(255, 255, 255, 0.15); font-size: 12px; text-align: left; transition: color 0.2s; }
+.av-entry-link:hover, .av-entry-link:focus-visible { color: #5683dd; outline: none; }
+
+@media (min-width: 768px) {
+  .av-tri { bottom: max(54px, calc(env(safe-area-inset-bottom, 0px) + 22px)); }
+  .av-panel.av-center { --av-bottom: calc(max(54px, calc(env(safe-area-inset-bottom, 0px) + 22px)) + 54px); }
+  .av-head { padding: 24px 28px 14px; }
+  .av-tabs { padding: 0 28px 14px; }
+  .av-log { padding: 18px 28px; }
+  .av-form, .av-step-nav { padding-left: 28px; padding-right: 28px; }
+  .av-fine { padding-left: 28px; padding-right: 28px; }
+  .av-title, .av-tab { font-size: 12px; }
+  .av-msg, .av-claim { font-size: 14px; }
+  .av-chip, .av-mark p { font-size: 13px; }
+  .av-v { font-size: 16px; }
+  .av-tri-label { font-size: 12px; }
+  .av-trigger { font-size: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .av-caret::after { animation: none; }
+  .av-tri-icon, .av-tri-label { transition: none; }
+}

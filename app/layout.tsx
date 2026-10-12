@@ -1,5 +1,6 @@
 import './globals.css'
 import { ChunkLoadErrorHandler } from '@/components/chunk-load-error-handler'
+import AskVeritas from '@/components/ask-veritas/AskVeritas'
 
 export const dynamic = 'force-dynamic'
 
@@ -70,6 +71,9 @@ export default function RootLayout({
       </head>
       <body>
         {children}
+        {/* Ask Veritas: AI chat, opened by the outline triangle at bottom centre on every page.
+            Lives outside the pages, so no page code changes. See ASK-VERITAS.md. */}
+        <AskVeritas trigger="triangle" side="center" />
         <ChunkLoadErrorHandler />
       </body>
     </html>

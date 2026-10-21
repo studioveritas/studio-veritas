@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC, ICON_SRC, ICON_SRC_BLACK, CLIENT_LOGOS, LANDING_IMG_DESKTOP, LANDING_IMG_MOBILE } from './media'
+import { MENU_ITEMS } from './site-nav'
 
 const CONTACT_EMAIL = 'info@studio-veritas.com'
 
@@ -11,12 +12,6 @@ const CONTACT_PANELS = {
   agencies: { heading: 'For agencies', body: 'We work as a freelance strategy, creative and design team\nwhen you need extra thinking, different perspectives or specialist capability.' },
 }
 
-const MENU_ITEMS = [
-  { label: 'Team', href: '/team' },
-  { label: 'Principles', href: '/process' },
-  { label: 'Experience', href: '/clients' },
-  { label: 'Contact', href: '/contact' },
-]
 
 const CLIENTS = [
   { id: 'mondelez', name: 'Mondelez International', logo: CLIENT_LOGOS.mondelez },

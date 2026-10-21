@@ -106,14 +106,14 @@ export default function AskVeritas({
 }: {
   /**
    * What opens the panel:
-   *  "triangle" - outline triangle, fixed at bottom centre (pair with side="center")
+   *  "triangle" - outline triangle, fixed in the bottom corner given by `side` (left or right) or bottom centre
    *  "pill"     - floating "Ask Veritas" pill
    *  "none"     - nothing; open it with openAskVeritas() from your own button (default)
    */
   trigger?: "triangle" | "pill" | "none";
   /** @deprecated use trigger="pill" */
   showTrigger?: boolean;
-  /** Where the panel opens. "center" sits above the bottom-centre triangle. */
+  /** Where the triangle sits and the panel opens: "left" is the bottom-left corner (the site default). */
   side?: "left" | "right" | "center";
 }) {
   const triggerKind = trigger ?? (showTrigger ? "pill" : "none");
@@ -263,7 +263,7 @@ export default function AskVeritas({
       {triggerKind === "triangle" && (
         <button
           type="button"
-          className={`av-tri${open ? " av-tri-open" : ""}`}
+          className={`av-tri av-tri-${side}${open ? " av-tri-open" : ""}`}
           aria-haspopup="dialog"
           aria-expanded={open}
           aria-label={open ? "Close Ask Veritas" : "Ask Veritas, an AI assistant"}

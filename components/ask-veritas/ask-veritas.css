@@ -70,6 +70,30 @@
 }
 .av-tri:focus-visible:not(.av-tri-open) .av-tri-label { opacity: 1; transform: translate(-50%, 0); }
 
+/* Bottom-left corner (the site default): the triangle's own edges line up with the
+   site's left margin (16px, 40px from 768px) and the footer triangle's baseline
+   (16px / 32px from the bottom). The 44px tap area centres the 22x19 icon, hence
+   the -11px / -12.5px. Its label reads left-aligned so it never runs off-screen. */
+.av-tri.av-tri-left {
+  left: calc(max(16px, env(safe-area-inset-left, 0px)) - 11px);
+  bottom: calc(max(16px, env(safe-area-inset-bottom, 0px)) - 12.5px);
+  transform: none;
+}
+.av-tri.av-tri-right {
+  left: auto;
+  right: calc(max(16px, env(safe-area-inset-right, 0px)) - 11px);
+  bottom: calc(max(16px, env(safe-area-inset-bottom, 0px)) - 12.5px);
+  transform: none;
+}
+.av-tri-left .av-tri-label { left: 11px; transform: translate(0, 4px); }
+.av-tri-right .av-tri-label { left: auto; right: 11px; transform: translate(0, 4px); }
+@media (hover: hover) {
+  .av-tri-left:hover:not(.av-tri-open) .av-tri-label,
+  .av-tri-right:hover:not(.av-tri-open) .av-tri-label { transform: translate(0, 0); }
+}
+.av-tri-left:focus-visible:not(.av-tri-open) .av-tri-label,
+.av-tri-right:focus-visible:not(.av-tri-open) .av-tri-label { transform: translate(0, 0); }
+
 /* ---------- optional floating pill ---------- */
 .av-trigger {
   position: fixed;
@@ -111,7 +135,12 @@
   overflow: hidden;
 }
 .av-panel.av-right { right: calc(16px + env(safe-area-inset-right, 0px)); transform-origin: bottom right; }
-.av-panel.av-left { left: calc(16px + env(safe-area-inset-left, 0px)); transform-origin: bottom left; }
+.av-panel.av-left {
+  /* opens just above the bottom-left triangle, aligned to the site's left margin */
+  --av-bottom: calc(max(16px, env(safe-area-inset-bottom, 0px)) + 19px + 16px);
+  left: max(16px, env(safe-area-inset-left, 0px));
+  transform-origin: bottom left;
+}
 .av-panel.av-center {
   --av-bottom: calc(max(46px, calc(env(safe-area-inset-bottom, 0px) + 30px)) + 52px);
   left: 0;
@@ -193,6 +222,9 @@
 @media (min-width: 768px) {
   .av-tri { bottom: max(54px, calc(env(safe-area-inset-bottom, 0px) + 22px)); }
   .av-panel.av-center { --av-bottom: calc(max(54px, calc(env(safe-area-inset-bottom, 0px) + 22px)) + 54px); }
+  .av-tri.av-tri-left { left: calc(max(40px, env(safe-area-inset-left, 0px)) - 11px); bottom: calc(max(32px, env(safe-area-inset-bottom, 0px)) - 12.5px); }
+  .av-tri.av-tri-right { right: calc(max(40px, env(safe-area-inset-right, 0px)) - 11px); bottom: calc(max(32px, env(safe-area-inset-bottom, 0px)) - 12.5px); }
+  .av-panel.av-left { --av-bottom: calc(max(32px, env(safe-area-inset-bottom, 0px)) + 19px + 18px); left: max(40px, env(safe-area-inset-left, 0px)); }
   .av-head { padding: 24px 28px 14px; }
   .av-tabs { padding: 0 28px 14px; }
   .av-log { padding: 18px 28px; }

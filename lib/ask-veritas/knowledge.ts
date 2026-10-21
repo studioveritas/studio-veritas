@@ -35,6 +35,7 @@ Work is framed as "the ideas behind the ideas". Clients are framed as "iconic br
 - LinkedIn: https://www.linkedin.com/company/team-studio-veritas
 
 ## Selected work (site)
+The Experience page (/experience on studio-veritas.com) shows the work as tiles; the client logo grid is on the Client Experience page (/clients). Full case studies so far: Windhoek (/experience/windhoek). The others are marked "coming soon".
 - Premiership Rugby: a platform built on the collision of tradition and raw spectacle.
 - Jordan Brand: mentorship as the truth behind the mythology.
 - Seedlip: what to drink when you're not drinking.
@@ -42,7 +43,13 @@ Work is framed as "the ideas behind the ideas". Clients are framed as "iconic br
 - Canyon: "Nothing between you and the road."
 - Uber: the city, always in motion.
 - Icebreaker: a natural alternative to synthetic.
-- Windhoek: "Pure by nature. Nothing to hide."
+- Windhoek: "Quality doesn't have to look German."
+
+### Windhoek case study (site, /experience/windhoek)
+- Problem: Windhoek was a respected quality beer in South Africa and Namibia, but its cues (Reinheitsgebot, Germanic naming, colonial-era visual language) coded quality as foreign rather than African, muting its relevance to most African drinkers.
+- Truth: Quality doesn't have to look German to be real. Africa has its own premium codes.
+- Response: the redesign and repositioning traded inherited European quality signifiers for local, premium African ones, repositioning Windhoek as proof that African-made can mean world-class.
+- Results: Namibia Breweries Limited said Windhoek's recovery was aided by the investment in refreshing the brand. 2024: Windhoek gained 2% market share following the rebrand. H2 2024: Windhoek Lager and Draught drove 58.9% of total beer volume in Namibia. Net revenue grew 19.8%. Operating profit grew 10.6%. Windhoek Lager later posted the strongest volume growth of any beer in the African portfolio.
 
 ## Credentials deck: case detail ("Selected brand experience", 2026)
 Note: some credentials come from earlier agency or in-house roles held by the team. Describe them as "selected brand experience" rather than claiming every project was delivered under the Studio Veritas name.

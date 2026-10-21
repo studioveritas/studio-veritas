@@ -1,16 +1,57 @@
 // Studio Veritas: Experience (selected work) and case studies.
 //
-// One list drives the Experience grid, each case study page, the case-study
-// prev/next arrows, page titles, and the structured data search engines read.
-// Text only, so server code (routes, metadata) can import it without pulling
-// in the image data. Tile images are looked up by `img` in components/work-images.js, case study
-// heroes by `caseStudy.hero` in components/case-images.js.
+// This one list drives everything: the Experience grid and its filters, each
+// case study page, the prev/next arrows, page titles, share images, the
+// sitemap, Ask Veritas's knowledge and /llms.txt. Step-by-step guide:
+// CASE-STUDIES.md in the project root.
 //
-// `tags` drive the filters on the Experience page (see TAGS below).
+// ─── PUBLISH A CASE STUDY ────────────────────────────────────────────────────
+// 1. Upload two photos to public/work/<slug>/ :
+//      hero.jpg  the case study photo, landscape, about 1850px wide
+//      tile.jpg  the grid tile, 892 x 500 (any landscape crop works)
+// 2. Find the project below (or add it where it should sit in the grid) and
+//    replace its line with the template, filled in. Keep the quote marks and
+//    commas exactly as they are. To use an apostrophe or quote mark inside the
+//    text, use the curly ones (’ “ ”).
+// 3. Commit. The tile turns into a link and the page goes live.
 //
-// To publish a case study: give the project a `caseStudy` object. Its tile then
-// links to /experience/<slug> instead of showing COMING SOON, and the arrows on
-// the case study pages step through every project that has one, in grid order.
+// ─── TEMPLATE (copy from { to }, ) ───────────────────────────────────────────
+//  {
+//    slug: 'ketel-one',                           // the web address: /experience/ketel-one
+//    name: 'KETEL ONE',                           // on the tile and the title box
+//    client: 'Ketel One',                         // brand name, as written normally
+//    subheading: 'Reframing the cocktail moment', // the line under the tile
+//    img: '/work/ketel-one/tile.jpg',
+//    tags: ['Brand', 'Comms'],                    // any of: Brand, Comms, Retail, Innovation
+//    caseStudy: {
+//      subheading: 'Reframing the cocktail moment', // line in the title box (delete to use the tile's)
+//      hero: '/work/ketel-one/hero.jpg',
+//      sections: [
+//        { heading: 'Problem', body: 'Paste the problem here.' },
+//        { heading: 'Truth', body: 'Paste the truth here.' },
+//        { heading: 'Response', body: 'Paste the response here.' },
+//        {
+//          heading: 'The results',
+//          list: [
+//            'First result.',
+//            'Second result.',
+//            'Add or remove lines as needed.',
+//          ],
+//        },
+//      ],
+//    },
+//  },
+//
+// Optional inside caseStudy:
+//   heroPosition: '70% 50%'        which part of the photo stays in view (left-right, top-bottom)
+//   heroPositionMobile: '60% 50%'  the same for phones
+//   heroSize: 'cover'              how the photo fills the card (default 'cover')
+//   askPrompts: ['What was the truth behind Ketel One?', 'A second question']
+//                                  questions Ask Veritas suggests on the page
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// Older entries use keys ('windhoek', 'seedlipHero') for photos embedded in
+// components/work-images.js and components/case-images.js; both ways work.
 
 export const WORK = [
   {

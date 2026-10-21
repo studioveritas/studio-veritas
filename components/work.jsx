@@ -19,7 +19,8 @@ function Tile({ work, index, firstPaint }) {
   const live = Boolean(work.caseStudy)
   const media = (
     <div className="sv-tile-media">
-      <img src={WORK_TILES[work.img]} alt="" draggable={false} />
+      {/* A file path (e.g. /work/ketel-one/tile.jpg in /public) or a key in work-images.js */}
+      <img src={work.img?.startsWith('/') ? work.img : WORK_TILES[work.img]} alt="" draggable={false} />
       {!live && (
         <div className="sv-tile-soon" aria-hidden="true">
           <span>Coming soon</span>

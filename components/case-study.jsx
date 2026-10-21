@@ -67,7 +67,11 @@ export function CaseStudy({ slug }) {
   }, [prev, next])
 
   if (!work || !cs) return null
-  const hero = CASE_STUDY_HEROES[cs.hero]
+  // A file path (e.g. /work/ketel-one/hero.jpg in /public) or a key in case-images.js.
+  const hero = cs.hero?.startsWith('/') ? cs.hero : CASE_STUDY_HEROES[cs.hero]
+  const heroSize = cs.heroSize || 'cover'
+  const heroPosition = cs.heroPosition || '50% 50%'
+  const heroPositionMobile = cs.heroPositionMobile || heroPosition
 
   return (
     <SiteShell
@@ -105,7 +109,7 @@ export function CaseStudy({ slug }) {
           position: relative; flex: none; background: #101010; border-radius: 4px; color: #fff;
           padding: 16px 44px 18px 18px;
         }
-        .sv-cs-name { margin: 0; font-family: ${MONO}; font-weight: 700; text-transform: uppercase; line-height: 1; font-size: 30px; }
+        .sv-cs-name { margin: 0; font-family: ${MONO}; font-weight: 600; text-transform: uppercase; line-height: 1; font-size: 30px; }
         .sv-cs-sub { margin: 12px 0 0; font-family: ${MONO}; font-weight: 400; line-height: 1.25; font-size: 16px; }
         .sv-cs-close {
           position: absolute; top: 8px; right: 8px; padding: 8px; line-height: 1;
@@ -118,7 +122,7 @@ export function CaseStudy({ slug }) {
           background: #fff; color: #000; border: 1px solid #000; border-radius: 4px;
           padding: 18px; font-family: ${MONO}; font-weight: 400; font-size: 13px; line-height: 1.38;
         }
-        .sv-cs-body h2 { margin: 0; font: inherit; text-transform: uppercase; }
+        .sv-cs-body h2 { margin: 0; font: inherit; font-weight: 600; text-transform: uppercase; }
         .sv-cs-body p { margin: 0; }
         .sv-cs-section + .sv-cs-section { margin-top: 1.38em; }
         .sv-cs-body ul { margin: 0; padding: 0; list-style: none; }
@@ -173,8 +177,8 @@ export function CaseStudy({ slug }) {
             style={{ backgroundImage: `url(${hero})` }}
           />
           <style>{`
-            .sv-cs-hero { background-position: ${cs.heroPositionMobile}; }
-            @media (min-width: 768px) { .sv-cs-hero { background-size: ${cs.heroSize}; background-position: ${cs.heroPosition}; } }
+            .sv-cs-hero { background-position: ${heroPositionMobile}; }
+            @media (min-width: 768px) { .sv-cs-hero { background-size: ${heroSize}; background-position: ${heroPosition}; } }
           `}</style>
 
           <div className="sv-cs-col">

@@ -5,7 +5,7 @@
 import { ImageResponse } from 'next/og'
 import { CASE_STUDIES, getCaseStudy, caseSubheading } from '@/components/work-data'
 import { CASE_STUDY_HEROES } from '@/components/case-images'
-import { OG_SIZE, OG_TYPE, ogFonts, TitleBox } from '@/lib/og'
+import { OG_SIZE, OG_TYPE, ogFonts, TitleBox, imageData } from '@/lib/og'
 
 export const size = OG_SIZE
 export const contentType = OG_TYPE
@@ -18,7 +18,7 @@ export function generateStaticParams() {
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const work = getCaseStudy(slug)
-  const hero = work ? (CASE_STUDY_HEROES as Record<string, string>)[work.caseStudy?.hero ?? ""] : null
+  const hero = work ? await imageData(work.caseStudy?.hero, CASE_STUDY_HEROES as Record<string, string>) : null
   const fonts = await ogFonts()
 
   return new ImageResponse(

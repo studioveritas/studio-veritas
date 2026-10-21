@@ -1,5 +1,9 @@
 # Studio Veritas
 
+## Publishing case studies
+
+See [CASE-STUDIES.md](CASE-STUDIES.md): a template in `components/work-data.js` plus two photos in `public/work/<slug>/`.
+
 ## What's here
 
 A complete Next.js 16 (App Router) project. `components/experience.jsx`

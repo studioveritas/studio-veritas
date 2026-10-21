@@ -3,6 +3,10 @@
 // Edit this file to change what the bot knows. Anything not here, the bot is told it does not know.
 // Deliberately excluded: personal phone number and personal email. Public contact is info@studio-veritas.com only.
 
+import { workForKnowledge } from '@/lib/work-text'
+
+// The Experience list and case studies are generated from components/work-data.js
+// (see lib/work-text.ts), so a new case study is known here automatically.
 export const KNOWLEDGE = `
 # STUDIO VERITAS
 
@@ -34,29 +38,7 @@ Work is framed as "the ideas behind the ideas". Clients are framed as "iconic br
 - Contact page: /contact on studio-veritas.com
 - LinkedIn: https://www.linkedin.com/company/team-studio-veritas
 
-## Selected work (site)
-The Experience page (/experience on studio-veritas.com) shows the work as tiles, filterable by Brand, Comms, Retail and Innovation; the client logo grid is on the Client Experience page (/clients). Full case studies so far: Windhoek (/experience/windhoek) and Seedlip (/experience/seedlip). The others are marked "coming soon".
-- Windhoek: "Quality doesn't have to look German."
-- Premiership Rugby (PREM): a platform built on the collision of tradition and raw spectacle.
-- Jordan Wings (Jordan Brand): mentorship as the truth behind the mythology.
-- Seedlip: what to drink when you're not drinking. Case study: "Hello Curious".
-- Allbirds: "Nature knows better than we do."
-- Canyon: "Power ON: Game ON."
-- Uber Social Impact: thanking the everyday giants.
-- Icebreaker: a natural alternative to synthetic.
-- Ketel One: reframing the cocktail moment.
-
-### Windhoek case study (site, /experience/windhoek)
-- Problem: Windhoek was a respected quality beer in South Africa and Namibia, but its cues (Reinheitsgebot, Germanic naming, colonial-era visual language) coded quality as foreign rather than African, muting its relevance to most African drinkers.
-- Truth: Quality doesn't have to look German to be real. Africa has its own premium codes.
-- Response: the redesign and repositioning traded inherited European quality signifiers for local, premium African ones, repositioning Windhoek as proof that African-made can mean world-class.
-- Results: Namibia Breweries Limited said Windhoek's recovery was aided by the investment in refreshing the brand. 2024: Windhoek gained 2% market share following the rebrand. H2 2024: Windhoek Lager and Draught drove 58.9% of total beer volume in Namibia. Net revenue grew 19.8%. Operating profit grew 10.6%. Windhoek Lager later posted the strongest volume growth of any beer in the African portfolio.
-
-### Seedlip case study, "Hello Curious" (site, /experience/seedlip)
-- Problem: despite creating the non-alcoholic spirits category, Seedlip faced growing consumer friction as the market crowded: drinkers were confused about what it actually tasted like, how to serve it, and why it commanded a premium price. Framed largely by absence (what it wasn't), the brand risked being seen as an expensive, diluted substitute rather than an elevated spirit in its own right.
-- Truth: adults choosing not to drink alcohol aren't looking for an apology or a compromised mimicry of booze; they want sophisticated sensory pleasure. Non-alcoholic drinking shouldn't be defined by sobriety or restriction, but by curiosity and an appetite for complex flavour.
-- Response: launched the global brand platform "Hello Curious", reframing Seedlip from a zero-proof compromise into an invitation to explore botanical distillation. Defensive category education was traded for an evocative sensory world: mapping natural ingredients to distinct flavour profiles, standardising iconic highball serve rituals across on-trade and retail, and a modular visual system built to own seasonal moments from Dry January through summer terrace drinking.
-- Results: solidified Seedlip as the global benchmark and market leader in premium non-alcoholic spirits; demystified the serve ritual across on-trade and off-trade, driving double-digit trial and repeat purchase globally; anchored peak cultural and seasonal drinking periods with a modular global toolkit across experiential, digital and retail in over 20 international markets; protected luxury price realisation and shelf authority after the brand's global rollout under Diageo's portfolio.
+${workForKnowledge()}
 
 ## Credentials deck: case detail ("Selected brand experience", 2026)
 Note: some credentials come from earlier agency or in-house roles held by the team. Describe them as "selected brand experience" rather than claiming every project was delivered under the Studio Veritas name.

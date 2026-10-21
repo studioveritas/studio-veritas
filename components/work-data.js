@@ -92,7 +92,7 @@ export const WORK = [
         {
           heading: 'Response',
           body:
-            'Launched the global brand platform “Hello Curious,” reframing Seedlip from a zero-proof compromise into an invitation to explore botanical distillation. We traded defensive category education for an evocative sensory world: mapping intricate natural ingredients directly to distinct flavor profiles, standardising iconic high-ball serve rituals across on-trade and retail, and deploying a modular visual system engineered to dominate key seasonal moments from Dry January through summer terrace drinking.',
+            'Launched the global brand platform “Hello Curious”, reframing Seedlip from a zero-proof compromise into an invitation to explore botanical distillation. We traded defensive category education for an evocative sensory world: mapping intricate natural ingredients directly to distinct flavour profiles, standardising iconic high-ball serve rituals across on-trade and retail, and deploying a modular visual system engineered to dominate key seasonal moments from Dry January through summer terrace drinking.',
         },
         {
           heading: 'The results',

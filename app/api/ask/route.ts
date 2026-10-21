@@ -35,7 +35,10 @@ const json = (status: number, reply: string, code?: string) =>
 
 export async function POST(req: Request) {
   if (process.env.ASK_VERITAS_ENABLED === "false") return json(503, CANNED.closed, "disabled");
-  if (!process.env.ANTHROPIC_API_KEY) return json(503, CANNED.error, "config");
+  if (!process.env.ANTHROPIC_API_KEY) {
+    console.error("[ask-veritas] ANTHROPIC_API_KEY is not set");
+    return json(503, CANNED.error, "config");
+  }
 
   const allowed = (process.env.ASK_ALLOWED_ORIGINS || "studio-veritas.com").split(",");
   const dev = process.env.NODE_ENV !== "production";
@@ -64,7 +67,8 @@ export async function POST(req: Request) {
       const map = { burst: CANNED.slow, ip_day: CANNED.you, global_day: CANNED.busy } as const;
       return json(429, map[verdict.code], verdict.code);
     }
-  } catch {
+  } catch (err) {
+    console.error("[ask-veritas] limiter error", (err as Error)?.message?.slice(0, 200));
     // If the limiter store is down, fail closed: no model call without a working cap.
     return json(503, CANNED.error, "limiter");
   }
@@ -82,8 +86,17 @@ export async function POST(req: Request) {
       .join("")
       .trim();
     return json(200, text || CANNED.error);
-  } catch {
-    return json(502, CANNED.error, "upstream"); // never leak provider errors or keys
+  } catch (err) {
+    // Log why the provider call failed (status, error type, message) so it shows
+    // in Vercel's runtime logs. Never logs the key or the visitor's messages.
+    const e = err as { status?: number; error?: { error?: { type?: string; message?: string } }; message?: string; name?: string };
+    console.error("[ask-veritas] upstream error", {
+      model: MODEL,
+      status: e?.status,
+      type: e?.error?.error?.type ?? e?.name,
+      message: (e?.error?.error?.message ?? e?.message ?? "").slice(0, 300),
+    });
+    return json(502, CANNED.error, "upstream"); // never leak provider errors or keys to the visitor
   }
 }
 

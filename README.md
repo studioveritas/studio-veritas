@@ -7,10 +7,11 @@ is the whole interactive site; everything else is standard scaffolding
 (layout, Tailwind, Prisma, API route) so it builds and runs.
 
 **Known gaps to fill in before/after launch:**
-- `public/og-image.png` (1200×630) and favicon files aren't included —
-  `app/layout.tsx` references `/og-image.png` but the file doesn't exist yet.
-- `app/layout.tsx` has a placeholder `SITE_URL` — replace it with your
-  real domain.
+- Share images (1200×630) are generated at build time by the
+  `opengraph-image.tsx` files: the site default, /experience, and one per
+  case study (photo + title box). Fonts for them live in `assets/fonts`.
+- The site domain is `https://www.studio-veritas.com` (`SITE_URL` in
+  `app/layout.tsx`, also used by `app/sitemap.ts` and `public/robots.txt`).
 - The contact panel just opens a `mailto:` link — there's no database or
   API route behind it (an earlier version of this project scaffolded a
   Prisma-backed `/api/contact` route, but it was removed: it required
@@ -71,12 +72,10 @@ git push -u origin main
    detects the domain is correctly pointed and has issued an SSL
    certificate automatically.
 
-## 5. Update the placeholders
+## 5. Domain
 
-Once your domain is live:
-- Set `NEXT_PUBLIC_SITE_URL` in Vercel's **Settings → Environment
-  Variables** to your real domain (e.g. `https://studioveritas.com`),
-  redeploy.
-- Update `Sitemap:` in `public/robots.txt` to your real domain.
+The domain is set to `https://www.studio-veritas.com` in code.
+`NEXT_PUBLIC_SITE_URL` in Vercel can override it, but is ignored unless it
+holds a full `https://` URL (a leftover placeholder value is ignored too).
 - Add `public/og-image.png`, `public/favicon.ico`, and
   `public/apple-icon.png` when you have them.

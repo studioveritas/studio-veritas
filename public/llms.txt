@@ -23,8 +23,9 @@ that's built on truth and made to work in the real world.
 
 ## Experience (selected work)
 
-Page: /experience. Tiles of work; full case studies are linked, the rest
-are marked "coming soon". Client logos: /clients (Client Experience).
+Page: /experience. Tiles of work, filterable by Brand, Comms, Retail and
+Innovation (e.g. /experience?tag=brand); full case studies are linked, the
+rest are marked "coming soon". Client logos: /clients (Client Experience).
 
 - **Windhoek** (WINDHOEK) — Quality doesn't have to look German.
   Case study: /experience/windhoek. Problem: Windhoek's quality cues
@@ -40,10 +41,22 @@ are marked "coming soon". Client logos: /clients (Client Experience).
 - **Jordan Brand** (JORDAN WINGS) — Mentorship as the truth behind the
   mythology.
 - **Seedlip** (SEEDLIP) — What to drink when you're not drinking.
+  Case study "Hello Curious": /experience/seedlip. Problem: as the
+  non-alcoholic category crowded, drinkers were unsure how Seedlip tasted,
+  how to serve it and why it cost more; framed by absence, it risked
+  reading as an expensive substitute. Truth: people choosing not to drink
+  want sophisticated sensory pleasure, not an apology; curiosity, not
+  restriction. Response: global platform "Hello Curious" — ingredients
+  mapped to flavour, a signature highball serve ritual across on-trade and
+  retail, and a modular visual system for seasonal moments. Results: global
+  category leader in premium non-alcoholic spirits; double-digit trial and
+  repeat; toolkit used in 20+ markets; price and shelf authority protected
+  under Diageo.
 - **Allbirds** (ALLBIRDS) — Nature knows better than we do.
 - **Canyon** (CANYON) — Power ON: Game ON.
-- **Uber** (UBER) — The city, always in motion.
+- **Uber Social Impact** (UBER SOCIAL IMPACT) — Thanking the everyday giants.
 - **Icebreaker** (ICEBREAKER) — A natural alternative to synthetic.
+- **Ketel One** (KETEL ONE) — Reframing the cocktail moment.
 
 ## Contact
 

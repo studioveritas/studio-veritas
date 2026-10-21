@@ -4,15 +4,18 @@
 // tiles of work, each with a name and subheading. Tiles with a case study link
 // to /experience/<slug>; the rest show COMING SOON on rollover.
 // Sizes are taken from the design at 1920 wide and scale down with the viewport.
+// Filters (Brand, Comms, ...) sit beside the title; the choice is kept in the
+// URL as ?tag=brand so a filtered view can be shared.
 
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { SiteShell } from './site-shell'
-import { WORK } from './work-data'
+import { WORK, TAGS } from './work-data'
 import { WORK_TILES } from './work-images'
 
 const MONO = "'IBM Plex Mono', monospace"
 
-function Tile({ work, index }) {
+function Tile({ work, index, firstPaint }) {
   const live = Boolean(work.caseStudy)
   const media = (
     <div className="sv-tile-media">
@@ -32,9 +35,11 @@ function Tile({ work, index }) {
   )
   return (
     <motion.li
+      layout
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.15 + index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+      exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.18 } }}
+      transition={{ duration: 0.6, delay: firstPaint ? 0.15 + index * 0.06 : 0.04 * index, ease: [0.22, 1, 0.36, 1] }}
     >
       {live ? (
         <a href={`/experience/${work.slug}`} className="sv-tile sv-tile-live" aria-label={`${work.client}: ${work.subheading}. Read the case study`}>
@@ -51,7 +56,38 @@ function Tile({ work, index }) {
   )
 }
 
+const slug = (t) => t.toLowerCase()
+
 export function Work() {
+  // Only offer filters that have work behind them.
+  const filters = TAGS.map((t) => ({ tag: t, count: WORK.filter((w) => w.tags?.includes(t)).length })).filter((f) => f.count)
+  const [tag, setTag] = useState(null)
+  const [firstPaint, setFirstPaint] = useState(true)
+
+  useEffect(() => {
+    try {
+      const q = new URLSearchParams(window.location.search).get('tag')
+      const found = TAGS.find((t) => slug(t) === (q || '').toLowerCase())
+      if (found) setTag(found)
+    } catch {}
+    const t = setTimeout(() => setFirstPaint(false), 1200)
+    return () => clearTimeout(t)
+  }, [])
+
+  const choose = (t) => {
+    const next = t === tag ? null : t
+    setTag(next)
+    setFirstPaint(false)
+    try {
+      const url = new URL(window.location.href)
+      if (next) url.searchParams.set('tag', slug(next))
+      else url.searchParams.delete('tag')
+      window.history.replaceState(null, '', url)
+    } catch {}
+  }
+
+  const shown = tag ? WORK.filter((w) => w.tags?.includes(tag)) : WORK
+
   return (
     <SiteShell
       pageKey="work"
@@ -101,6 +137,20 @@ export function Work() {
           margin: 0; color: #000; font-family: ${MONO}; font-weight: 700;
           text-transform: uppercase; line-height: 1; font-size: 30px;
         }
+        .sv-work-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 14px 32px; }
+        .sv-filters { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0 -6px; }
+        .sv-filter {
+          padding: 6px; background: none; border: 0; color: #000; font-family: ${MONO}; font-weight: 500;
+          font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1;
+          text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 5px; text-decoration-thickness: 1px;
+          transition: color 0.2s, text-decoration-color 0.2s;
+        }
+        .sv-filter sup { font-size: 0.72em; margin-left: 3px; letter-spacing: 0; vertical-align: 0.5em; opacity: 0.55; }
+        .sv-filter[aria-pressed='true'] { color: #5683DD; text-decoration-color: currentColor; }
+        .sv-filter:focus-visible { outline: none; color: #5683DD; }
+        @media (hover: hover) { .sv-filter:hover { color: #5683DD; } }
+        @media (min-width: 768px) { .sv-filter { font-size: clamp(12px, 0.73vw, 14px); } }
+        .sv-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }
         .sv-work-grid {
           list-style: none; margin: 28px 0 0; padding: 0;
           display: grid; grid-template-columns: 1fr; column-gap: 14px; row-gap: 22px;
@@ -159,11 +209,28 @@ export function Work() {
           transition={{ type: 'spring', damping: 28, stiffness: 260 }}
           aria-labelledby="sv-work-title"
         >
-          <h1 id="sv-work-title" className="sv-work-title">Experience</h1>
+          <div className="sv-work-head">
+            <h1 id="sv-work-title" className="sv-work-title">Experience</h1>
+            <div className="sv-filters" role="group" aria-label="Filter the work">
+              <button type="button" className="sv-filter" aria-pressed={tag === null} onClick={() => choose(null)}>
+                All<sup>{WORK.length}</sup>
+              </button>
+              {filters.map((f) => (
+                <button key={f.tag} type="button" className="sv-filter" aria-pressed={tag === f.tag} onClick={() => choose(f.tag)}>
+                  {f.tag}<sup>{f.count}</sup>
+                </button>
+              ))}
+            </div>
+          </div>
+          <p className="sv-sr" aria-live="polite">
+            {tag ? `${shown.length} ${tag} projects` : `All ${WORK.length} projects`}
+          </p>
           <ul className="sv-work-grid">
-            {WORK.map((w, i) => (
-              <Tile key={w.slug} work={w} index={i} />
-            ))}
+            <AnimatePresence mode="popLayout" initial={true}>
+              {shown.map((w, i) => (
+                <Tile key={w.slug} work={w} index={i} firstPaint={firstPaint} />
+              ))}
+            </AnimatePresence>
           </ul>
         </motion.section>
       </div>

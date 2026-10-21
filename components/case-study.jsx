@@ -10,8 +10,8 @@
 import { useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { SiteShell } from './site-shell'
-import { getCaseStudy, getNeighbours } from './work-data'
-import { CASE_STUDY_HEROES } from './work-images'
+import { getCaseStudy, getNeighbours, caseSubheading } from './work-data'
+import { CASE_STUDY_HEROES } from './case-images'
 
 const MONO = "'IBM Plex Mono', monospace"
 
@@ -80,7 +80,7 @@ export function CaseStudy({ slug }) {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'CreativeWork',
-            name: `${work.client} — ${work.subheading}`,
+            name: `${work.client} — ${caseSubheading(work)}`,
             about: work.client,
             creator: { '@type': 'Organization', name: 'Studio Veritas' },
             text: cs.sections
@@ -180,7 +180,7 @@ export function CaseStudy({ slug }) {
           <div className="sv-cs-col">
             <header className="sv-cs-titlebox">
               <h1 id="sv-cs-name" className="sv-cs-name">{work.name}</h1>
-              <p className="sv-cs-sub">{work.subheading}</p>
+              <p className="sv-cs-sub">{caseSubheading(work)}</p>
               <a className="sv-cs-close" href="/experience" aria-label="Close case study, back to Experience">X</a>
             </header>
 

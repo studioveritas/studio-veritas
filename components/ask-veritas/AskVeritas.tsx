@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { usePathname } from "next/navigation";
+import { askPromptsFor, getCaseStudy } from "@/components/work-data";
 import { PROCESS, processReady } from "@/lib/ask-veritas/process";
 import { parseVerdict, type Verdict } from "@/lib/ask-veritas/truth";
 import { OPEN_EVENT, type AskMode } from "./open";
@@ -134,6 +136,14 @@ export default function AskVeritas({
   const [busy, setBusy] = useState(false);
   const [calls, setCalls] = useState(0);
   const [stage, setStage] = useState(0);
+  const [pending, setPending] = useState<string | null>(null);
+
+  // On a case study page, suggest questions about that work: a nudge above the
+  // triangle a moment after the page opens, and the first chips in the panel.
+  const pathname = usePathname() || "";
+  const caseWork = getCaseStudy(pathname.match(/^\/experience\/([^/]+)\/?$/)?.[1] ?? "");
+  const casePrompts: string[] = caseWork ? askPromptsFor(caseWork) : [];
+  const [nudge, setNudge] = useState(false);
 
   const idRef = useRef(1);
   const scroller = useRef<HTMLDivElement>(null);
@@ -166,7 +176,11 @@ export default function AskVeritas({
 
   // Opened from the footer triangle panel (or anywhere) via openAskVeritas(mode)
   useEffect(() => {
-    const on = (e: Event) => openAs((e as CustomEvent<{ mode?: AskMode }>).detail?.mode ?? "ask");
+    const on = (e: Event) => {
+      const d = (e as CustomEvent<{ mode?: AskMode; question?: string }>).detail;
+      openAs(d?.question ? "ask" : d?.mode ?? "ask");
+      if (d?.question) setPending(d.question);
+    };
     window.addEventListener(OPEN_EVENT, on);
     return () => window.removeEventListener(OPEN_EVENT, on);
   }, [openAs]);
@@ -225,6 +239,47 @@ export default function AskVeritas({
     setBusy(false);
   };
 
+  // A question passed in from outside (openAskVeritas or the nudge) is sent once the panel is open.
+  useEffect(() => {
+    if (!open || !pending || mode !== "ask") return;
+    const q = pending;
+    setPending(null);
+    ask(q);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, pending, mode]);
+
+  // The nudge: once per case study per visit, 2.5s after arriving, gone after 12s.
+  const caseSlug = caseWork?.slug ?? null;
+  useEffect(() => {
+    setNudge(false);
+    if (!caseSlug || triggerKind !== "triangle") return;
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem(`av-nudge:${caseSlug}`) === "1";
+    } catch {}
+    if (seen) return;
+    const show = setTimeout(() => {
+      setNudge(true);
+      try {
+        sessionStorage.setItem(`av-nudge:${caseSlug}`, "1");
+      } catch {}
+    }, 2500);
+    const hide = setTimeout(() => setNudge(false), 14500);
+    return () => {
+      clearTimeout(show);
+      clearTimeout(hide);
+    };
+  }, [caseSlug, triggerKind]);
+  useEffect(() => {
+    if (open) setNudge(false);
+  }, [open]);
+
+  const askFromNudge = (q: string) => {
+    setNudge(false);
+    openAs("ask");
+    setPending(q);
+  };
+
   const askAboutStage = () => {
     setMode("ask");
     ask(`Tell me more about the ${PROCESS[stage].name} stage.`);
@@ -270,13 +325,34 @@ export default function AskVeritas({
           onClick={() => (open ? close() : openAs("ask"))}
         >
           <span className="av-tri-label" aria-hidden="true">
-            Ask Veritas
+            {caseWork ? `Ask about ${caseWork.client}` : "Ask Veritas"}
           </span>
           <svg className="av-tri-icon" width="22" height="19" viewBox="0 0 22 19" fill="none" aria-hidden="true">
             <polygon points="11,1.6 20.4,17.4 1.6,17.4" stroke="currentColor" strokeWidth="1.6" />
           </svg>
         </button>
       )}
+
+      <AnimatePresence>
+        {nudge && !open && casePrompts[0] && (
+          <motion.div
+            key="nudge"
+            className={`av-nudge av-nudge-${side}`}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 }}
+            animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.15 } }}
+            transition={reduce ? { duration: 0.15 } : { type: "spring", stiffness: 380, damping: 30 }}
+          >
+            <button type="button" className="av-nudge-q" onClick={() => askFromNudge(casePrompts[0])}>
+              <span className="av-nudge-k">Ask Veritas</span>
+              <span>{casePrompts[0]}{"\u00a0"}→</span>
+            </button>
+            <button type="button" className="av-nudge-x" aria-label="Dismiss" onClick={() => setNudge(false)}>
+              ✕
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {open && (
@@ -335,7 +411,7 @@ export default function AskVeritas({
                   )}
                   {msgs.length === 1 && (
                     <div className="av-chips">
-                      {SUGGESTIONS.map((q) => (
+                      {[...casePrompts, ...SUGGESTIONS.slice(0, casePrompts.length ? 1 : SUGGESTIONS.length)].map((q) => (
                         <button key={q} type="button" className="av-chip" onClick={() => ask(q)}>
                           {q}
                         </button>

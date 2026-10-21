@@ -3,6 +3,10 @@
 // Edit this file to change what the bot knows. Anything not here, the bot is told it does not know.
 // Deliberately excluded: personal phone number and personal email. Public contact is info@studio-veritas.com only.
 
+import { workForKnowledge } from '@/lib/work-text'
+
+// The Experience list and case studies are generated from components/work-data.js
+// (see lib/work-text.ts), so a new case study is known here automatically.
 export const KNOWLEDGE = `
 # STUDIO VERITAS
 
@@ -34,15 +38,7 @@ Work is framed as "the ideas behind the ideas". Clients are framed as "iconic br
 - Contact page: /contact on studio-veritas.com
 - LinkedIn: https://www.linkedin.com/company/team-studio-veritas
 
-## Selected work (site)
-- Premiership Rugby: a platform built on the collision of tradition and raw spectacle.
-- Jordan Brand: mentorship as the truth behind the mythology.
-- Seedlip: what to drink when you're not drinking.
-- Allbirds: "Nature knows better than we do."
-- Canyon: "Nothing between you and the road."
-- Uber: the city, always in motion.
-- Icebreaker: a natural alternative to synthetic.
-- Windhoek: "Pure by nature. Nothing to hide."
+${workForKnowledge()}
 
 ## Credentials deck: case detail ("Selected brand experience", 2026)
 Note: some credentials come from earlier agency or in-house roles held by the team. Describe them as "selected brand experience" rather than claiming every project was delivered under the Studio Veritas name.

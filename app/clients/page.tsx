@@ -1,7 +1,7 @@
 import { Clients } from '@/components/clients'
 
 export const metadata = {
-  title: 'Clients — Studio Veritas',
+  title: 'Client Experience — Studio Veritas',
   description: 'Brands Studio Veritas has worked with.',
   alternates: {
     canonical: '/clients',

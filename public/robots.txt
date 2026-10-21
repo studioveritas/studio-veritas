@@ -41,4 +41,4 @@ Allow: /
 User-agent: cohere-ai
 Allow: /
 
-Sitemap: https://REPLACE-WITH-YOUR-DOMAIN.com/sitemap.xml
+Sitemap: https://www.studio-veritas.com/sitemap.xml

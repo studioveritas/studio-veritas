@@ -12,11 +12,15 @@ export const viewport = {
   themeColor: '#D8FF00',
 }
 
-// TODO: replace with your real production domain before deploying.
-const SITE_URL = 'https://REPLACE-WITH-YOUR-DOMAIN.com'
+// The live domain (studio-veritas.com redirects here). Canonical links and the
+// absolute URLs of share images are built from it. NEXT_PUBLIC_SITE_URL can
+// override it, but only when it holds a full https:// URL.
+const SITE_URL = 'https://www.studio-veritas.com'
+const envUrl = (process.env.NEXT_PUBLIC_SITE_URL || '').trim()
+const BASE_URL = /^https?:\/\/[^/]+/.test(envUrl) && !/replace-with/i.test(envUrl) ? envUrl : SITE_URL
 
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || SITE_URL),
+  metadataBase: new URL(BASE_URL),
   title: 'Studio Veritas — Creative Strategy',
   description:
     'Good strategy starts with hard questions. We find the truth that makes brands matter.',
@@ -34,15 +38,13 @@ export const metadata = {
     url: '/',
     siteName: 'Studio Veritas',
     type: 'website',
-    // Add /public/og-image.png (1200x630) for this to render — not yet supplied.
-    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    // Share image: app/opengraph-image.tsx (each section can have its own).
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Studio Veritas — Creative Strategy',
     description:
       'Good strategy starts with hard questions. We find the truth that makes brands matter.',
-    images: ['/og-image.png'],
   },
 }
 
@@ -66,14 +68,14 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
         />
       </head>
       <body>
         {children}
-        {/* Ask Veritas: AI chat, opened by the outline triangle at bottom centre on every page.
+        {/* Ask Veritas: AI chat, opened by the outline triangle in the bottom-left corner of every page.
             Lives outside the pages, so no page code changes. See ASK-VERITAS.md. */}
-        <AskVeritas trigger="triangle" side="center" />
+        <AskVeritas trigger="triangle" side="left" />
         <ChunkLoadErrorHandler />
       </body>
     </html>

@@ -1,4 +1,12 @@
-# Studio Veritas
+// /llms.txt (llmstxt.org): a plain-text summary of the site for AI crawlers.
+// The Experience section is generated from components/work-data.js, so new
+// case studies appear here automatically. Edit the fixed text below directly.
+
+import { workForLlms } from '@/lib/work-text'
+
+export const dynamic = 'force-static'
+
+const HEAD = `# Studio Veritas
 
 > Studio Veritas is a creative strategy studio. Good strategy starts with
 > hard questions — the studio finds the truth that makes brands matter.
@@ -21,22 +29,18 @@ that's built on truth and made to work in the real world.
   team for extra thinking, different perspectives, or specialist
   capability.
 
-## Selected work
+`
 
-- **Premiership Rugby** (PREM RUGBY) — A platform built on the collision
-  of tradition and raw spectacle.
-- **Jordan Brand** (JORDAN WINGS) — Mentorship as the truth behind the
-  mythology.
-- **Seedlip** (SEEDLIP) — What to drink when you're not drinking.
-- **Allbirds** (ALLBIRDS) — Nature knows better than we do.
-- **Canyon** (CANYON) — Nothing between you and the road.
-- **Uber** (UBER) — The city, always in motion.
-- **Icebreaker** (ICEBREAKER) — A natural alternative to synthetic.
-- **Windhoek** (WINDHOEK) — Pure by nature. Nothing to hide.
-
-## Contact
+const TAIL = `## Contact
 
 Contact page: /contact
 Email: info@studio-veritas.com
 LinkedIn: https://www.linkedin.com/company/team-studio-veritas
 Team: Guillaume Furminger + Ali Marmaduke
+`
+
+export function GET() {
+  return new Response(`${HEAD}${workForLlms()}\n\n${TAIL}`, {
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  })
+}

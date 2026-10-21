@@ -1,12 +1,12 @@
 # Ask Veritas on studio-veritas.com
 
-An AI chat (Claude Haiku 5.5) opened by an **outline triangle at bottom centre**, on every page, mobile and desktop. It answers from the site copy and credentials only. It has two modes: **Ask** and the **Truth Test**. A third, the **Process** guide, appears once the real Truthful / Noticeable / Memorable copy exists.
+An AI chat (Claude Haiku 5.5) opened by an **outline triangle in the bottom-left corner**, on every page, mobile and desktop. It answers from the site copy and credentials only. It has two modes: **Ask** and the **Truth Test**. A third, the **Process** guide, appears once the real Truthful / Noticeable / Memorable copy exists.
 
 ## What was added (no existing page code changed)
 
 | Path | What |
 |---|---|
-| `app/layout.tsx` | +1 import, +1 line: `<AskVeritas trigger="triangle" side="center" />` |
+| `app/layout.tsx` | +1 import, +1 line: `<AskVeritas trigger="triangle" side="left" />` |
 | `package.json` | + `@anthropic-ai/sdk` |
 | `app/api/ask/route.ts` | The only server endpoint. Holds the key, enforces every cap before calling the model |
 | `components/ask-veritas/` | `AskVeritas.tsx` (triangle + panel), `ask-veritas.css`, `open.ts` |
@@ -14,7 +14,7 @@ An AI chat (Claude Haiku 5.5) opened by an **outline triangle at bottom centre**
 
 ## How it sits in the design
 
-- **Triangle:** outline, black, 22×19, at bottom centre. It sits one step above the bottom bar, so the opened WORK list never runs under it. It turns blue on hover, shows "ASK VERITAS" above it on desktop hover, and points down while the panel is open (like the footer's close triangle).
+- **Triangle:** outline, black, 22×19, in the bottom-left corner, lined up with the site's left margin and the footer triangle's baseline (16px on phones, 40px/32px from 768px). The panel opens just above it, from that corner. It turns blue on hover, shows "ASK VERITAS" above it on desktop hover, and points down while the panel is open (like the footer's close triangle).
 - **Panel:** the site's pop-out style. Black, 1px 10% white border, 6px corners, blue uppercase heading, ✕ close, █ typewriter cursor, the site's arrow cursor.
 - **Layering:** matches every page. Bottom bars 40, triangle 45, pop-outs 50, panel 55, footer 60, grain 100. The grain still washes over it, and the grey footer still slides over it.
 - **Verified:** before/after on all five pages at 390px and 1440px. Every original element is in the same position, size, colour, font and layer, and pages are pixel-identical outside the triangle.

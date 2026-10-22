@@ -207,7 +207,7 @@ export const WORK = [
     name: "ALLBIRDS",
     client: "Allbirds",
     subheading: "Nature knows better then we do",
-    img: "allbirds",
+    img: "/work/allbirds/tile.jpg",
     tags: ["Retail"],
     caseStudy: {
       title: "ALLBIRDS x SELFRIDGES",

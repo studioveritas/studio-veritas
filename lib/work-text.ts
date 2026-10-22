@@ -11,7 +11,7 @@ type Work = {
   client: string
   subheading: string
   tags?: string[]
-  caseStudy?: { subheading?: string; sections: Section[] }
+  caseStudy?: { title?: string; subheading?: string; intro?: string; sections: Section[] }
 }
 
 const ALL = WORK as Work[]
@@ -27,6 +27,7 @@ export function workForKnowledge(): string {
   const cases = CASES.map((w) =>
     [
       `### ${w.client} case study, "${caseSubheading(w)}" (site, /experience/${w.slug})`,
+      ...(w.caseStudy!.intro ? [`- Summary: ${w.caseStudy!.intro}`] : []),
       ...w.caseStudy!.sections.map((s) => `- ${s.heading}: ${sectionText(s)}`),
     ].join('\n')
   ).join('\n\n')
@@ -42,7 +43,7 @@ export function workForLlms(): string {
   const items = ALL.map((w) => {
     const head = `- **${w.client}** (${w.name}) — ${w.subheading}.`
     if (!w.caseStudy) return head
-    const parts = w.caseStudy.sections.map((s) => `${s.heading}: ${sectionText(s)}`).join(' ')
+    const parts = [w.caseStudy.intro, ...w.caseStudy.sections.map((s) => `${s.heading}: ${sectionText(s)}`)].filter(Boolean).join(' ')
     return `${head}\n  Case study "${caseSubheading(w)}": /experience/${w.slug}. ${parts}`
   }).join('\n')
   return `## Experience (selected work)

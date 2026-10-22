@@ -7,10 +7,10 @@
 // the first case study shows an outline left arrow).
 // Sizes are taken from the design at 1920x1080 and scale down with the viewport.
 
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { SiteShell } from './site-shell'
-import { getCaseStudy, getNeighbours, caseSubheading } from './work-data'
+import { getCaseStudy, getNeighbours, caseSubheading, caseTitle } from './work-data'
 import { CASE_STUDY_HEROES } from './case-images'
 
 const MONO = "'IBM Plex Mono', monospace"
@@ -54,6 +54,21 @@ export function CaseStudy({ slug }) {
   const { prev, next } = getNeighbours(slug)
   const cs = work?.caseStudy
 
+  // When the copy is longer than its box, fade the last line until the reader
+  // reaches the end, so it's clear there is more to scroll.
+  const bodyRef = useRef(null)
+  const [more, setMore] = useState(false)
+  const checkMore = useCallback(() => {
+    const el = bodyRef.current
+    if (el) setMore(el.scrollHeight - el.clientHeight - el.scrollTop > 4)
+  }, [])
+  useEffect(() => {
+    checkMore()
+    document.fonts?.ready.then(checkMore) // text reflows once the web font arrives
+    window.addEventListener('resize', checkMore)
+    return () => window.removeEventListener('resize', checkMore)
+  }, [checkMore])
+
   const backToExperience = useCallback(() => { window.location.href = '/experience' }, [])
 
   useEffect(() => {
@@ -87,8 +102,8 @@ export function CaseStudy({ slug }) {
             name: `${work.client} — ${caseSubheading(work)}`,
             about: work.client,
             creator: { '@type': 'Organization', name: 'Studio Veritas' },
-            text: cs.sections
-              .map((s) => `${s.heading}: ${s.body || (s.list || []).join(' ')}`)
+            text: [cs.intro, ...cs.sections.map((s) => `${s.heading}: ${s.body || (s.list || []).join(' ')}`)]
+              .filter(Boolean)
               .join(' '),
           }),
         }}
@@ -122,9 +137,17 @@ export function CaseStudy({ slug }) {
           background: #fff; color: #000; border: 1px solid #000; border-radius: 4px;
           padding: 18px; font-family: ${MONO}; font-weight: 400; font-size: 13px; line-height: 1.38;
         }
+        .sv-cs-bodywrap { position: relative; display: flex; flex-direction: column; min-height: 0; }
+        .sv-cs-bodywrap::after {
+          content: ''; position: absolute; left: 1px; right: 1px; bottom: 1px; height: 64px;
+          border-radius: 0 0 4px 4px; pointer-events: none;
+          background: linear-gradient(rgba(255,255,255,0), #fff 85%);
+          opacity: 0; transition: opacity 0.25s;
+        }
+        .sv-cs-bodywrap[data-more='true']::after { opacity: 1; }
         .sv-cs-body h2 { margin: 0; font: inherit; font-weight: 600; text-transform: uppercase; }
         .sv-cs-body p { margin: 0; }
-        .sv-cs-section + .sv-cs-section { margin-top: 1.38em; }
+        .sv-cs-section + .sv-cs-section, .sv-cs-intro + .sv-cs-section { margin-top: 1.38em; }
         .sv-cs-body ul { margin: 0; padding: 0; list-style: none; }
         .sv-cs-body li { position: relative; padding-left: 1.2em; }
         .sv-cs-body li::before { content: '•'; position: absolute; left: 0.45em; }
@@ -150,8 +173,9 @@ export function CaseStudy({ slug }) {
           .sv-cs-name { font-size: clamp(30px, 2.604vw, 50px); }
           .sv-cs-sub { margin-top: clamp(10px, 0.84vw, 16px); font-size: clamp(16px, 1.25vw, 24px); }
           .sv-cs-close { top: clamp(4px, 0.34vw, 6px); right: clamp(6px, 0.5vw, 9px); font-size: clamp(14px, 1.04vw, 20px); }
+          .sv-cs-bodywrap { flex: 1 1 auto; }
           .sv-cs-body { flex: 1 1 auto; padding: clamp(16px, 1.25vw, 24px) clamp(18px, 1.5625vw, 30px) clamp(18px, 1.5625vw, 30px); font-size: clamp(13px, 0.9375vw, 18px); line-height: 1.278; }
-          .sv-cs-section + .sv-cs-section { margin-top: 1.278em; }
+          .sv-cs-section + .sv-cs-section, .sv-cs-intro + .sv-cs-section { margin-top: 1.278em; }
           .sv-cs-nav { display: contents; }
           .sv-cs-arrow { position: absolute; top: 53.2%; transform: translateY(-50%); margin: 0; }
           .sv-cs-arrow-prev { left: calc(14px - 10px); }
@@ -183,12 +207,14 @@ export function CaseStudy({ slug }) {
 
           <div className="sv-cs-col">
             <header className="sv-cs-titlebox">
-              <h1 id="sv-cs-name" className="sv-cs-name">{work.name}</h1>
+              <h1 id="sv-cs-name" className="sv-cs-name">{caseTitle(work)}</h1>
               <p className="sv-cs-sub">{caseSubheading(work)}</p>
               <a className="sv-cs-close" href="/experience" aria-label="Close case study, back to Experience">X</a>
             </header>
 
-            <div className="sv-cs-body" tabIndex={0} aria-label={`${work.client} case study`}>
+            <div className="sv-cs-bodywrap" data-more={more ? 'true' : 'false'}>
+            <div className="sv-cs-body" ref={bodyRef} onScroll={checkMore} tabIndex={0} aria-label={`${work.client} case study`}>
+              {cs.intro && <p className="sv-cs-intro">{cs.intro}</p>}
               {cs.sections.map((s) => (
                 <section className="sv-cs-section" key={s.heading}>
                   <h2>{s.heading}</h2>
@@ -202,6 +228,7 @@ export function CaseStudy({ slug }) {
                   )}
                 </section>
               ))}
+            </div>
             </div>
           </div>
 

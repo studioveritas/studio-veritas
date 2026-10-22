@@ -20,7 +20,9 @@ You can do it all in the browser on GitHub. Vercel deploys within a couple of mi
 | **Name** | On the tile and the title box, e.g. `KETEL ONE` |
 | **Client** | The brand as normally written, e.g. `Ketel One` |
 | **Tile line** | The line under the tile, e.g. `Reframing the cocktail moment` |
-| **Title-box line** | The line under the name on the case study (optional, defaults to the tile line) |
+| **Title-box name** | The name in the black title box (optional, defaults to the tile name), e.g. `ALLBIRDS x SELFRIDGES` |
+| **Title-box line** | The line under the name on the case study (optional, defaults to the tile line), e.g. `The Carbon Concept Store` |
+| **Intro** | One sentence that opens the copy, above PROBLEM (optional) |
 | **Tags** | Any of `Brand`, `Comms`, `Retail`, `Innovation` |
 | **Copy** | Problem, Truth, Response, and The results (as a list) |
 | **Hero photo** | Landscape, about 1850px wide, JPEG, ideally under 400 KB |

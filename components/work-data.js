@@ -24,7 +24,9 @@
 //    img: '/work/ketel-one/tile.jpg',
 //    tags: ['Brand', 'Comms'],                    // any of: Brand, Comms, Retail, Innovation
 //    caseStudy: {
-//      subheading: 'Reframing the cocktail moment', // line in the title box (delete to use the tile's)
+//      title: 'KETEL ONE',                        // name in the title box (delete to use the tile's)
+//      subheading: 'Reframe The Possible',        // line in the title box (delete to use the tile's)
+//      intro: 'One-sentence summary.',            // opens the copy, above Problem (optional)
 //      hero: '/work/ketel-one/hero.jpg',
 //      sections: [
 //        { heading: 'Problem', body: 'Paste the problem here.' },
@@ -100,8 +102,61 @@ export const WORK = [
       ],
     },
   },
-  { slug: 'prem', name: 'PREM', client: 'Premiership Rugby', subheading: 'A platform the the raw spectacle', img: 'prem', tags: ['Brand', 'Comms'] },
-  { slug: 'jordan-wings', name: 'JORDAN WINGS', client: 'Jordan Brand', subheading: 'Mentorship as the truth behind the mythology', img: 'jordan', tags: ['Comms', 'Innovation'] },
+  {
+    slug: "gallagher-prem",
+    name: "PREM",
+    client: "Premiership Rugby",
+    subheading: "A platform the the raw spectacle",
+    img: "prem",
+    tags: ["Brand", "Comms"],
+    caseStudy: {
+      title: "GALLAGHER PREM",
+      subheading: "Rugby Reimagined",
+      intro: "A ferocious new brand platform that breaks rugby out of its traditional bubble to compete directly in the modern high-octane entertainment market.",
+      hero: "/work/gallagher-prem/hero.jpg",
+      askPrompts: ["What was the truth behind Gallagher PREM?", "How did PREM set out to double its audience?"],
+      sections: [
+        { heading: "Problem", body: "In a crowded world of entertainment options, rugby was struggling to command attention and stay top of mind. The sport remained confined to a traditional rugby bubble, failing to consistently amplify the visceral truth of its physicality to attract casual, thrill-seeking sports fans." },
+        { heading: "Truth", body: "To win hearts today, sport must be a social event and a source of adrenaline; fans crave action-packed experiences centred around heroes, unpredictable momentum shifts, and extreme rivalries." },
+        { heading: "Response", body: "The competition was radically transformed into Gallagher PREM, anchored by the brand positioning: \"A ferocious game played on the edge\". We replaced polished sports tropes with an unapologetically raw design system featuring a high-contrast palette of Ferocious Orange and Gallagher Blue, dynamic adrenaline-inspired patterns, and gritty, close-up photography that puts fans directly in the action. This visual world was paired with a bold, visceral tone of voice deployed across broadcast, social media, and in-stadium environments." },
+        {
+          heading: 'The results',
+          list: [
+            "Established a bold new benchmark for rugby as the most relentless, electrifying competition in the sport's history.",
+            "Built a comprehensive ecosystem of experience design engineered to double the league’s weekly reach from 1.9 million to 3.8 million viewers.",
+            "Delivered a vivid, digital-first brand experience that successfully captures the true essence and unpolished beauty of the game.",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    slug: "jordan-wings",
+    name: "JORDAN WINGS",
+    client: "Jordan Brand",
+    subheading: "Mentorship as the truth behind the mythology",
+    img: "jordan",
+    tags: ["Comms", "Innovation"],
+    caseStudy: {
+      subheading: "Paris Launch",
+      intro: "Dismantling Systemic Barriers: Engineered a definitive operational toolkit and cultural ecosystem to establish Jordan as a purpose-driven brand in EMEA.",
+      hero: "/work/jordan-wings/hero.jpg",
+      askPrompts: ["What was the truth behind Jordan Wings?", "Who did Jordan Wings partner with in Paris?"],
+      sections: [
+        { heading: "Problem", body: "Underserved youth in Paris face severe systemic friction, where future success is dictated by access to opportunity rather than raw aptitude. Within the city, youth unemployment reaches 20.9%—double the national average—while deep-rooted cultural stigmas heavily penalise academic failure. The brand required an uncompromising, unified framework to combat these local inequities and permanently shift the narrative for disadvantaged communities." },
+        { heading: "Truth", body: "Education transcends traditional schooling; it demands holistic access to creative outlets, digital art, and soft skills to shatter socio-economic and mental barriers." },
+        { heading: "Response", body: "We engineered the Jordan Wings EMEA Toolkit, a centralised launch platform designed to standardise community impact communications and equip internal stakeholders. The Paris launch anchored this initiative through strategic alliances with three embedded cultural institutions: LE BAL, Casa93, and Prométhée Education. This localised ecosystem operationalised 365-day mentorships, specialised design curricula, and internships to directly rewrite the trajectory of marginalised youth." },
+        {
+          heading: 'The results',
+          list: [
+            "Transformed Jordan into a purpose-driven entity within EMEA, targeting over 10,000 meaningful student interactions annually in Paris by 2024.",
+            "Codified internal brand messaging, approved statistics, and program guidelines into a singular, deployable launch toolkit.",
+            "Fortified a global legacy that has already funded 8,080 semesters and awarded 1,850 students worldwide.",
+          ],
+        },
+      ],
+    },
+  },
   {
     slug: 'seedlip',
     name: 'SEEDLIP',
@@ -147,11 +202,92 @@ export const WORK = [
       ],
     },
   },
-  { slug: 'allbirds', name: 'ALLBIRDS', client: 'Allbirds', subheading: 'Nature knows better then we do', img: 'allbirds', tags: ['Retail'] },
+  {
+    slug: "allbirds",
+    name: "ALLBIRDS",
+    client: "Allbirds",
+    subheading: "Nature knows better then we do",
+    img: "allbirds",
+    tags: ["Retail"],
+    caseStudy: {
+      title: "ALLBIRDS x SELFRIDGES",
+      subheading: "The Carbon Concept Store",
+      intro: "Materialised the invisible cost of carbon to force radical industry accountability and drive high-value omni-channel growth.",
+      hero: "/work/allbirds/hero.jpg",
+      askPrompts: ["What was the truth behind the Carbon Concept Store?", "How did Allbirds make carbon visible?"],
+      sections: [
+        { heading: "Problem", body: "The global fashion industry masks a devastating environmental footprint behind opaque supply chains. While consumers increasingly demand sustainable options, carbon tracking remains a complicated, abstract metric that fails to influence point-of-sale behaviour. Allbirds needed to cut through this category confusion to launch their first UK concession in Selfridges. The challenge was twofold: mandate radical accountability for an environmentally unfriendly industry, and convert a discerning London audience into high-value omni-channel customers." },
+        { heading: "Truth", body: "Carbon is invisible, making it easy to ignore. To fundamentally shift consumer behaviour, we had to weaponise transparency by making emissions a physical, unavoidable retail experience." },
+        { heading: "Response", body: "We engineered the Carbon Concept Store in the heart of Selfridges’ Wonder Room. We stripped away passive sustainability messaging, replacing it with to-scale, three-dimensional visualisations of carbon. We anchored the space with tactile, deconstructed displays of natural raw materials—Merino wool, eucalyptus, and sugarcane—to codify material innovation. Every product featured an exact carbon footprint label, culminating in the showcase of the M0.0NSHOT net-zero shoe. We enforced absolute accountability for the build itself, tracking, measuring, and offsetting the exact CO2 score of the installation's entire supply chain." },
+        {
+          heading: 'The results',
+          list: [
+            "Secured premium positioning as a Selfridges ‘Project Earth’ brand within the elite ‘For Nature’ category.",
+            "Accelerated aggressive UK retail expansion, acquiring more new customers in London than any other market outside New York City.",
+            "Captured high-value omni-channel shoppers who spend 1.5x more than single-channel consumers.",
+            "Propelled Allbirds past the $1 billion milestone in lifetime net revenue.",
+          ],
+        },
+      ],
+    },
+  },
   { slug: 'canyon', name: 'CANYON', client: 'Canyon', subheading: 'Power ON:Game ON', img: 'canyon', tags: ['Comms'] },
-  { slug: 'uber-social-impact', name: 'UBER SOCIAL IMPACT', client: 'Uber', subheading: 'Thanking the everyday giants', img: 'uber', tags: ['Comms'] },
+  {
+    slug: "uber-social-impact",
+    name: "UBER SOCIAL IMPACT",
+    client: "Uber",
+    subheading: "Thanking the everyday giants",
+    img: "uber",
+    tags: ["Comms"],
+    caseStudy: {
+      title: "UBER",
+      subheading: "Global Social Impact",
+      intro: "Re-engineered Uber’s global brand perception by transforming an invisible workforce into the celebrated centre of the business.",
+      hero: "/work/uber-social-impact/hero.jpg",
+      askPrompts: ["What was the truth behind Everyday Giants?", "How did Uber thank its drivers and couriers?"],
+      sections: [
+        { heading: "Problem", body: "The global pandemic revealed a sharp commercial friction: Uber relied entirely on a frontline of drivers and couriers, yet 70% of US drivers felt unheard by the platform. The brand faced a critical trust deficit, trapped by an outdated corporate narrative that prioritised frictionless tech over human respect, rendering its essential workforce completely invisible." },
+        { heading: "Truth", body: "True appreciation demands more than financial compensation; it requires structural respect and visibility. The strategic unlock inverted Uber’s traditional brand architecture, forcing the company to lead with social impact and human storytelling rather than top-down corporate brand messaging." },
+        { heading: "Response", body: "We codified a multi-year, global Social Impact Platform that permanently shifted Uber’s operational posture. We launched the \"Everyday Giants\" platform, stripping away corporate polish to broadcast authentic earner stories captured globally in partnership with Noor Images. The ecosystem integrated external omni-channel broadcasting—including hand-painted murals and placements in Time magazine’s ‘Person of the Year’—with internal mechanics like a frictionless in-app gratitude system." },
+        {
+          heading: 'The results',
+          list: [
+            "Executed an omni-channel global campaign spanning TVC, social, digital, OOH, and major press publications including The New York Times and Washington Post.",
+            "Installed five massive, hand-painted murals across four major U.S. cities to immortalise hero earners.",
+            "Institutionalised a unified external tone of voice that successfully shifted Uber's overarching narrative from frictionless mobility to forward movement.",
+          ],
+        },
+      ],
+    },
+  },
   { slug: 'icebreaker', name: 'ICEBREAKER', client: 'Icebreaker', subheading: 'A natural alternative to synthetic', img: 'icebreaker', tags: ['Brand'] },
-  { slug: 'ketel-one', name: 'KETEL ONE', client: 'Ketel One', subheading: 'Reframing the cocktail moment', img: 'ketel', tags: ['Comms'] },
+  {
+    slug: "ketel-one",
+    name: "KETEL ONE",
+    client: "Ketel One",
+    subheading: "Reframing the cocktail moment",
+    img: "ketel",
+    tags: ["Comms"],
+    caseStudy: {
+      subheading: "Reframe The Possible",
+      intro: "Unifying a fragmented portfolio to command the elevated global cocktail occasion.",
+      hero: "/work/ketel-one/hero.jpg",
+      askPrompts: ["What was the truth behind Ketel One?", "What is Reframe the Possible?"],
+      sections: [
+        { heading: "Problem", body: "Despite a rich heritage and premium product, Ketel One lacked a definitive cultural narrative, losing ground to competitors with aggressive, clear positioning. The core commercial friction stemmed from a fractured portfolio: Vodka and Botanical product lines operated in silos, splitting the brand across disconnected audiences and visual worlds. Ketel One required a singular platform to bridge these divides and establish indispensable brand meaning." },
+        { heading: "Truth", body: "Modern discerning consumers do not just purchase spirits; they seek out brands that empower them to curate and distinguish their personal experiences. We codified Ketel One’s independent \"discovery\" mindset, transforming the brand from a static liquid into an active catalyst that invites consumers to elevate their ordinary routines into extraordinary moments." },
+        { heading: "Response", body: "We engineered \"Reframe the Possible,\" an uncompromising creative vehicle. We hijacked the Ketel One 'K', positioning it as a visual frame and literal threshold into an aspirational lifestyle. The omni-channel execution anchored the brand in culture: a continuous-shot first-person brand film drove visceral engagement, localised OOH challenged specific cities to reinvent classic cocktails, and AR-enabled bottles transformed packaging into interactive portals. We further deepened cultural resonance by launching \"The Power of No,\" a social responsibility initiative promoting mindful discernment." },
+        {
+          heading: 'The results',
+          list: [
+            "Unified the Vodka and Botanical lines under one resilient, multi-year communications platform.",
+            "Replaced passive brand broadcasting with active, culturally relevant consumer conversations.",
+            "Successfully established Ketel One as synonymous with elevated cocktail experiences globally.",
+          ],
+        },
+      ],
+    },
+  },
 ]
 
 export const CASE_STUDIES = WORK.filter((w) => w.caseStudy)
@@ -163,6 +299,11 @@ export const TAGS = ['Brand', 'Comms', 'Retail', 'Innovation']
 // The line under the name in a case study's title box (falls back to the tile's).
 export function caseSubheading(work) {
   return work.caseStudy?.subheading || work.subheading
+}
+
+// The name in a case study's title box (falls back to the tile's name).
+export function caseTitle(work) {
+  return work.caseStudy?.title || work.name
 }
 
 // Questions Ask Veritas suggests on a case study page.

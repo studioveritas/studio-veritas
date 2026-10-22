@@ -3,7 +3,7 @@
 // one automatically.
 
 import { ImageResponse } from 'next/og'
-import { CASE_STUDIES, getCaseStudy, caseSubheading } from '@/components/work-data'
+import { CASE_STUDIES, getCaseStudy, caseSubheading, caseTitle } from '@/components/work-data'
 import { CASE_STUDY_HEROES } from '@/components/case-images'
 import { OG_SIZE, OG_TYPE, ogFonts, TitleBox, imageData } from '@/lib/og'
 
@@ -39,7 +39,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         <div style={{ position: 'absolute', left: 48, bottom: 48, display: 'flex' }}>
           <TitleBox
             kicker="Studio Veritas · Case study"
-            name={work ? work.name : 'Experience'}
+            name={work ? caseTitle(work) : 'Experience'}
             line={work ? caseSubheading(work) : 'Selected work'}
           />
         </div>

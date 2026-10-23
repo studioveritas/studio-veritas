@@ -397,6 +397,7 @@ export function Process() {
               transition={{ duration: 0.9, ease: 'easeInOut' }}
               onClick={() => setSpinCount((c) => c + 1)}
               role="button"
+              className="sv-zoom-on-hover"
               aria-label="Spin the process icon"
             >
               <img
@@ -440,7 +441,7 @@ export function Process() {
             >
               {/* Rotating group: the new triangle-eye icon replaces the old polygon + logo */}
               <motion.div
-                className="absolute inset-0"
+                className="absolute inset-0 sv-zoom-on-hover"
                 style={{ zIndex: 10, cursor: 'pointer' }}
                 animate={{ rotate: spinCount * 360 }}
                 transition={{ duration: 0.9, ease: 'easeInOut' }}

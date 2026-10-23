@@ -54,3 +54,29 @@
 html {
   scroll-behavior: smooth;
 }
+
+
+/* ─── Hover states ───────────────────────────────────────────────────────────
+   Everything clickable shows the pointing-hand cursor (same drawing style as
+   the site's arrow) and changes on hover. Each page forces the arrow onto every
+   element with `.sv-…-root * { cursor: … !important }`; these selectors are
+   more specific, so they win. Text links and buttons turn the accent blue in
+   their own components; the rules below cover the ones that had no change. */
+body :is(a[href], button:not(:disabled), [role="button"], label[for], summary),
+body :is(a[href], button:not(:disabled), [role="button"], label[for], summary) * {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='26' viewBox='0 0 22 26' fill='none'><path d='M6 3.5a1.75 1.75 0 0 1 3.5 0V10a1.5 1.5 0 0 1 3 0v1a1.5 1.5 0 0 1 3 0v1a1.5 1.5 0 0 1 3 0v6c0 3.3-2.7 6-6 6h-1.3c-1.9 0-3.6-.9-4.8-2.4L2.6 16.6a1.6 1.6 0 0 1 2.5-2L6 15.8Z' fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='round'/><path d='M9.5 10v4.5M12.5 11v3.5M15.5 12v2.5' stroke='black' stroke-width='1.2' stroke-linecap='round'/></svg>") 8 2, pointer !important;
+}
+
+@media (hover: hover) {
+  /* Top-left logo (every page) */
+  .sv-topleft-icon { transition: opacity 0.2s; }
+  a:hover > .sv-topleft-icon,
+  button:hover > .sv-topleft-icon { opacity: 0.55; }
+
+  /* Principles: TRUTHFUL / NOTICEABLE / MEMORABLE (colour is set inline, hence !important) */
+  .sv-triangle-label:hover { color: #5683dd !important; }
+
+  /* Image buttons: team photos and the spinning process icon */
+  .sv-zoom-on-hover img { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+  .sv-zoom-on-hover:hover img { transform: scale(1.04); }
+}

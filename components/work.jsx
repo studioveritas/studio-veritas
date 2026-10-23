@@ -1,6 +1,6 @@
 'use client'
 
-// Experience: the selected-work grid. A white card on the site background with
+// Work: the selected-work grid. A black card with a white keyline on the site background, with
 // tiles of work, each with a name and subheading. Tiles with a case study link
 // to /experience/<slug>; the rest show COMING SOON on rollover.
 // Sizes are taken from the design at 1920 wide and scale down with the viewport.
@@ -127,21 +127,21 @@ export function Work() {
         }}
       />
       <style>{`
-        /* Card: 1582px wide at 1920 (169px each side), 1px black border */
+        /* Card: 1582px wide at 1920 (169px each side), black with a 1px white keyline; all text white */
         .sv-work-wrap { padding: 80px 16px 104px; }
         .sv-work-card {
           width: 100%; max-width: 1582px; margin: 0 auto;
-          background: #fff; border: 1px solid #000; border-radius: 4px;
+          background: #000; border: 1px solid #fff; border-radius: 4px; color: #fff;
           padding: 28px 18px 40px;
         }
         .sv-work-title {
-          margin: 0; color: #000; font-family: ${MONO}; font-weight: 700;
+          margin: 0; color: #fff; font-family: ${MONO}; font-weight: 700;
           text-transform: uppercase; line-height: 1; font-size: 30px;
         }
         .sv-work-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 14px 32px; }
         .sv-filters { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0 -6px; }
         .sv-filter {
-          padding: 6px; background: none; border: 0; color: #000; font-family: ${MONO}; font-weight: 500;
+          padding: 6px; background: none; border: 0; color: #fff; font-family: ${MONO}; font-weight: 500;
           font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1;
           text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 5px; text-decoration-thickness: 1px;
           transition: color 0.2s, text-decoration-color 0.2s;
@@ -165,7 +165,7 @@ export function Work() {
           .sv-work-grid { margin-top: clamp(28px, 2.29vw, 44px); column-gap: clamp(10px, 0.73vw, 14px); row-gap: clamp(12px, 0.83vw, 16px); }
         }
 
-        .sv-tile { display: block; color: #000; text-decoration: none; outline: none; }
+        .sv-tile { display: block; color: #fff; text-decoration: none; outline: none; }
         .sv-tile-media {
           position: relative; overflow: hidden; border-radius: 4px; background: #111;
           aspect-ratio: 446 / 250;

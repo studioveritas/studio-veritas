@@ -250,7 +250,7 @@ export function Team() {
                 <div key={member.id} className="flex flex-col items-center">
                   <button
                     onClick={() => toggleMember(member.id)}
-                    className="relative w-full max-w-[320px] aspect-[439/464] overflow-hidden rounded-sm"
+                    className="sv-zoom-on-hover relative w-full max-w-[320px] aspect-[439/464] overflow-hidden rounded-sm"
                     aria-expanded={open}
                     aria-label={`${member.name}: view bio`}
                   >

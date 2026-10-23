@@ -111,7 +111,7 @@ export function Work() {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'ItemList',
-            name: 'Studio Veritas — Experience',
+            name: 'Studio Veritas — Work',
             itemListElement: WORK.map((w, i) => ({
               '@type': 'ListItem',
               position: i + 1,
@@ -185,7 +185,8 @@ export function Work() {
         }
         .sv-tile-caption { padding-top: 2px; }
         .sv-tile-name {
-          margin: 0; font-family: ${MONO}; font-weight: 400; text-transform: uppercase;
+          /* brand names in IBM Plex Mono SemiBold */
+          margin: 0; font-family: ${MONO}; font-weight: 600; text-transform: uppercase;
           font-size: clamp(16px, 1.042vw, 20px); line-height: 1.25; transition: color 0.2s;
         }
         .sv-tile-sub { margin: 5px 0 0; font-family: ${MONO}; font-weight: 400; font-size: clamp(12px, 0.73vw, 14px); line-height: 1.5; }
@@ -211,7 +212,7 @@ export function Work() {
           aria-labelledby="sv-work-title"
         >
           <div className="sv-work-head">
-            <h1 id="sv-work-title" className="sv-work-title">Experience</h1>
+            <h1 id="sv-work-title" className="sv-work-title">Work</h1>
             <div className="sv-filters" role="group" aria-label="Filter the work">
               <button type="button" className="sv-filter" aria-pressed={tag === null} onClick={() => choose(null)}>
                 All<sup>{WORK.length}</sup>

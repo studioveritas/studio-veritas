@@ -174,7 +174,7 @@ export function Experience() {
         ))}
         <h2>Selected work</h2>
         <p>
-          See <a href="/experience">Experience</a>:{' '}
+          See <a href="/experience">Work</a>:{' '}
           {WORK.map((w) => `${w.client} (${w.subheading})`).join(', ')}.
         </p>
         <h2>{CONTACT_PANELS.companies.heading}</h2>

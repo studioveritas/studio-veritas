@@ -39,7 +39,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         <div style={{ position: 'absolute', left: 48, bottom: 48, display: 'flex' }}>
           <TitleBox
             kicker="Studio Veritas · Case study"
-            name={work ? caseTitle(work) : 'Experience'}
+            name={work ? caseTitle(work) : 'Work'}
             line={work ? caseSubheading(work) : 'Selected work'}
           />
         </div>

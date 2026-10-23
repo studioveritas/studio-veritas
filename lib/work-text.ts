@@ -32,7 +32,7 @@ export function workForKnowledge(): string {
     ].join('\n')
   ).join('\n\n')
   return `## Selected work (site)
-The Experience page (/experience on studio-veritas.com) shows the work as tiles, filterable by ${TAGS.join(', ')}; the client logo grid is on the Client Experience page (/clients). Full case studies so far: ${CASES.map((w) => `${w.client} (/experience/${w.slug})`).join(', ')}. The others are marked "coming soon".
+The Work page (/experience on studio-veritas.com, "Work" in the menu) shows the work as tiles, filterable by ${TAGS.join(', ')}; the client logo grid is on the Client Experience page (/clients). Full case studies so far: ${CASES.map((w) => `${w.client} (/experience/${w.slug})`).join(', ')}. The others are marked "coming soon".
 ${list}
 
 ${cases}`
@@ -46,7 +46,7 @@ export function workForLlms(): string {
     const parts = [w.caseStudy.intro, ...w.caseStudy.sections.map((s) => `${s.heading}: ${sectionText(s)}`)].filter(Boolean).join(' ')
     return `${head}\n  Case study "${caseSubheading(w)}": /experience/${w.slug}. ${parts}`
   }).join('\n')
-  return `## Experience (selected work)
+  return `## Work (selected case studies)
 
 Page: /experience. Tiles of work, filterable by ${TAGS.join(', ')} (e.g. /experience?tag=${TAGS[0].toLowerCase()}); full case studies are linked, the rest are marked "coming soon". Client logos: /clients (Client Experience).
 

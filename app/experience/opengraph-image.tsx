@@ -7,7 +7,7 @@ import { OG_SIZE, OG_TYPE, ogFonts, TitleBox, imageData } from '@/lib/og'
 
 export const size = OG_SIZE
 export const contentType = OG_TYPE
-export const alt = 'Studio Veritas: Experience, selected work'
+export const alt = 'Studio Veritas: Work, selected case studies'
 
 export default async function Image() {
   const fonts = await ogFonts()
@@ -26,7 +26,7 @@ export default async function Image() {
         )}
         <div style={{ position: 'absolute', top: 0, left: 0, width: 1200, height: 630, display: 'flex', background: 'rgba(0,0,0,0.18)' }} />
         <div style={{ position: 'absolute', left: 48, bottom: 48, display: 'flex' }}>
-          <TitleBox kicker="Studio Veritas" name="Experience" line="Selected work, brand to retail" />
+          <TitleBox kicker="Studio Veritas" name="Work" line="Selected case studies, brand to retail" />
         </div>
       </div>
     ),

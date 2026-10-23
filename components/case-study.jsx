@@ -209,7 +209,7 @@ export function CaseStudy({ slug }) {
             <header className="sv-cs-titlebox">
               <h1 id="sv-cs-name" className="sv-cs-name">{caseTitle(work)}</h1>
               <p className="sv-cs-sub">{caseSubheading(work)}</p>
-              <a className="sv-cs-close" href="/experience" aria-label="Close case study, back to Experience">X</a>
+              <a className="sv-cs-close" href="/experience" aria-label="Close case study, back to Work">X</a>
             </header>
 
             <div className="sv-cs-bodywrap" data-more={more ? 'true' : 'false'}>

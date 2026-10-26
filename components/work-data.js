@@ -75,6 +75,10 @@ export const WORK = [
       // (template-matched against the original photo). Mobile keeps the bottle
       // in view instead.
       hero: 'windhoekHero',
+      images: [
+        { src: "/work/windhoek/image-1.jpg", alt: "Friends toasting with Windhoek at an outdoor braai" },
+        { src: "/work/windhoek/image-2.jpg", alt: "Windhoek packaging pattern" },
+      ],
       heroSize: 'auto 126.3%',
       heroPosition: '1.7% 48.5%',
       heroPositionMobile: '64% 50%',
@@ -120,6 +124,11 @@ export const WORK = [
       subheading: "Rugby Reimagined",
       intro: "A ferocious new brand platform that breaks rugby out of its traditional bubble to compete directly in the modern high-octane entertainment market.",
       hero: "/work/gallagher-prem/hero.jpg",
+      images: [
+        { src: "/work/gallagher-prem/image-1.jpg", alt: "Gallagher PREM posters on a London street wall" },
+        { src: "/work/gallagher-prem/image-2.jpg", alt: "Match action from a Gallagher PREM game" },
+        { src: "/work/gallagher-prem/image-3.jpg", alt: "The Gallagher PREM logo" },
+      ],
       askPrompts: ["What was the truth behind Gallagher PREM?", "How did PREM set out to double its audience?"],
       sections: [
         { heading: "Problem", body: "In a crowded world of entertainment options, rugby was struggling to command attention and stay top of mind. The sport remained confined to a traditional rugby bubble, failing to consistently amplify the visceral truth of its physicality to attract casual, thrill-seeking sports fans." },
@@ -147,6 +156,11 @@ export const WORK = [
       subheading: "Paris Launch",
       intro: "Dismantling Systemic Barriers: Engineered a definitive operational toolkit and cultural ecosystem to establish Jordan as a purpose-driven brand in EMEA.",
       hero: "/work/jordan-wings/hero.jpg",
+      images: [
+        { src: "/work/jordan-wings/image-1.jpg", alt: "A young player on a Paris court, with the Jordan Wings logo" },
+        { src: "/work/jordan-wings/image-2.jpg", alt: "About Jordan Wings: programme page" },
+        { src: "/work/jordan-wings/image-3.jpg", alt: "Jordan Wings mission statement" },
+      ],
       askPrompts: ["What was the truth behind Jordan Wings?", "Who did Jordan Wings partner with in Paris?"],
       sections: [
         { heading: "Problem", body: "Underserved youth in Paris face severe systemic friction, where future success is dictated by access to opportunity rather than raw aptitude. Within the city, youth unemployment reaches 20.9%—double the national average—while deep-rooted cultural stigmas heavily penalise academic failure. The brand required an uncompromising, unified framework to combat these local inequities and permanently shift the narrative for disadvantaged communities." },
@@ -174,6 +188,11 @@ export const WORK = [
       // The case study's title box carries the platform name; the tile keeps its line.
       subheading: 'Hello Curious',
       hero: 'seedlipHero',
+      images: [
+        { src: "/work/seedlip/image-1.jpg", alt: "Orange and ice, close up" },
+        { src: "/work/seedlip/image-2.jpg", alt: "Seedlip: Serve with Tonic" },
+        { src: "/work/seedlip/image-3.jpg", alt: "Detail of the Seedlip label illustration" },
+      ],
       // A touch larger than the card and anchored right, so the SEEDLIP wordmark
       // sits fully behind the copy and the bottle and serve stay in view.
       heroSize: 'auto 104%',
@@ -220,6 +239,11 @@ export const WORK = [
       subheading: "The Carbon Concept Store",
       intro: "Materialised the invisible cost of carbon to force radical industry accountability and drive high-value omni-channel growth.",
       hero: "/work/allbirds/hero.jpg",
+      images: [
+        { src: "/work/allbirds/image-1.jpg", alt: "The Allbirds carbon concept store at Selfridges" },
+        { src: "/work/allbirds/image-2.jpg", alt: "The carbon timeline wall in store" },
+        { src: "/work/allbirds/image-3.jpg", alt: "A sphere showing what 1kg of carbon dioxide looks like" },
+      ],
       askPrompts: ["What was the truth behind the Carbon Concept Store?", "How did Allbirds make carbon visible?"],
       sections: [
         { heading: "Problem", body: "The global fashion industry masks a devastating environmental footprint behind opaque supply chains. While consumers increasingly demand sustainable options, carbon tracking remains a complicated, abstract metric that fails to influence point-of-sale behaviour. Allbirds needed to cut through this category confusion to launch their first UK concession in Selfridges. The challenge was twofold: mandate radical accountability for an environmentally unfriendly industry, and convert a discerning London audience into high-value omni-channel customers." },
@@ -250,6 +274,11 @@ export const WORK = [
       subheading: "Global Social Impact",
       intro: "Re-engineered Uber’s global brand perception by transforming an invisible workforce into the celebrated centre of the business.",
       hero: "/work/uber-social-impact/hero.jpg",
+      images: [
+        { src: "/work/uber-social-impact/image-1.jpg", alt: "“Thank you Antwyan” billboard" },
+        { src: "/work/uber-social-impact/image-2.jpg", alt: "A driver beside his thank-you mural" },
+        { src: "/work/uber-social-impact/image-3.jpg", alt: "A driver seen in the rear-view mirror" },
+      ],
       askPrompts: ["What was the truth behind Everyday Giants?", "How did Uber thank its drivers and couriers?"],
       sections: [
         { heading: "Problem", body: "The global pandemic revealed a sharp commercial friction: Uber relied entirely on a frontline of drivers and couriers, yet 70% of US drivers felt unheard by the platform. The brand faced a critical trust deficit, trapped by an outdated corporate narrative that prioritised frictionless tech over human respect, rendering its essential workforce completely invisible." },
@@ -278,6 +307,11 @@ export const WORK = [
       subheading: "Reframe The Possible",
       intro: "Unifying a fragmented portfolio to command the elevated global cocktail occasion.",
       hero: "/work/ketel-one/hero.jpg",
+      images: [
+        { src: "/work/ketel-one/image-1.jpg", alt: "Ketel One: Mix up your ordinary" },
+        { src: "/work/ketel-one/image-2.jpg", alt: "Choose your cocktail moment, on iPad" },
+        { src: "/work/ketel-one/image-3.jpg", alt: "Flowers behind wet glass" },
+      ],
       askPrompts: ["What was the truth behind Ketel One?", "What is Reframe the Possible?"],
       sections: [
         { heading: "Problem", body: "Despite a rich heritage and premium product, Ketel One lacked a definitive cultural narrative, losing ground to competitors with aggressive, clear positioning. The core commercial friction stemmed from a fractured portfolio: Vodka and Botanical product lines operated in silos, splitting the brand across disconnected audiences and visual worlds. Ketel One required a singular platform to bridge these divides and establish indispensable brand meaning." },

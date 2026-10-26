@@ -33,7 +33,7 @@ export function SiteShell({ pageKey, srOnly, children, onEscape }) {
       if (e.key !== 'Escape') return
       if (menuOpen || footerOpen) { setMenuOpen(false); setFooterOpen(false); return }
       // Ask Veritas closes itself on Escape; don't also leave the page.
-      if (document.querySelector('.av-panel')) return
+      if (document.querySelector('.av-panel, [data-sv-modal="open"]')) return
       onEscape?.()
     }
     window.addEventListener('keydown', onKey)

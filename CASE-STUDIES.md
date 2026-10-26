@@ -27,6 +27,7 @@ You can do it all in the browser on GitHub. Vercel deploys within a couple of mi
 | **Copy** | Problem, Truth, Response, and The results (as a list) |
 | **Hero photo** | Landscape, about 1850px wide, JPEG, ideally under 400 KB |
 | **Tile photo** | 892 × 500 JPEG (or crop it from the hero, see below) |
+| **Extra images** | Optional, 1 to 3. Landscape JPEG, about 1600px wide, ideally under 300 KB each. Shown under MORE IMAGERY once the copy has typed out |
 
 ## Steps on GitHub (no tools needed)
 
@@ -62,6 +63,24 @@ This resizes the photo to `public/work/ketel-one/hero.jpg` (1848px wide) and cro
 
 - To use a separate tile photo, pass it as the third argument.
 - To control the crop, add `left`, `right`, `top` or `bottom` as the fourth argument.
+
+## How a case study opens
+
+The copy box first shows the intro line and the **Truth**, with **MORE +** underneath. MORE types out the rest (Problem, Response, The results) in the site's typewriter style; clicking the box skips to the end. When the copy has finished and the case study has `images`, **MORE IMAGERY +** appears and shows them in the box: one full width, two side by side, or one wide above two. Clicking an image enlarges it.
+
+## Extra images
+
+Upload them next to the hero as `image-1.jpg`, `image-2.jpg`, `image-3.jpg` and list them inside `caseStudy`:
+
+```js
+images: [
+  '/work/ketel-one/image-1.jpg',
+  '/work/ketel-one/image-2.jpg',
+  { src: '/work/ketel-one/image-3.jpg', alt: 'AR-enabled bottle' }, // optional description for screen readers
+],
+```
+
+Or prepare them with one command: `npm run case-study-images -- ketel-one --images ~/Desktop/a.jpg ~/Desktop/b.jpg ~/Desktop/c.jpg`
 
 ## Fine-tuning
 

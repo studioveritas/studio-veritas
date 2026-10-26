@@ -6,9 +6,10 @@
 // CASE-STUDIES.md in the project root.
 //
 // ─── PUBLISH A CASE STUDY ────────────────────────────────────────────────────
-// 1. Upload two photos to public/work/<slug>/ :
+// 1. Upload the photos to public/work/<slug>/ :
 //      hero.jpg  the case study photo, landscape, about 1850px wide
 //      tile.jpg  the grid tile, 892 x 500 (any landscape crop works)
+//      image-1.jpg … image-3.jpg  optional extra images, landscape, about 1600px wide
 // 2. Find the project below (or add it where it should sit in the grid) and
 //    replace its line with the template, filled in. Keep the quote marks and
 //    commas exactly as they are. To use an apostrophe or quote mark inside the
@@ -28,6 +29,11 @@
 //      subheading: 'Reframe The Possible',        // line in the title box (delete to use the tile's)
 //      intro: 'One-sentence summary.',            // opens the copy, above Problem (optional)
 //      hero: '/work/ketel-one/hero.jpg',
+//      images: [                                  // optional: up to 3, shown under MORE IMAGERY
+//        '/work/ketel-one/image-1.jpg',
+//        '/work/ketel-one/image-2.jpg',
+//        '/work/ketel-one/image-3.jpg',
+//      ],
 //      sections: [
 //        { heading: 'Problem', body: 'Paste the problem here.' },
 //        { heading: 'Truth', body: 'Paste the truth here.' },

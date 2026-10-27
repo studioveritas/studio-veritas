@@ -14,6 +14,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { SiteShell } from './site-shell'
+import { useColumns } from './use-columns'
 import { PageTag } from './site-chrome'
 import { LogoTicker } from './logo-ticker'
 import { WORK, TAGS } from './work-data'
@@ -27,17 +28,6 @@ const slug = (t) => t.toLowerCase()
 const shapeOf = (w) => w.tile || (SQUARES.includes(WORK.indexOf(w) % PAGE) ? 'square' : 'portrait')
 const srcOf = (w) => w.portrait || (w.img?.startsWith('/') ? w.img : WORK_TILES[w.img])
 
-// 1 column on phones, 2 on tablets, 3 from 1024px.
-function useColumns() {
-  const [cols, setCols] = useState(3)
-  useEffect(() => {
-    const read = () => setCols(window.innerWidth < 600 ? 1 : window.innerWidth < 1024 ? 2 : 3)
-    read()
-    window.addEventListener('resize', read)
-    return () => window.removeEventListener('resize', read)
-  }, [])
-  return cols
-}
 
 function Tile({ work, order }) {
   const live = Boolean(work.caseStudy)

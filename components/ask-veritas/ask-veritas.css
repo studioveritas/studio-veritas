@@ -264,6 +264,21 @@
 .av-entry-link { display: flex; justify-content: space-between; align-items: center; gap: 14px; width: 100%; padding: 8px 0; color: #fff; background: none; border: 0; border-top: 1px solid rgba(255, 255, 255, 0.15); font-size: 12px; text-align: left; transition: color 0.2s; }
 .av-entry-link:hover, .av-entry-link:focus-visible { color: #5683dd; outline: none; }
 
+/* ---------- under the nav bar (site default): opened by the nav bar's triangle ---------- */
+.av-panel.av-top {
+  top: calc(var(--sv-nav-top) + var(--sv-nav-h) + 10px);
+  bottom: auto;
+  left: calc(50% - var(--sv-nav-w) / 2);
+  height: min(600px, calc(100dvh - var(--sv-nav-top) - var(--sv-nav-h) - 34px));
+  transform-origin: top left;
+}
+.av-nudge.av-nudge-top {
+  top: calc(var(--sv-nav-top) + var(--sv-nav-h) + 10px);
+  bottom: auto;
+  left: calc(50% - var(--sv-nav-w) / 2);
+  transform-origin: top left;
+}
+
 @media (min-width: 768px) {
   .av-tri { bottom: max(54px, calc(env(safe-area-inset-bottom, 0px) + 22px)); }
   .av-panel.av-center { --av-bottom: calc(max(54px, calc(env(safe-area-inset-bottom, 0px) + 22px)) + 54px); }

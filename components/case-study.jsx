@@ -318,7 +318,7 @@ export function CaseStudy({ slug }) {
         a.sv-cs-arrow:hover, a.sv-cs-arrow:focus-visible { opacity: 0.7; outline: none; }
 
         @media (min-width: 768px) {
-          .sv-cs-wrap { padding: clamp(96px, 7.76vw, 149px) clamp(24px, 8.8vw, 169px) 36px; }
+          .sv-cs-wrap { padding: clamp(132px, 7.76vw, 149px) clamp(24px, 8.8vw, 169px) 36px; }
           .sv-cs-card {
             height: calc(100vh - clamp(96px, 7.76vw, 149px) - 36px);
             height: calc(100dvh - clamp(96px, 7.76vw, 149px) - 36px);

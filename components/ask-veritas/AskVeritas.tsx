@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { askPromptsFor, getCaseStudy } from "@/components/work-data";
 import { PROCESS, processReady } from "@/lib/ask-veritas/process";
 import { parseVerdict, type Verdict } from "@/lib/ask-veritas/truth";
-import { OPEN_EVENT, type AskMode } from "./open";
+import { OPEN_EVENT, TOGGLE_EVENT, STATE_EVENT, type AskMode } from "./open";
 import "./ask-veritas.css";
 
 type Msg = { id: number; role: "user" | "assistant"; text: string; local?: boolean; type?: boolean };
@@ -115,8 +115,8 @@ export default function AskVeritas({
   trigger?: "triangle" | "pill" | "none";
   /** @deprecated use trigger="pill" */
   showTrigger?: boolean;
-  /** Where the triangle sits and the panel opens: "left" is the bottom-left corner (the site default). */
-  side?: "left" | "right" | "center";
+  /** Where the triangle sits and the panel opens: "top" opens under the nav bar's triangle (the site default, with trigger="none"). */
+  side?: "left" | "right" | "center" | "top";
 }) {
   const triggerKind = trigger ?? (showTrigger ? "pill" : "none");
   const reduce = useReducedMotion() ?? false;
@@ -185,6 +185,18 @@ export default function AskVeritas({
     return () => window.removeEventListener(OPEN_EVENT, on);
   }, [openAs]);
 
+  // The nav bar's triangle toggles the panel, and shows whether it is open.
+  const openRef = useRef(false);
+  useEffect(() => {
+    openRef.current = open;
+    window.dispatchEvent(new CustomEvent(STATE_EVENT, { detail: { open } }));
+  }, [open]);
+  useEffect(() => {
+    const on = () => (openRef.current ? close() : openAs("ask"));
+    window.addEventListener(TOGGLE_EVENT, on);
+    return () => window.removeEventListener(TOGGLE_EVENT, on);
+  }, [openAs, close]);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
@@ -252,7 +264,7 @@ export default function AskVeritas({
   const caseSlug = caseWork?.slug ?? null;
   useEffect(() => {
     setNudge(false);
-    if (!caseSlug || triggerKind !== "triangle") return;
+    if (!caseSlug || (triggerKind !== "triangle" && side !== "top")) return;
     let seen = false;
     try {
       seen = sessionStorage.getItem(`av-nudge:${caseSlug}`) === "1";
@@ -269,7 +281,7 @@ export default function AskVeritas({
       clearTimeout(show);
       clearTimeout(hide);
     };
-  }, [caseSlug, triggerKind]);
+  }, [caseSlug, triggerKind, side]);
   useEffect(() => {
     if (open) setNudge(false);
   }, [open]);

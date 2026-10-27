@@ -26,14 +26,15 @@ You can do it all in the browser on GitHub. Vercel deploys within a couple of mi
 | **Tags** | Any of `Brand`, `Comms`, `Retail`, `Innovation` |
 | **Copy** | Problem, Truth, Response, and The results (as a list) |
 | **Hero photo** | Landscape, about 1850px wide, JPEG, ideally under 400 KB |
-| **Tile photo** | 892 × 500 JPEG (or crop it from the hero, see below) |
+| **Tile photo** | 892 × 500 JPEG, used for share images (or crop it from the hero, see below) |
+| **Portrait photo** | 4:5 JPEG, about 880 × 1100, for the Work page tile (`portrait.jpg`). Some tiles show it square, cropped from the middle |
 | **Extra images** | Optional, 1 to 3. Landscape JPEG, about 1600px wide, ideally under 300 KB each. Shown under MORE IMAGERY once the copy has typed out |
 
 ## Steps on GitHub (no tools needed)
 
 1. **Upload the photos.**
    - Go to the repository, then **Add file → Upload files**.
-   - Drag in `hero.jpg` and `tile.jpg`.
+   - Drag in `hero.jpg`, `tile.jpg` and `portrait.jpg`.
    - Before committing, type the folder into the file path: `public/work/ketel-one/`.
    - Commit to a new branch.
 2. **Add the copy.**
@@ -59,7 +60,7 @@ If you have the project on your computer:
 npm run case-study-images -- ketel-one ~/Desktop/ketel-hero.png
 ```
 
-This resizes the photo to `public/work/ketel-one/hero.jpg` (1848px wide) and crops a `tile.jpg` (892 × 500) from it.
+This resizes the photo to `public/work/ketel-one/hero.jpg` (1848px wide) and crops a `tile.jpg` (892 × 500) and a 4:5 `portrait.jpg` from it.
 
 - To use a separate tile photo, pass it as the third argument.
 - To control the crop, add `left`, `right`, `top` or `bottom` as the fourth argument.
@@ -81,6 +82,10 @@ images: [
 ```
 
 Or prepare them with one command: `npm run case-study-images -- ketel-one --images ~/Desktop/a.jpg ~/Desktop/b.jpg ~/Desktop/c.jpg`
+
+## The Work page
+
+Tiles appear in the order of `WORK`, in three columns (two on tablets, one on phones), and rise in as they scroll into view. In each run of nine, the 1st and 3rd tiles are square and the rest are 4:5; add `tile: 'square'` or `tile: 'portrait'` to an entry to choose. Nine tiles load first; LOAD MORE adds the next nine. The logo ticker under the grid uses the Client Experience logos (`components/clients-data.js`).
 
 ## Fine-tuning
 

@@ -4,6 +4,10 @@
 
 @layer base {
   :root {
+    /* the nav bar (components/site-chrome.jsx): Ask Veritas and the menu open beneath it */
+    --sv-nav-top: max(12px, env(safe-area-inset-top));
+    --sv-nav-h: 52px;
+    --sv-nav-w: min(900px, calc(100% - 32px));
     --background: 69 100% 50%;
     --foreground: 0 0% 100%;
 
@@ -79,4 +83,12 @@ body :is(a[href], button:not(:disabled), [role="button"], label[for], summary) *
   /* Image buttons: team photos and the spinning process icon */
   .sv-zoom-on-hover img { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
   .sv-zoom-on-hover:hover img { transform: scale(1.04); }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --sv-nav-top: max(40px, env(safe-area-inset-top));
+    --sv-nav-h: 68px;
+    --sv-nav-w: min(900px, calc(100% - 80px));
+  }
 }

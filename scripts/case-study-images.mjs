@@ -8,8 +8,9 @@
 //   npm run case-study-images -- ketel-one ~/Desktop/ketel.png "" right
 //   npm run case-study-images -- ketel-one --images ~/Desktop/a.jpg ~/Desktop/b.jpg ~/Desktop/c.jpg
 //
-// Writes public/work/<slug>/hero.jpg (1848px wide) and tile.jpg (892x500,
-// cropped from the tile photo, or from the hero photo if none is given).
+// Writes public/work/<slug>/hero.jpg (1848px wide), tile.jpg (892x500, for share images)
+// and portrait.jpg (4:5, for the Work page tile), cropped from the tile photo, or from
+// the hero photo if none is given.
 // [focus] decides which part of the photo the tile keeps:
 // centre (default), left, right, top or bottom.
 // With --images, writes up to three extra images as image-1.jpg … image-3.jpg
@@ -78,6 +79,16 @@ await sharp(resolve(tileSrcArg || heroSrc))
   .jpeg({ quality: 82, progressive: true, mozjpeg: true })
   .toFile(tile)
 
+const portrait = join(outDir, 'portrait.jpg')
+const srcMeta = await sharp(resolve(tileSrcArg || heroSrc)).metadata()
+await sharp(resolve(tileSrcArg || heroSrc))
+  .rotate()
+  .resize(Math.min(880, Math.round(srcMeta.height * 0.8)), Math.min(1100, srcMeta.height), { fit: 'cover', position: focus })
+  .flatten({ background: '#141414' })
+  .jpeg({ quality: 82, progressive: true, mozjpeg: true })
+  .toFile(portrait)
+
 console.log(`Done:
   public/work/${slug}/hero.jpg   ->  hero: '/work/${slug}/hero.jpg'
-  public/work/${slug}/tile.jpg   ->  img:  '/work/${slug}/tile.jpg'`)
+  public/work/${slug}/tile.jpg   ->  img:  '/work/${slug}/tile.jpg'
+  public/work/${slug}/portrait.jpg -> portrait: '/work/${slug}/portrait.jpg'`)

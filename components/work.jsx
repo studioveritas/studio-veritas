@@ -159,7 +159,7 @@ export function Work() {
         @media (min-width: 640px) { .sv-work-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 1024px) { .sv-work-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (min-width: 768px) {
-          .sv-work-wrap { padding: clamp(96px, 7.76vw, 149px) clamp(24px, 8.8vw, 169px) 120px; }
+          .sv-work-wrap { padding: clamp(132px, 7.76vw, 149px) clamp(24px, 8.8vw, 169px) 120px; }
           .sv-work-card { padding: clamp(30px, 2.4vw, 46px) clamp(24px, 5.625vw, 108px) clamp(48px, 5.625vw, 108px); }
           .sv-work-title { font-size: clamp(34px, 2.604vw, 50px); }
           .sv-work-grid { margin-top: clamp(28px, 2.29vw, 44px); column-gap: clamp(10px, 0.73vw, 14px); row-gap: clamp(12px, 0.83vw, 16px); }

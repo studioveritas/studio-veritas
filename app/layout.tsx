@@ -1,6 +1,7 @@
 import './globals.css'
 import { ChunkLoadErrorHandler } from '@/components/chunk-load-error-handler'
 import AskVeritas from '@/components/ask-veritas/AskVeritas'
+import { SiteNav } from '@/components/site-chrome'
 
 export const dynamic = 'force-dynamic'
 
@@ -73,9 +74,11 @@ export default function RootLayout({
       </head>
       <body>
         {children}
-        {/* Ask Veritas: AI chat, opened by the outline triangle in the bottom-left corner of every page.
-            Lives outside the pages, so no page code changes. See ASK-VERITAS.md. */}
-        <AskVeritas trigger="triangle" side="left" />
+        {/* Nav bar (Ask Veritas · wordmark · menu) that follows you down every page, plus the
+            eye in the bottom-left corner. See components/site-chrome.jsx. */}
+        <SiteNav />
+        {/* Ask Veritas: AI chat, opened by the triangle in the nav bar; the panel opens beneath it. */}
+        <AskVeritas trigger="none" side="top" />
         <ChunkLoadErrorHandler />
       </body>
     </html>

@@ -107,12 +107,12 @@ export function SiteShell({ pageKey, srOnly, children, onEscape }) {
         >
           <button
             onClick={() => setFooterOpen(true)}
-            className="p-2 -m-2 touch-manipulation hover:opacity-70 transition-opacity"
+            className="sv-foot-trigger p-2 -m-2 touch-manipulation hover:opacity-70 transition-[opacity,color]"
             aria-label="Open footer"
             aria-expanded={footerOpen}
           >
             <svg width="13" height="11" viewBox="0 0 13 11" fill="none" aria-hidden="true">
-              <polygon points="6.5,0 13,11 0,11" fill="#000000" />
+              <polygon points="6.5,0 13,11 0,11" fill="currentColor" />
             </svg>
           </button>
         </motion.div>

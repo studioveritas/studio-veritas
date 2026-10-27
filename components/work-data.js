@@ -23,6 +23,7 @@
 //    client: 'Ketel One',                         // brand name, as written normally
 //    subheading: 'Reframing the cocktail moment', // the line under the tile
 //    img: '/work/ketel-one/tile.jpg',
+//    portrait: '/work/ketel-one/portrait.jpg',  // the Work page tile, 4:5 portrait (about 880 x 1100)
 //    tags: ['Brand', 'Comms'],                    // any of: Brand, Comms, Retail, Innovation
 //    caseStudy: {
 //      title: 'KETEL ONE',                        // name in the title box (delete to use the tile's)
@@ -68,6 +69,7 @@ export const WORK = [
     client: 'Windhoek',
     subheading: "Quality doesn't have to look German",
     img: 'windhoek',
+    portrait: '/work/windhoek/portrait.jpg',
     tags: ['Brand'],
     caseStudy: {
       // Hero: the photo is drawn at 126.3% of the card's height and placed at
@@ -118,6 +120,7 @@ export const WORK = [
     client: "Premiership Rugby",
     subheading: "A platform the the raw spectacle",
     img: "prem",
+    portrait: '/work/gallagher-prem/portrait.jpg',
     tags: ["Brand", "Comms"],
     caseStudy: {
       title: "GALLAGHER PREM",
@@ -151,6 +154,7 @@ export const WORK = [
     client: "Jordan Brand",
     subheading: "Mentorship as the truth behind the mythology",
     img: "jordan",
+    portrait: '/work/jordan-wings/portrait.jpg',
     tags: ["Comms", "Innovation"],
     caseStudy: {
       subheading: "Paris Launch",
@@ -183,6 +187,7 @@ export const WORK = [
     client: 'Seedlip',
     subheading: 'What to drink when you’re not drinking',
     img: 'seedlip',
+    portrait: '/work/seedlip/portrait.jpg',
     tags: ['Brand', 'Comms', 'Innovation'],
     caseStudy: {
       // The case study's title box carries the platform name; the tile keeps its line.
@@ -233,6 +238,7 @@ export const WORK = [
     client: "Allbirds",
     subheading: "Nature knows better then we do",
     img: "/work/allbirds/tile.jpg",
+    portrait: '/work/allbirds/portrait.jpg',
     tags: ["Retail"],
     caseStudy: {
       title: "ALLBIRDS x SELFRIDGES",
@@ -261,13 +267,14 @@ export const WORK = [
       ],
     },
   },
-  { slug: 'canyon', name: 'CANYON', client: 'Canyon', subheading: 'Power ON:Game ON', img: 'canyon', tags: ['Comms'] },
+  { slug: 'canyon', name: 'CANYON', client: 'Canyon', subheading: 'Power ON:Game ON', img: 'canyon', portrait: '/work/canyon/portrait.jpg', tags: ['Comms'] },
   {
     slug: "uber-social-impact",
     name: "UBER SOCIAL IMPACT",
     client: "Uber",
     subheading: "Thanking the everyday giants",
     img: "uber",
+    portrait: '/work/uber-social-impact/portrait.jpg',
     tags: ["Comms"],
     caseStudy: {
       title: "UBER",
@@ -295,13 +302,14 @@ export const WORK = [
       ],
     },
   },
-  { slug: 'icebreaker', name: 'ICEBREAKER', client: 'Icebreaker', subheading: 'A natural alternative to synthetic', img: 'icebreaker', tags: ['Brand'] },
+  { slug: 'icebreaker', name: 'ICEBREAKER', client: 'Icebreaker', subheading: 'A natural alternative to synthetic', img: 'icebreaker', portrait: '/work/icebreaker/portrait.jpg', tags: ['Brand'] },
   {
     slug: "ketel-one",
     name: "KETEL ONE",
     client: "Ketel One",
     subheading: "Reframing the cocktail moment",
     img: "ketel",
+    portrait: '/work/ketel-one/portrait.jpg',
     tags: ["Comms"],
     caseStudy: {
       subheading: "Reframe The Possible",

@@ -102,6 +102,11 @@ export function SiteNav() {
           .sv-eye { left: max(40px, env(safe-area-inset-left)); bottom: max(28px, env(safe-area-inset-bottom)); }
           .sv-eye img { height: 46px; }
         }
+        /* over a black section (the Work page), the eye and the footer triangle turn white */
+        .sv-eye img { transition: filter .25s; }
+        html[data-sv-dark-bottom='1'] .sv-eye img { filter: invert(1); }
+        .sv-foot-trigger { color: #000; }
+        html[data-sv-dark-bottom='1'] .sv-foot-trigger { color: #fff; }
       `}</style>
 
       <motion.header
@@ -276,7 +281,9 @@ export function SiteFooter({ open, onClose }) {
 
 /* ------------------------------------------------------------- page tag */
 
-export function PageTag({ label, onClose = leavePage, closeLabel, className = '' }) {
+// tone="light": off-white with black type, for pages on black (WORK).
+export function PageTag({ label, onClose = leavePage, closeLabel, className = '', tone = 'dark', align = 'center' }) {
+  const light = tone === 'light'
   return (
     <>
       <style>{`
@@ -288,18 +295,18 @@ export function PageTag({ label, onClose = leavePage, closeLabel, className = ''
         initial={{ opacity: 0, y: 10, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ type: 'spring', damping: 26, stiffness: 300, delay: 0.1 }}
-        className={`sv-tag relative rounded-md shadow-2xl px-10 py-5 text-center ${className}`}
-        style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}
+        className={`sv-tag relative rounded-md shadow-2xl px-10 py-5 ${align === 'left' ? 'text-left pl-7' : 'text-center'} ${className}`}
+        style={light ? { background: '#f6f4ee', color: '#000' } : { background: '#000', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }}
       >
         <h1
-          className="sv-tag-title text-white font-medium uppercase whitespace-nowrap"
+          className="sv-tag-title font-medium uppercase whitespace-nowrap"
           style={{ fontFamily: MONO, letterSpacing: '0.04em', lineHeight: 1 }}
         >
           {label}
         </h1>
         <button
           onClick={onClose}
-          className="absolute top-1 right-1.5 md:top-1.5 md:right-2 text-white/80 hover:text-white transition-colors p-2 text-sm md:text-[17px] leading-none"
+          className={`absolute top-1 right-1.5 md:top-1.5 md:right-2 transition-colors p-2 text-sm md:text-[17px] leading-none ${light ? 'text-black/80 hover:text-[#5683DD]' : 'text-white/80 hover:text-white'}`}
           style={{ fontFamily: MONO }}
           aria-label={closeLabel || `Close ${label.toLowerCase()} page`}
         >

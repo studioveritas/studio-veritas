@@ -78,7 +78,8 @@ export async function POST(req: Request) {
     const res = await client.messages.create({
       model: MODEL,
       max_tokens: mode === "truth" ? TRUTH_MAX_TOKENS : MAX_OUTPUT_TOKENS,
-      system: mode === "truth" ? TRUTH_PROMPT : SYSTEM_PROMPT,
+      // The system prompt (instructions + knowledge) is the same for every visitor, so it is cached.
+      system: [{ type: "text", text: mode === "truth" ? TRUTH_PROMPT : SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
       messages,
     });
     const text = res.content

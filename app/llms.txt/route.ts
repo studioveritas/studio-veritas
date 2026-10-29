@@ -3,6 +3,7 @@
 // case studies appear here automatically. Edit the fixed text below directly.
 
 import { workForLlms } from '@/lib/work-text'
+import { newsForLlms } from '@/lib/news-text'
 
 export const dynamic = 'force-static'
 
@@ -40,7 +41,7 @@ Team: Guillaume Furminger + Ali Marmaduke
 `
 
 export function GET() {
-  return new Response(`${HEAD}${workForLlms()}\n\n${TAIL}`, {
+  return new Response(`${HEAD}${workForLlms()}\n\n${newsForLlms()}\n\n${TAIL}`, {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
   })
 }

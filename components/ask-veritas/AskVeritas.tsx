@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { askPromptsFor, getCaseStudy } from "@/components/work-data";
+import { getArticle, askPromptsForArticle, NEWS_PROMPTS } from "@/components/news-data";
 import { PROCESS, processReady } from "@/lib/ask-veritas/process";
 import { parseVerdict, type Verdict } from "@/lib/ask-veritas/truth";
 import { OPEN_EVENT, TOGGLE_EVENT, STATE_EVENT, type AskMode } from "./open";
@@ -138,11 +139,19 @@ export default function AskVeritas({
   const [stage, setStage] = useState(0);
   const [pending, setPending] = useState<string | null>(null);
 
-  // On a case study page, suggest questions about that work: a nudge above the
-  // triangle a moment after the page opens, and the first chips in the panel.
+  // On a case study or article page, suggest questions about it: a nudge under the
+  // nav triangle a moment after the page opens, and the first chips in the panel.
+  // On /news, the chips lead with a question about the studio's point of view.
   const pathname = usePathname() || "";
   const caseWork = getCaseStudy(pathname.match(/^\/experience\/([^/]+)\/?$/)?.[1] ?? "");
-  const casePrompts: string[] = caseWork ? askPromptsFor(caseWork) : [];
+  const article = getArticle(pathname.match(/^\/news\/([^/]+)\/?$/)?.[1] ?? "");
+  const casePrompts: string[] = caseWork
+    ? askPromptsFor(caseWork)
+    : article
+      ? askPromptsForArticle(article)
+      : /^\/news\/?$/.test(pathname)
+        ? NEWS_PROMPTS
+        : [];
   const [nudge, setNudge] = useState(false);
 
   const idRef = useRef(1);
@@ -260,8 +269,8 @@ export default function AskVeritas({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, pending, mode]);
 
-  // The nudge: once per case study per visit, 2.5s after arriving, gone after 12s.
-  const caseSlug = caseWork?.slug ?? null;
+  // The nudge: once per case study or article per visit, 2.5s after arriving, gone after 12s.
+  const caseSlug = caseWork?.slug ?? (article ? `news/${article.slug}` : null);
   useEffect(() => {
     setNudge(false);
     if (!caseSlug || (triggerKind !== "triangle" && side !== "top")) return;

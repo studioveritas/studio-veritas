@@ -10,6 +10,7 @@
 //    tile: '/news/in-signo-veritas-05/tile.jpg',   // the tile image (4:5, JPEG, 880 x 1100)
 //    image: '/news/in-signo-veritas-05/image.png', // the article image: PNG, JPEG or GIF (4:5, 1080 x 1350)
 //    imageAlt: 'What the image shows',             // for screen readers
+//    askPrompts: ['What does Studio Veritas say about …?'], // optional: Ask Veritas suggests this on the article
 //    // comingSoon: true,                          // shows the tile as COMING SOON, with no page yet
 //    sections: [
 //      { heading: 'The subject', body: 'The opening paragraph.' },
@@ -35,6 +36,7 @@ export const NEWS = [
     name: 'IN SIGNO VERITAS #01',
     title: 'Your customers have stopped talking to you. Something else is answering for them.',
     tile: '/news/in-signo-veritas-01/tile.jpg',
+    askPrompts: ['What does Studio Veritas say about AI in customer research?'],
     image: '/news/in-signo-veritas-01/image.jpg',
     imageAlt: 'People crossing a street seen from above, each tagged with a red detection box',
     sections: [
@@ -67,6 +69,7 @@ export const NEWS = [
     name: 'IN SIGNO VERITAS #02',
     title: 'Is it design or disguise?',
     tile: '/news/in-signo-veritas-02/tile.jpg',
+    askPrompts: ['What does Studio Veritas say about cute AI branding?'],
     image: '/news/in-signo-veritas-02/image.png',
     imageAlt: 'A classical statue’s face rendered in black and white dots',
     sections: [
@@ -100,6 +103,7 @@ export const NEWS = [
     name: 'IN SIGNO VERITAS #03',
     title: 'Will fans actually remember your brand?',
     tile: '/news/in-signo-veritas-03/tile.jpg',
+    askPrompts: ['What does Studio Veritas say about sponsorship?'],
     image: '/news/in-signo-veritas-03/image.jpg',
     imageAlt: 'Football fans in Japan and Netherlands shirts celebrating in the stands',
     sections: [
@@ -131,6 +135,7 @@ export const NEWS = [
     name: 'IN SIGNO VERITAS #04',
     title: 'CMOs want to put brand first, but they’re losing the power to do it',
     tile: '/news/in-signo-veritas-04/tile.jpg',
+    askPrompts: ['What does Studio Veritas say about brand and the CMO’s influence?'],
     image: '/news/in-signo-veritas-04/image.jpg',
     imageAlt: 'An On “Dream On.” banner across the front of the New York Stock Exchange',
     sections: [
@@ -165,6 +170,10 @@ export const NEWS = [
     comingSoon: true,
   },
 ]
+
+// Ask Veritas suggests these: on /news, and on each article (its own, or a default).
+export const NEWS_PROMPTS = ['What does Studio Veritas say about sponsorship?']
+export const askPromptsForArticle = (a) => a.askPrompts || [`What’s the truth in ${a.name.toLowerCase().replace(/(^|\s)(\S)/g, (m, sp, c) => sp + c.toUpperCase())}?`]
 
 export const ARTICLES = NEWS.filter((n) => !n.comingSoon)
 export const getArticle = (slug) => ARTICLES.find((n) => n.slug === slug) || null

@@ -1,4 +1,4 @@
-// Client logos, shared by the Client Experience grid and the Work page ticker. Change them here once.
+// Client logos, shown on the Work page ticker. Change them here once.
 import { CLIENT_LOGOS } from './media'
 
 export const CLIENTS = [

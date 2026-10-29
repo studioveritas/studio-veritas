@@ -282,8 +282,10 @@ export function SiteFooter({ open, onClose }) {
 /* ------------------------------------------------------------- page tag */
 
 // tone="light": off-white with black type, for pages on black (WORK).
+// tone="ink": black with warm beige type, for News + Insights.
 export function PageTag({ label, onClose = leavePage, closeLabel, className = '', tone = 'dark', align = 'center' }) {
   const light = tone === 'light'
+  const ink = tone === 'ink'
   return (
     <>
       <style>{`
@@ -296,7 +298,7 @@ export function PageTag({ label, onClose = leavePage, closeLabel, className = ''
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ type: 'spring', damping: 26, stiffness: 300, delay: 0.1 }}
         className={`sv-tag relative rounded-md shadow-2xl px-10 py-5 ${align === 'left' ? 'text-left pl-7' : 'text-center'} ${className}`}
-        style={light ? { background: '#f6f4ee', color: '#000' } : { background: '#000', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }}
+        style={light ? { background: '#f6f4ee', color: '#000' } : { background: '#000', color: ink ? '#ddc9b8' : '#fff', border: '1px solid rgba(255,255,255,0.1)' }}
       >
         <h1
           className="sv-tag-title font-medium uppercase whitespace-nowrap"
@@ -306,7 +308,7 @@ export function PageTag({ label, onClose = leavePage, closeLabel, className = ''
         </h1>
         <button
           onClick={onClose}
-          className={`absolute top-1 right-1.5 md:top-1.5 md:right-2 transition-colors p-2 text-sm md:text-[17px] leading-none ${light ? 'text-black/80 hover:text-[#5683DD]' : 'text-white/80 hover:text-white'}`}
+          className={`absolute top-1 right-1.5 md:top-1.5 md:right-2 transition-colors p-2 text-sm md:text-[17px] leading-none ${light ? 'text-black/80 hover:text-[#5683DD]' : ink ? 'text-[#ddc9b8] hover:text-white' : 'text-white/80 hover:text-white'}`}
           style={{ fontFamily: MONO }}
           aria-label={closeLabel || `Close ${label.toLowerCase()} page`}
         >

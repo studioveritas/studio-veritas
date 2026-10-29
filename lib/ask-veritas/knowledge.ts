@@ -4,9 +4,11 @@
 // Deliberately excluded: personal phone number and personal email. Public contact is info@studio-veritas.com only.
 
 import { workForKnowledge } from '@/lib/work-text'
+import { newsForKnowledge } from '@/lib/news-text'
 
 // The Experience list and case studies are generated from components/work-data.js
 // (see lib/work-text.ts), so a new case study is known here automatically.
+// The News + Insights articles come from components/news-data.js (see lib/news-text.ts) the same way.
 export const KNOWLEDGE = `
 # STUDIO VERITAS
 
@@ -39,6 +41,8 @@ Work is framed as "the ideas behind the ideas". Clients are framed as "iconic br
 - LinkedIn: https://www.linkedin.com/company/team-studio-veritas
 
 ${workForKnowledge()}
+
+${newsForKnowledge()}
 
 ## Credentials deck: case detail ("Selected brand experience", 2026)
 Note: some credentials come from earlier agency or in-house roles held by the team. Describe them as "selected brand experience" rather than claiming every project was delivered under the Studio Veritas name.

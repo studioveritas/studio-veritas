@@ -32,7 +32,7 @@ export function workForKnowledge(): string {
     ].join('\n')
   ).join('\n\n')
   return `## Selected work (site)
-The Work page (/experience on studio-veritas.com, "Work" in the menu) shows the work as tiles, filterable by ${TAGS.join(', ')}; the client logo grid is on the Client Experience page (/clients). Full case studies so far: ${CASES.map((w) => `${w.client} (/experience/${w.slug})`).join(', ')}. The others are marked "coming soon".
+The Work page (/experience on studio-veritas.com, "Work" in the menu) shows the work as tiles, filterable by ${TAGS.join(', ')}; client logos scroll along the bottom of the Work page. News + Insights (/news) carries the In Signo Veritas articles. Full case studies so far: ${CASES.map((w) => `${w.client} (/experience/${w.slug})`).join(', ')}. The others are marked "coming soon".
 ${list}
 
 ${cases}`
@@ -48,7 +48,7 @@ export function workForLlms(): string {
   }).join('\n')
   return `## Work (selected case studies)
 
-Page: /experience. Tiles of work, filterable by ${TAGS.join(', ')} (e.g. /experience?tag=${TAGS[0].toLowerCase()}); full case studies are linked, the rest are marked "coming soon". Client logos: /clients (Client Experience).
+Page: /experience. Tiles of work, filterable by ${TAGS.join(', ')} (e.g. /experience?tag=${TAGS[0].toLowerCase()}); full case studies are linked, the rest are marked "coming soon". Client logos run on a ticker under the Work grid. News + Insights: /news.
 
 ${items}`
 }

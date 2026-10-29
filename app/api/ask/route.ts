@@ -14,8 +14,10 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const MODEL = process.env.ASK_VERITAS_MODEL || "claude-haiku-5-5";
-const MAX_OUTPUT_TOKENS = Number(process.env.ASK_MAX_OUTPUT_TOKENS) || 300;
-const TRUTH_MAX_TOKENS = Number(process.env.ASK_TRUTH_MAX_TOKENS) || 260;
+// Headroom above the ~120-word answers the prompt asks for: answers that draw on several
+// articles and case studies were being cut off at 300.
+const MAX_OUTPUT_TOKENS = Number(process.env.ASK_MAX_OUTPUT_TOKENS) || 900;
+const TRUTH_MAX_TOKENS = Number(process.env.ASK_TRUTH_MAX_TOKENS) || 600;
 const EMAIL = "info@studio-veritas.com";
 
 // Every non-answer is a static, in-voice message. No model call, no cost.
@@ -82,10 +84,25 @@ export async function POST(req: Request) {
       system: [{ type: "text", text: mode === "truth" ? TRUTH_PROMPT : SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
       messages,
     });
-    const text = res.content
+    let text = res.content
       .map((b) => (b.type === "text" ? b.text : ""))
       .join("")
       .trim();
+    if (res.stop_reason !== "end_turn" || !text) {
+      // Visible in Vercel's runtime logs; never logs the visitor's messages or the reply.
+      console.warn("[ask-veritas] incomplete reply", {
+        model: MODEL,
+        stop: res.stop_reason,
+        blocks: res.content.map((b) => b.type),
+        chars: text.length,
+        usage: res.usage,
+      });
+      // Cut off mid-answer: end on the last full sentence rather than a fragment.
+      if (res.stop_reason === "max_tokens" && text) {
+        const end = Math.max(text.lastIndexOf(". "), text.lastIndexOf("? "), text.lastIndexOf("! "));
+        text = end > 40 ? text.slice(0, end + 1) : "";
+      }
+    }
     return json(200, text || CANNED.error);
   } catch (err) {
     // Log why the provider call failed (status, error type, message) so it shows

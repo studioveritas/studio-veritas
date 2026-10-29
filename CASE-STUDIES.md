@@ -85,7 +85,7 @@ Or prepare them with one command: `npm run case-study-images -- ketel-one --imag
 
 ## The Work page
 
-Tiles appear in the order of `WORK`, in three columns (two on tablets, one on phones), and rise in as they scroll into view. In each run of nine, the 1st and 3rd tiles are square and the rest are 4:5; add `tile: 'square'` or `tile: 'portrait'` to an entry to choose. Nine tiles load first; LOAD MORE adds the next nine. The logo ticker under the grid uses the Client Experience logos (`components/clients-data.js`).
+Tiles appear in the order of `WORK`, in three columns (two on tablets, one on phones), and rise in as they scroll into view. In each run of nine, the 1st and 3rd tiles are square and the rest are 4:5; add `tile: 'square'` or `tile: 'portrait'` to an entry to choose. Nine tiles load first; LOAD MORE adds the next nine. The logo ticker under the grid uses the client logos in `components/clients-data.js`.
 
 ## Fine-tuning
 
@@ -98,3 +98,30 @@ Add any of these inside `caseStudy`:
 ## Unpublish
 
 Delete the `caseStudy: { … }` block. The tile returns to COMING SOON and the page returns a 404.
+
+---
+
+# Publishing a News + Insights article
+
+Each article takes one entry in `components/news-data.js` and two images. Once committed, the tile appears on `/news`, the article goes live at `/news/<slug>`, the arrows include it, and it's added to the sitemap.
+
+## What you need
+
+| | |
+|---|---|
+| **Slug** | e.g. `in-signo-veritas-05` → `/news/in-signo-veritas-05` |
+| **Name** | e.g. `IN SIGNO VERITAS #05` |
+| **Title** | The headline, in sentence case |
+| **Tile image** | 4:5 JPEG, 880 × 1100 → `public/news/<slug>/tile.jpg` |
+| **Article image** | 4:5, 1080 × 1350: PNG, JPEG or animated GIF → `public/news/<slug>/image.png` (or `.jpg` / `.gif`) |
+| **Copy** | ■ The subject, ■ The signal (a line plus points with sources), ■ The truth, ■ Worth asking, and an optional closing line |
+
+## Steps
+
+1. Upload both images to `public/news/<slug>/` (Add file → Upload files, type the folder into the path).
+2. In `components/news-data.js`, copy the template at the top and fill it in. Put a blank line (`\n\n`) inside a body to start a new paragraph.
+3. Commit to a new branch and open a pull request; check the Vercel preview, then merge.
+
+## How it reads
+
+Tiles sit in a brown monotone and come into colour on rollover (on phones, as they reach mid-screen). The article shows THE SUBJECT and THE SIGNAL; MORE types out THE TRUTH and WORTH ASKING, then the closing line, where "Get in touch" links to the Contact page. To show a tile before the article is ready, add `comingSoon: true`: it shows COMING SOON and doesn't link.

@@ -6,7 +6,7 @@ import { ARTICLES } from '@/components/news-data'
 const BASE = 'https://www.studio-veritas.com'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = ['', '/experience', '/news', '/clients', '/team', '/process', '/contact']
+  const pages = ['', '/experience', '/news', '/team', '/process', '/contact']
   return [
     ...pages.map((p) => ({ url: `${BASE}${p}`, changeFrequency: 'monthly' as const, priority: p === '' ? 1 : 0.7 })),
     ...CASE_STUDIES.map((w) => ({ url: `${BASE}/experience/${w.slug}`, changeFrequency: 'yearly' as const, priority: 0.8 })),

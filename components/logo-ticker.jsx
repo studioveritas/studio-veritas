@@ -1,7 +1,7 @@
 'use client'
 
 // Client logos on a band that scrolls left to right in a continuous loop.
-// The logos come from components/clients-data.js (the same list as the Client Experience page).
+// The logos come from components/clients-data.js (the studio's client list).
 // Hovering pauses it; with reduced motion it stands still and can be scrolled by hand.
 
 import { CLIENTS } from './clients-data'

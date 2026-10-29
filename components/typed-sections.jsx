@@ -3,17 +3,20 @@
 // The copy reveal shared by case studies and News + Insights articles: Section renders a heading
 // with its paragraph and/or list; TypedSections types sections out in the site's typewriter style.
 // Styling comes from the page (.sv-cs-section, .sv-cs-caret).
+// A body can hold several paragraphs, separated by a blank line (\n\n).
 
 import { useEffect, useState } from 'react'
 
 const TYPE_CHARS = 3 // characters per tick: the site's typewriter speed
 const TYPE_MS = 12
 
+export const paragraphs = (body) => (body ? String(body).split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean) : [])
+
 export function Section({ s }) {
   return (
     <section className="sv-cs-section">
       <h2>{s.heading}</h2>
-      {s.body && <p>{s.body}</p>}
+      {paragraphs(s.body).map((para, i) => <p key={i}>{para}</p>)}
       {s.list && (
         <ul>
           {s.list.map((item) => (
@@ -30,7 +33,7 @@ export function TypedSections({ sections, onTick, onDone, skipRef }) {
   const parts = []
   sections.forEach((s, si) => {
     parts.push({ si, kind: 'h', text: s.heading })
-    if (s.body) parts.push({ si, kind: 'p', text: s.body })
+    paragraphs(s.body).forEach((text) => parts.push({ si, kind: 'p', text }))
     ;(s.list || []).forEach((t) => parts.push({ si, kind: 'li', text: t }))
   })
   const total = parts.reduce((n, p) => n + p.text.length, 0)

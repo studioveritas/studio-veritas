@@ -12,7 +12,7 @@ import { useEffect, useCallback, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { SiteShell } from './site-shell'
 import { Section, TypedSections } from './typed-sections'
-import { getArticle, getArticleNeighbours, SERIES_INTRO, REVEAL_FROM } from './news-data'
+import { getArticle, getArticleNeighbours, REVEAL_FROM } from './news-data'
 
 const MONO = "'IBM Plex Mono', monospace"
 const BROWN = '#ddc9b8'
@@ -35,6 +35,20 @@ function Arrow({ dir, target }) {
     <a className={cls} href={`/news/${target.slug}`} aria-label={`${prev ? 'Previous' : 'Next'} article: ${target.name}, ${target.title}`}>
       {icon}
     </a>
+  )
+}
+
+// The closing line; "Get in touch" links to the Contact page.
+function Cta({ text }) {
+  const i = text.search(/get in touch/i)
+  if (i < 0) return <p className="sv-na-cta">{text}</p>
+  const m = text.slice(i).match(/get in touch/i)[0]
+  return (
+    <p className="sv-na-cta">
+      {text.slice(0, i)}
+      <a href="/contact">{m}</a>
+      {text.slice(i + m.length)}
+    </p>
   )
 }
 
@@ -100,7 +114,7 @@ export function NewsArticle({ slug }) {
             ...(item.date ? { datePublished: item.date } : {}),
             image: item.image,
             author: { '@type': 'Organization', name: 'Studio Veritas' },
-            articleBody: [item.intro || SERIES_INTRO, ...sections.map((s) => `${s.heading}: ${[s.body, ...(s.list || [])].filter(Boolean).join(' ')}`)].join(' '),
+            articleBody: [...sections.map((s) => `${s.heading}: ${[s.body, ...(s.list || [])].filter(Boolean).join(' ')}`), item.cta].filter(Boolean).join(' '),
           }),
         }}
       />
@@ -126,6 +140,10 @@ export function NewsArticle({ slug }) {
         }
         .sv-na-bodywrap[data-more='true']::after { opacity: 1; }
         .sv-na-body p { margin: 0; }
+        .sv-na-body .sv-cs-section p + p { margin-top: 1em; }
+        .sv-na-cta { margin-top: 1.38em !important; animation: sv-na-in .45s ease both; }
+        .sv-na-cta a { text-decoration: underline; text-underline-offset: 3px; transition: color .2s; }
+        .sv-na-cta a:hover, .sv-na-cta a:focus-visible { color: #5683DD; outline: none; }
         .sv-na-kicker { margin-bottom: 1.38em !important; }
         .sv-na-body h2 { margin: 0; font: inherit; font-weight: 600; text-transform: uppercase; }
         .sv-na-body h2::before { content: '\\25A0\\00a0'; }
@@ -209,10 +227,13 @@ export function NewsArticle({ slug }) {
                 onClick={(e) => { if (phase === 'typing' && !e.target.closest('button')) skipRef.current() }}
               >
                 <p className="sv-na-kicker">{titleCase(item.name)}</p>
-                <p>{item.intro || SERIES_INTRO}</p>
+                {item.intro && <p>{item.intro}</p>}
                 {lead.map((s) => <Section key={s.heading} s={s} />)}
 
-                <div className="sv-na-sr">{rest.map((s) => <Section key={s.heading} s={s} />)}</div>
+                <div className="sv-na-sr">
+                  {rest.map((s) => <Section key={s.heading} s={s} />)}
+                  {item.cta && phase !== 'done' && <p>{item.cta}</p>}
+                </div>
                 {phase === 'lead' && rest.length > 0 && (
                   <button type="button" className="sv-na-more" onClick={startReveal} aria-label="Read the rest of the article">
                     <span className="sign" aria-hidden="true">+</span> More
@@ -220,6 +241,7 @@ export function NewsArticle({ slug }) {
                 )}
                 {phase === 'typing' && <TypedSections sections={rest} onTick={onTick} onDone={onDone} skipRef={skipRef} />}
                 {phase === 'done' && <div aria-hidden="true">{rest.map((s) => <Section key={s.heading} s={s} />)}</div>}
+                {(phase === 'done' || rest.length === 0) && item.cta && <Cta text={item.cta} />}
               </div>
             </div>
 

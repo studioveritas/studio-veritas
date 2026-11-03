@@ -239,7 +239,7 @@ export function Team() {
           </div>
         </div>
 
-        {/* BOTTOM-RIGHT: FOR COMPANIES / FOR AGENCIES + footer trigger */}
+        {/* BOTTOM-RIGHT: footer trigger (FOR COMPANIES / FOR AGENCIES are global, bottom centre: site-chrome.jsx) */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: mounted ? 1 : 0 }}
@@ -247,19 +247,6 @@ export function Team() {
           className="sv-contact-row fixed sv-safe-bottom sv-safe-right flex flex-row items-center gap-3 md:gap-4"
           style={{ zIndex: 40 }}
         >
-          {['companies', 'agencies'].map((key) => {
-            const activeContact = contactPanel === key
-            return (
-              <button
-                key={key}
-                onClick={() => setContactPanel((v) => (v === key ? null : key))}
-                className="text-[11px] md:text-xs font-medium tracking-[0.12em] uppercase hover:opacity-70 transition-opacity whitespace-nowrap p-2 -m-2"
-                style={{ color: activeContact ? '#5683DD' : '#000000', fontFamily: "'IBM Plex Mono', monospace" }}
-              >
-                {key === 'companies' ? 'FOR COMPANIES' : 'FOR AGENCIES'}
-              </button>
-            )
-          })}
           <button
             onClick={() => setFooterOpen(true)}
             className="p-2 -m-2 touch-manipulation hover:opacity-70 transition-opacity"
@@ -271,42 +258,6 @@ export function Team() {
             </svg>
           </button>
         </motion.div>
-
-        {/* CONTACT PANEL */}
-        <AnimatePresence>
-          {contactPanel && (
-            <motion.div
-              key={contactPanel}
-              initial={{ opacity: 0, y: 20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.98 }}
-              transition={{ type: 'spring', damping: 26, stiffness: 300 }}
-              className="fixed bottom-20 right-4 md:bottom-28 md:right-10 w-[calc(100%-2rem)] max-w-[300px] max-h-[55%] rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl"
-              style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)', zIndex: 50 }}
-            >
-              <button
-                onClick={() => setContactPanel(null)}
-                className="absolute top-3 right-3 text-white/70 hover:text-white transition-colors p-2 touch-manipulation"
-                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                aria-label="Close"
-              >
-                ✕
-              </button>
-              <p style={{ fontFamily: "'IBM Plex Mono', monospace", color: '#5683DD', letterSpacing: '0.2em' }} className="text-[11px] md:text-xs font-medium uppercase mb-3">{CONTACT_PANELS[contactPanel].heading}</p>
-              <p style={{ fontFamily: "'IBM Plex Mono', monospace" }} className="whitespace-pre-line text-[13px] md:text-sm text-white/90 leading-relaxed pr-6">
-                {CONTACT_PANELS[contactPanel].body.slice(0, contactRevealed)}
-                {contactRevealed < CONTACT_PANELS[contactPanel].body.length && <span className="sv-typewriter-cursor" />}
-              </p>
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                className="inline-block mt-6 text-[13px] md:text-sm text-white underline underline-offset-4 decoration-white/40 hover:decoration-white hover:text-[#5683DD] transition-colors"
-              >
-                Contact Us →
-              </a>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* SLIDE-UP FOOTER */}
         <SiteFooter open={footerOpen} onClose={() => setFooterOpen(false)} />

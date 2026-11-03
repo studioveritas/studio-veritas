@@ -67,7 +67,7 @@ export function SiteNav() {
           position: fixed; z-index: 40;
           top: var(--sv-nav-top); left: 50%; transform: translateX(-50%);
           width: var(--sv-nav-w); height: var(--sv-nav-h);
-          display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+          display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center;
           padding: 0 14px; background: #fff; border-radius: 8px;
           box-shadow: 0 6px 24px -14px rgba(0,0,0,0.35);
         }
@@ -75,6 +75,8 @@ export function SiteNav() {
         .sv-nav-ask { justify-self: start; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 8px; margin-left: -8px; background: none; border: 0; color: #000; font: 500 11px/1 ${MONO}; letter-spacing: 0.2em; text-transform: uppercase; transition: color .2s; }
         .sv-nav-ask svg { display: block; flex: none; transition: transform .35s cubic-bezier(0.22,1,0.36,1); }
         .sv-nav-ask[aria-expanded="true"] svg { transform: rotate(180deg); }
+        /* the label only ever shows on desktop hover; on small screens it must not take space, or it pushes the wordmark off centre */
+        @media (max-width: 767px) { .sv-nav-ask-label { display: none; } }
         .sv-nav-ask-label { opacity: 0; transform: translateX(-4px); transition: opacity .2s, transform .2s; white-space: nowrap; }
         .sv-nav-ask:hover, .sv-nav-ask:focus-visible, .sv-nav-ask[aria-expanded="true"] { color: #5683DD; outline: none; }
         @media (hover: hover) and (min-width: 768px) {
@@ -110,6 +112,7 @@ export function SiteNav() {
       `}</style>
 
       <motion.header
+        data-sv-intro-step="1"
         className="sv-nav"
         initial={{ opacity: 0, y: -8, x: '-50%' }}
         animate={{ opacity: 1, y: 0, x: '-50%' }}
@@ -130,7 +133,7 @@ export function SiteNav() {
         </button>
 
         <a href="/" className="sv-nav-logo" aria-label="Studio Veritas, home">
-          <img src={LOGO_SRC_BLACK} alt="Studio Veritas" draggable={false} />
+          <img src={LOGO_SRC_BLACK} alt="Studio Veritas" draggable={false} data-sv-intro="logo" />
         </a>
 
         <button
@@ -186,13 +189,135 @@ export function SiteNav() {
         href="/"
         onClick={onEye}
         className="sv-eye"
+        data-sv-intro-step="2"
         aria-label={pathname === '/' ? 'About Studio Veritas' : 'Studio Veritas, home'}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.4 }}
       >
-        <img src={ICON_SRC_BLACK} alt="" draggable={false} />
+        <img src={ICON_SRC_BLACK} alt="" draggable={false} data-sv-intro="icon" />
       </motion.a>
+
+      <ContactBar />
+    </>
+  )
+}
+
+/* --------------------------------------------------------- contact bar */
+
+// FOR COMPANIES / FOR AGENCIES: black buttons, bottom centre, on every page.
+// Each opens a black pop-out above it with the typed copy and a Contact Us link.
+export const CONTACT_PANELS = {
+  companies: {
+    heading: 'For companies',
+    body: 'We work directly with brand, marketing, innovation and\ndesign teams on strategic and creative projects.',
+  },
+  agencies: {
+    heading: 'For agencies',
+    body: 'We work as a freelance strategy, creative and design team\nwhen you need extra thinking, different perspectives or specialist capability.',
+  },
+}
+
+export function ContactBar() {
+  const pathname = usePathname() || '/'
+  const [panel, setPanel] = useState(null)
+  const [revealed, setRevealed] = useState(0)
+
+  useEffect(() => setPanel(null), [pathname])
+
+  useEffect(() => {
+    if (!panel) { setRevealed(0); return }
+    setRevealed(0)
+    const total = CONTACT_PANELS[panel].body.length
+    let current = 0
+    const interval = setInterval(() => {
+      current += 3
+      setRevealed(Math.min(current, total))
+      if (current >= total) clearInterval(interval)
+    }, 12)
+    return () => clearInterval(interval)
+  }, [panel])
+
+  useEffect(() => {
+    if (!panel) return
+    const onKey = (e) => e.key === 'Escape' && setPanel(null)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [panel])
+
+  return (
+    <>
+      <style>{`
+        .sv-cbar { position: fixed; z-index: 41; left: 50%; transform: translateX(-50%); bottom: max(16px, env(safe-area-inset-bottom)); display: flex; gap: 6px; }
+        @media (min-width: 768px) { .sv-cbar { bottom: max(28px, env(safe-area-inset-bottom)); gap: 8px; } }
+        .sv-cbar-btn { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px 0 8px; background: #000; color: #fff; border: 0; border-radius: 3px;
+          font: 500 9px/1 ${MONO}; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; transition: color .2s, background .2s, box-shadow .2s; }
+        @media (min-width: 768px) { .sv-cbar-btn { height: 32px; padding: 0 18px 0 13px; gap: 10px; font-size: 13px; } }
+        .sv-cbar-btn svg { width: 8px; height: 8px; }
+        @media (min-width: 768px) { .sv-cbar-btn svg { width: 10px; height: 10px; } }
+        .sv-cbar-btn svg { flex: none; transition: transform .3s cubic-bezier(0.22,1,0.36,1); }
+        .sv-cbar-btn:hover, .sv-cbar-btn:focus-visible { color: #5683DD; outline: none; }
+        .sv-cbar-btn[aria-expanded="true"] { color: #5683DD; }
+        .sv-cbar-btn[aria-expanded="true"] svg { transform: rotate(45deg); }
+        html[data-sv-dark-bottom='1'] .sv-cbar-btn { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35); }
+        @keyframes sv-cbar-blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
+        .sv-cpanel .sv-typewriter-cursor::after { content: '\\2588'; animation: sv-cbar-blink 0.8s step-end infinite; margin-left: 2px; }
+        .sv-cpanel { position: fixed; z-index: 50; left: 50%; bottom: calc(max(16px, env(safe-area-inset-bottom)) + 38px); width: min(340px, calc(100% - 2rem)); max-height: 55%; }
+        @media (min-width: 768px) { .sv-cpanel { bottom: calc(max(28px, env(safe-area-inset-bottom)) + 46px); } }
+      `}</style>
+
+      <div className="sv-cbar" data-sv-intro-step="2">
+        {['companies', 'agencies'].map((key) => (
+          <button
+            key={key}
+            type="button"
+            className="sv-cbar-btn"
+            aria-expanded={panel === key}
+            onClick={() => setPanel((v) => (v === key ? null : key))}
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M6 0v12M0 6h12" stroke="currentColor" strokeWidth="2" />
+            </svg>
+            {key === 'companies' ? 'For companies' : 'For agencies'}
+          </button>
+        ))}
+      </div>
+
+      <AnimatePresence>
+        {panel && (
+          <motion.div
+            key={panel}
+            data-sv-modal="open"
+            initial={{ opacity: 0, y: 20, scale: 0.98, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, scale: 1, x: '-50%' }}
+            exit={{ opacity: 0, y: 20, scale: 0.98, x: '-50%' }}
+            transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+            className="sv-cpanel rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl"
+            style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}
+          >
+            <button
+              onClick={() => setPanel(null)}
+              className="absolute top-3 right-3 text-white/70 hover:text-white transition-colors p-2 touch-manipulation"
+              style={{ fontFamily: MONO }}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+            <p style={{ fontFamily: MONO, color: '#5683DD', letterSpacing: '0.2em' }} className="text-[11px] md:text-xs font-medium uppercase mb-3">{CONTACT_PANELS[panel].heading}</p>
+            <p style={{ fontFamily: MONO }} className="whitespace-pre-line text-[13px] md:text-sm text-white/90 leading-relaxed pr-6">
+              {CONTACT_PANELS[panel].body.slice(0, revealed)}
+              {revealed < CONTACT_PANELS[panel].body.length && <span className="sv-typewriter-cursor" />}
+            </p>
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              style={{ fontFamily: MONO }}
+              className="inline-block mt-6 text-[13px] md:text-sm text-white underline underline-offset-4 decoration-white/40 hover:decoration-white hover:text-[#5683DD] transition-colors"
+            >
+              Contact Us →
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }

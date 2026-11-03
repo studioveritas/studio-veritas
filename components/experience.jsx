@@ -20,6 +20,13 @@ const CONTACT_PANELS = {
   },
 }
 
+// The centre copy on the home page (typed in on load).
+const HOME_COPY = [
+  'Studio Veritas is an agile strategy,\ndesign and innovation team.',
+  'We partner to isolate the fundamental\ntruths behind a brand.',
+  'We deliver nimble, sharp decision-making\nto solve complex challenges and drive\nlasting commercial growth.',
+]
+
 const POPUP_PARAGRAPHS = [
   'Good strategy starts with hard questions.\nThe kind that get under the brief to find the truth.\nThe real problem. The deeper need.',
   "We look at the company, the category and at culture.\nAt what's changing and emerging.\nWhat's working and what's not.\nAnd what all that means for the brand.",
@@ -27,9 +34,10 @@ const POPUP_PARAGRAPHS = [
   "We work with companies and agencies that need clear thinking,\na sharp point of view, and creative that's built on truth and\nmade to work in the real world.",
 ]
 
-function Wordmark({ max = 60, className = '', src = LOGO_SRC }) {
+function Wordmark({ max = 60, className = '', src = LOGO_SRC, ...rest }) {
   return (
     <img
+      {...rest}
       src={src}
       alt="Studio Veritas"
       className={className}
@@ -52,9 +60,8 @@ export function Experience() {
   const [infoOpen, setInfoOpen] = useState(false)
   const [titleHover, setTitleHover] = useState(false)
   const [revealed, setRevealed] = useState([])
-  const [contactPanel, setContactPanel] = useState(null)
   const [footerOpen, setFooterOpen] = useState(false)
-  const [contactRevealed, setContactRevealed] = useState(0)
+  const [typed, setTyped] = useState(HOME_COPY.map(() => 0))
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => setMounted(true), [])
@@ -66,22 +73,31 @@ export function Experience() {
     return () => window.removeEventListener(ABOUT_EVENT, on)
   }, [])
 
+  // Type the centre copy in. On a first visit the sticker intro runs first and
+  // announces its end with 'sv:intro-done' (public/sv-intro.js).
   useEffect(() => {
-    if (!contactPanel) { setContactRevealed(0); return }
-    setContactRevealed(0)
-    const total = CONTACT_PANELS[contactPanel].body.length
-    let current = 0
-    const interval = setInterval(() => {
-      current += 3
-      setContactRevealed(Math.min(current, total))
-      if (current >= total) clearInterval(interval)
-    }, 12)
-    return () => clearInterval(interval)
-  }, [contactPanel])
+    const lengths = HOME_COPY.map((p) => p.length)
+    const total = lengths.reduce((a, b) => a + b, 0)
+    let interval, timer
+    const run = () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setTyped(lengths); return }
+      let current = 0
+      interval = setInterval(() => {
+        current += 2
+        let acc = 0
+        setTyped(lengths.map((len) => { const v = Math.max(0, Math.min(current - acc, len)); acc += len; return v }))
+        if (current >= total) clearInterval(interval)
+      }, 18)
+    }
+    const introRunning = document.documentElement.classList.contains('sv-intro')
+    if (introRunning) window.addEventListener('sv:intro-done', run, { once: true })
+    else timer = setTimeout(run, 350)
+    return () => { clearInterval(interval); clearTimeout(timer); window.removeEventListener('sv:intro-done', run) }
+  }, [])
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === 'Escape') { setInfoOpen(false); setContactPanel(null); setFooterOpen(false) }
+      if (e.key === 'Escape') { setInfoOpen(false); setFooterOpen(false) }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -154,9 +170,13 @@ export function Experience() {
         }
         .sv-case-copy { font-size: 18pt; }
         @media (min-width: 768px) { .sv-case-copy { font-size: 28px; } }
-        .sv-center-logo { max-height: 50px; }
-        @media (min-width: 768px) { .sv-center-logo { max-height: 75px; } }
-        @media (min-width: 1024px) { .sv-center-logo { max-height: 100px; } }
+        .sv-home-copy { font-size: 17px; line-height: 1.2; max-width: 34ch; margin: 0 auto; }
+        .sv-home-copy p + p { margin-top: 1.05em; }
+        @media (min-width: 768px) { .sv-home-copy { font-size: 22px; line-height: 1.14; max-width: none; white-space: pre-line; } }
+        @media (min-width: 1280px) { .sv-home-copy { font-size: 28px; } }
+        .sv-home-tag { font-size: 26px; }
+        @media (min-width: 768px) { .sv-home-tag { font-size: 34px; } }
+        @media (min-width: 1280px) { .sv-home-tag { font-size: 44px; } }
         .sv-topleft-icon { height: 33px; }
         @media (min-width: 768px) { .sv-topleft-icon { height: 42px; } }
         .sv-safe-top-menu { top: max(56px, calc(env(safe-area-inset-top) + 40px)); }
@@ -174,6 +194,7 @@ export function Experience() {
           contact info without simulating clicks, hovers, or carousel navigation. */}
       <section className="sv-sr-only">
         <h1>Studio Veritas — Creative strategy studio. The truth will set you free.</h1>
+        {HOME_COPY.map((p, i) => <p key={'c' + i}>{p.replace(/\n/g, ' ')}</p>)}
         {POPUP_PARAGRAPHS.map((p, i) => (
           <p key={i}>{p.replace(/\n/g, ' ')}</p>
         ))}
@@ -194,7 +215,7 @@ export function Experience() {
       <div className="sv-root absolute inset-0">
         {/* BACKGROUND */}
         <div className="absolute inset-0">
-            <div className="absolute inset-0 overflow-hidden" style={{ background: '#D8FF00' }}>
+            <div className="absolute inset-0 overflow-hidden" style={{ background: '#D8FF00' }} data-sv-intro="bg">
               <div
                 className="absolute inset-0 hidden md:block"
                 style={{
@@ -228,45 +249,49 @@ export function Experience() {
           </svg>
         </div>
 
-        {/* CENTER TITLE */}
+        {/* CENTRE COPY: typed in on load (after the intro on a first visit); GROWTH IN TRUTH on rollover */}
         <div className="absolute inset-0 flex items-center justify-center px-6" style={{ zIndex: 30, pointerEvents: 'none' }}>
           <div
+            data-sv-intro="copy"
             style={{ pointerEvents: 'auto' }}
             className="text-center select-none"
             onMouseEnter={() => setTitleHover(true)}
             onMouseLeave={() => setTitleHover(false)}
           >
-            <AnimatePresence mode="wait">
-              {titleHover ? (
-                <motion.p
-                  key="tagline"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.35 }}
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: '-0.01em' }}
-                  className="text-[24px] md:text-[30px] lg:text-[36px] font-medium text-black"
-                >
-                  GROWTH IN TRUTH
-                </motion.p>
-              ) : (
-                <motion.div
-                  key="name"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.35 }}
-                >
-                  <Wordmark className="sv-center-logo" src={LOGO_SRC_BLACK} />
-                  <p
-                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '18pt' }}
-                    className="mt-3 font-medium text-black"
+            <div className="relative">
+              <div
+                className="sv-home-copy font-medium text-black"
+                style={{ fontFamily: "'IBM Plex Mono', monospace", visibility: titleHover ? 'hidden' : 'visible' }}
+              >
+                {HOME_COPY.map((para, idx) => {
+                  const chars = typed[idx] ?? 0
+                  const isActive = chars > 0 && chars < para.length
+                  return (
+                    <p key={idx}>
+                      <span>{para.slice(0, chars)}</span>
+                      {isActive && <span className="sv-typewriter-cursor" />}
+                      {/* the untyped rest holds its space, so lines never jump while typing */}
+                      <span aria-hidden="true" style={{ visibility: 'hidden' }}>{para.slice(chars)}</span>
+                    </p>
+                  )
+                })}
+              </div>
+              <AnimatePresence>
+                {titleHover && (
+                  <motion.p
+                    key="tagline"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.3 }}
+                    style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: '-0.01em' }}
+                    className="sv-home-tag absolute inset-0 flex items-center justify-center font-medium text-black whitespace-nowrap"
                   >
-                    Freelance team for strategy + design + innovation
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                    GROWTH IN TRUTH
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
 
@@ -319,21 +344,9 @@ export function Experience() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="absolute sv-safe-bottom sv-safe-left sv-safe-right flex items-end justify-end gap-4"
           style={{ zIndex: 40 }}
+          data-sv-intro-step="2"
         >
           <div className="sv-contact-row flex flex-row items-center gap-3 md:gap-4 flex-shrink-0">
-            {['companies', 'agencies'].map((key) => {
-              const active = contactPanel === key
-              return (
-                <button
-                  key={key}
-                  onClick={() => setContactPanel((v) => (v === key ? null : key))}
-                  className="text-[11px] md:text-xs font-medium tracking-[0.12em] uppercase hover:opacity-70 transition-opacity whitespace-nowrap p-2 -m-2"
-                  style={{ color: active ? '#5683DD' : '#000000', fontFamily: "'IBM Plex Mono', monospace" }}
-                >
-                  {key === 'companies' ? 'FOR COMPANIES' : 'FOR AGENCIES'}
-                </button>
-              )
-            })}
             <button
               onClick={() => setFooterOpen(true)}
               className="p-2 -m-2 touch-manipulation hover:opacity-70 transition-opacity"
@@ -350,41 +363,6 @@ export function Experience() {
         {/* SLIDE-UP FOOTER */}
         <SiteFooter open={footerOpen} onClose={() => setFooterOpen(false)} />
 
-        {/* CONTACT PANEL */}
-        <AnimatePresence>
-          {contactPanel && (
-            <motion.div
-              key={contactPanel}
-              initial={{ opacity: 0, y: 20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.98 }}
-              transition={{ type: 'spring', damping: 26, stiffness: 300 }}
-              className="absolute bottom-20 right-4 md:bottom-28 md:right-10 w-[calc(100%-2rem)] max-w-[300px] max-h-[55%] rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl"
-              style={{ zIndex: 50, background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}
-            >
-              <button
-                onClick={() => setContactPanel(null)}
-                className="absolute top-3 right-3 text-white/70 hover:text-white transition-colors p-2 touch-manipulation"
-                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                aria-label="Close"
-              >
-                ✕
-              </button>
-              <p style={{ fontFamily: "'IBM Plex Mono', monospace", color: '#5683DD', letterSpacing: '0.2em' }} className="text-[11px] md:text-xs font-medium uppercase mb-3">{CONTACT_PANELS[contactPanel].heading}</p>
-              <p style={{ fontFamily: "'IBM Plex Mono', monospace", WebkitOverflowScrolling: 'touch' }} className="whitespace-pre-line text-[13px] md:text-sm text-white/90 leading-relaxed pr-6">
-                {CONTACT_PANELS[contactPanel].body.slice(0, contactRevealed)}
-                {contactRevealed < CONTACT_PANELS[contactPanel].body.length && <span className="sv-typewriter-cursor" />}
-              </p>
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                className="inline-block mt-6 text-[13px] md:text-sm text-white underline underline-offset-4 decoration-white/40 hover:decoration-white hover:text-[#5683DD] transition-colors"
-              >
-                Contact Us →
-              </a>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </main>
   )

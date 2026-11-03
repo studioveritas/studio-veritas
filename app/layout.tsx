@@ -2,6 +2,7 @@ import './globals.css'
 import { ChunkLoadErrorHandler } from '@/components/chunk-load-error-handler'
 import AskVeritas from '@/components/ask-veritas/AskVeritas'
 import { SiteNav } from '@/components/site-chrome'
+import { IntroLoader } from '@/components/intro-loader'
 
 export const dynamic = 'force-dynamic'
 
@@ -71,6 +72,10 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
         />
+        {/* First-load sticker intro (home page, once per session). Blocking on purpose:
+            it hides the chrome before the first paint. See components/intro-loader.jsx. */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script src="/sv-intro.js" data-auto="" />
       </head>
       <body>
         {children}
@@ -79,6 +84,7 @@ export default function RootLayout({
         <SiteNav />
         {/* Ask Veritas: AI chat, opened by the triangle in the nav bar; the panel opens beneath it. */}
         <AskVeritas trigger="none" side="top" />
+        <IntroLoader />
         <ChunkLoadErrorHandler />
       </body>
     </html>

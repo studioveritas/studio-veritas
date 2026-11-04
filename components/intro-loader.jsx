@@ -6,7 +6,7 @@
 // first visit it hides the nav, eye, bottom bar and logo before the first paint. This
 // component starts it once React has rendered the page.
 //
-// Variants: 'sticker' (stickers pop off, lead sticker lands as the logo) or
+// Variants: 'peel' (live) or 'sticker' (stickers pop off, lead sticker lands as the logo);
 //           'peel'    (stickers peel off by hand; the lead sticker is peeled away to
 //                      reveal the logo). Test either with /#intro-sticker or /#intro-peel.
 // Plays once per browser session. Page hooks: data-sv-intro / data-sv-intro-step
@@ -15,7 +15,7 @@
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
-export const INTRO_VARIANT = 'sticker'
+export const INTRO_VARIANT = 'peel'
 
 export function IntroLoader({ variant = INTRO_VARIANT }) {
   const pathname = usePathname()

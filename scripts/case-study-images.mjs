@@ -8,7 +8,7 @@
 //   npm run case-study-images -- ketel-one ~/Desktop/ketel.png "" right
 //   npm run case-study-images -- ketel-one --images ~/Desktop/a.jpg ~/Desktop/b.jpg ~/Desktop/c.jpg
 //
-// Writes public/work/<slug>/hero.jpg (1848px wide), tile.jpg (892x500, for share images)
+// Writes public/work/<slug>/hero.jpg (1920px wide), tile.jpg (892x500, for share images)
 // and portrait.jpg (4:5, for the Work page tile), cropped from the tile photo, or from
 // the hero photo if none is given.
 // [focus] decides which part of the photo the tile keeps:
@@ -66,7 +66,7 @@ await mkdir(outDir, { recursive: true })
 const hero = join(outDir, 'hero.jpg')
 await sharp(resolve(heroSrc))
   .rotate()
-  .resize({ width: 1848, withoutEnlargement: true })
+  .resize({ width: 1920, withoutEnlargement: true })
   .flatten({ background: '#141414' })
   .jpeg({ quality: 82, progressive: true, mozjpeg: true })
   .toFile(hero)

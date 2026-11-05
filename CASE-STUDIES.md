@@ -25,10 +25,11 @@ You can do it all in the browser on GitHub. Vercel deploys within a couple of mi
 | **Intro** | One sentence that opens the copy, above PROBLEM (optional) |
 | **Tags** | Any of `Brand`, `Comms`, `Retail`, `Innovation` |
 | **Copy** | Problem, Truth, Response, and The results (as a list) |
-| **Hero photo** | Landscape, about 1850px wide, JPEG, ideally under 400 KB |
+| **Hero photo** | The master image: it fills the screen behind the case study, up to 1920px wide. Landscape, 1920px wide, JPEG, ideally under 500 KB. Choose a strong, simple image with room at the bottom left for the title |
 | **Tile photo** | 892 × 500 JPEG, used for share images (or crop it from the hero, see below) |
 | **Portrait photo** | 4:5 JPEG, about 880 × 1100, for the Work page tile (`portrait.jpg`). Some tiles show it square, cropped from the middle |
-| **Extra images** | Optional, 1 to 3. Landscape JPEG, about 1600px wide, ideally under 300 KB each. Shown under MORE IMAGERY once the copy has typed out |
+| **Accent colour** | One colour from the brand, used for the headings in the case study, e.g. `accent: '#FF5A1F'` |
+| **Extra images** | Optional, 1 to 3. Landscape JPEG, about 1600px wide, ideally under 300 KB each. Shown between the copy as you scroll |
 
 ## Steps on GitHub (no tools needed)
 
@@ -60,14 +61,22 @@ If you have the project on your computer:
 npm run case-study-images -- ketel-one ~/Desktop/ketel-hero.png
 ```
 
-This resizes the photo to `public/work/ketel-one/hero.jpg` (1848px wide) and crops a `tile.jpg` (892 × 500) and a 4:5 `portrait.jpg` from it.
+This resizes the photo to `public/work/ketel-one/hero.jpg` (1920px wide) and crops a `tile.jpg` (892 × 500) and a 4:5 `portrait.jpg` from it.
 
 - To use a separate tile photo, pass it as the third argument.
 - To control the crop, add `left`, `right`, `top` or `bottom` as the fourth argument.
 
 ## How a case study opens
 
-The copy box first shows the intro line and the **Truth**, with **MORE +** underneath. MORE types out the rest (Problem, Response, The results) in the site's typewriter style; clicking the box skips to the end. When the copy has finished and the case study has `images`, **MORE IMAGERY +** appears and shows them in the box: one full width, two side by side, or one wide above two. Clicking an image enlarges it.
+The Experience page doesn't change: clicking a tile opens the case study.
+
+- **The master image** (`hero`) fills the screen and stays fixed behind the page with a slow drift. On screens wider than 1920px it stops at 1920px; beyond that the edges are black, with a thin hairline at the image edge. On phones held upright the portrait photo is used instead.
+- **First screen:** the client and tags, the title, the title-box line in the accent colour, the intro, and Client / Discipline at the foot.
+- **Scrolling down:** each section (Problem, Truth, Response) appears in a black pop-out, alternating left and right, and types out in the site's typewriter style as it comes into view. The image darkens as you scroll so the copy stays easy to read.
+- **Images:** the first extra image follows Problem; the others sit side by side before The Results. Clicking an image enlarges it.
+- **The Results** is a full-width pop-out with the results as a numbered list.
+- **Type:** headings in the accent colour, IBM Plex Mono SemiBold, all at one size; body copy at one size in every pop-out (the same as the intro).
+- **Getting around:** the X (top right) goes back to Experience, as does Escape; the side arrows and the ← → keys step through the case studies; *Next case study* sits at the foot.
 
 ## Extra images
 
@@ -91,8 +100,12 @@ Tiles appear in the order of `WORK`, in three columns (two on tablets, one on ph
 
 Add any of these inside `caseStudy`:
 
-- **`heroPosition: '70% 50%'`**: which part of the photo stays visible beside the copy box. The first number is left↔right (0% to 100%), the second is top↕bottom. The copy box covers the left half on desktop, so move the subject right.
-- **`heroPositionMobile: '60% 50%'`**: the same for phones.
+- **`accent: '#FF5A1F'`**: the heading colour, taken from the brand. Pick one that reads well on black. Default: Veritas blue.
+- **`masterPosition: '30% 50%'`**: which part of the master image stays in view when the screen crops it. The first number is left↔right (0% to 100%), the second is top↕bottom. Default: the centre.
+- **`masterPortrait: '/work/ketel-one/portrait.jpg'`**: the master image on phones held upright. Default: the tile's portrait photo.
+- **`positioning: '“A ferocious game played on the edge”'`**: the platform line, in its own pop-out after Truth, and under Platform on the first screen.
+- **`resultStat: { value: '1.9M → 3.8M', label: '…' }`**: a headline figure at the top of The Results.
+- `heroPosition`, `heroPositionMobile` and `heroSize` belonged to the previous case study card and are no longer used.
 - **`askPrompts: ['What was the truth behind Ketel One?']`**: the question Ask Veritas suggests on the page. Default: "What was the truth behind <Client>?".
 
 ## Unpublish

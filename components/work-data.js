@@ -7,7 +7,7 @@
 //
 // ─── PUBLISH A CASE STUDY ────────────────────────────────────────────────────
 // 1. Upload the photos to public/work/<slug>/ :
-//      hero.jpg  the case study photo, landscape, about 1850px wide
+//      hero.jpg  the master image (fills the screen behind the case study), landscape, 1920px wide
 //      tile.jpg  the grid tile, 892 x 500 (any landscape crop works)
 //      image-1.jpg … image-3.jpg  optional extra images, landscape, about 1600px wide
 // 2. Find the project below (or add it where it should sit in the grid) and
@@ -29,8 +29,9 @@
 //      title: 'KETEL ONE',                        // name in the title box (delete to use the tile's)
 //      subheading: 'Reframe The Possible',        // line in the title box (delete to use the tile's)
 //      intro: 'One-sentence summary.',            // opens the copy, above Problem (optional)
-//      hero: '/work/ketel-one/hero.jpg',
-//      images: [                                  // optional: up to 3, shown under MORE IMAGERY
+//      hero: '/work/ketel-one/hero.jpg',          // the master image, full screen behind the case study
+//      accent: '#FF5B36',                         // heading colour, from the brand
+//      images: [                                  // optional: up to 3, shown between the copy
 //        '/work/ketel-one/image-1.jpg',
 //        '/work/ketel-one/image-2.jpg',
 //        '/work/ketel-one/image-3.jpg',
@@ -55,6 +56,11 @@
 //   heroPosition: '70% 50%'        which part of the photo stays in view (left-right, top-bottom)
 //   heroPositionMobile: '60% 50%'  the same for phones
 //   heroSize: 'cover'              how the photo fills the card (default 'cover')
+//   accent: '#FF5A1F'              colour of the headings in the case study (from the brand; default Veritas blue)
+//   masterPosition: '30% 50%'      which part of the master image stays in view in the full-screen case study
+//   masterPortrait: '/work/<slug>/portrait.jpg'  master image on phones held upright (default: the tile portrait)
+//   positioning: '“…”'             optional: the platform line, in its own pop-out after Truth
+//   resultStat: { value: '1.9M → 3.8M', label: '…' }  optional headline figure in The Results
 //   askPrompts: ['What was the truth behind Ketel One?', 'A second question']
 //                                  questions Ask Veritas suggests on the page
 // ─────────────────────────────────────────────────────────────────────────────
@@ -77,6 +83,8 @@ export const WORK = [
       // (template-matched against the original photo). Mobile keeps the bottle
       // in view instead.
       hero: 'windhoekHero',
+      accent: '#C9A44C', // Windhoek gold
+      masterPosition: '30% 50%',
       images: [
         { src: "/work/windhoek/image-1.jpg", alt: "Friends toasting with Windhoek at an outdoor braai" },
         { src: "/work/windhoek/image-2.jpg", alt: "Windhoek packaging pattern" },
@@ -127,6 +135,9 @@ export const WORK = [
       subheading: "Rugby Reimagined",
       intro: "A ferocious new brand platform that breaks rugby out of its traditional bubble to compete directly in the modern high-octane entertainment market.",
       hero: "/work/gallagher-prem/hero.jpg",
+      accent: '#FF5A1F', // Ferocious Orange
+      positioning: '“A ferocious game played on the edge”',
+      resultStat: { value: '1.9M → 3.8M', label: 'Weekly reach the experience ecosystem was engineered to deliver: doubling the league’s audience.' },
       images: [
         { src: "/work/gallagher-prem/image-1.jpg", alt: "Gallagher PREM posters on a London street wall" },
         { src: "/work/gallagher-prem/image-2.jpg", alt: "Match action from a Gallagher PREM game" },
@@ -160,6 +171,7 @@ export const WORK = [
       subheading: "Paris Launch",
       intro: "Dismantling Systemic Barriers: Engineered a definitive operational toolkit and cultural ecosystem to establish Jordan as a purpose-driven brand in EMEA.",
       hero: "/work/jordan-wings/hero.jpg",
+      accent: '#F5D10A', // Wings yellow
       images: [
         { src: "/work/jordan-wings/image-1.jpg", alt: "A young player on a Paris court, with the Jordan Wings logo" },
         { src: "/work/jordan-wings/image-2.jpg", alt: "About Jordan Wings: programme page" },
@@ -193,6 +205,7 @@ export const WORK = [
       // The case study's title box carries the platform name; the tile keeps its line.
       subheading: 'Hello Curious',
       hero: 'seedlipHero',
+      accent: '#E98A4F', // Seedlip copper-orange
       images: [
         { src: "/work/seedlip/image-1.jpg", alt: "Orange and ice, close up" },
         { src: "/work/seedlip/image-2.jpg", alt: "Seedlip: Serve with Tonic" },
@@ -245,6 +258,7 @@ export const WORK = [
       subheading: "The Carbon Concept Store",
       intro: "Materialised the invisible cost of carbon to force radical industry accountability and drive high-value omni-channel growth.",
       hero: "/work/allbirds/hero.jpg",
+      accent: '#A8C79B', // natural sage
       images: [
         { src: "/work/allbirds/image-1.jpg", alt: "The Allbirds carbon concept store at Selfridges" },
         { src: "/work/allbirds/image-2.jpg", alt: "The carbon timeline wall in store" },
@@ -281,6 +295,7 @@ export const WORK = [
       subheading: "Global Social Impact",
       intro: "Re-engineered Uber’s global brand perception by transforming an invisible workforce into the celebrated centre of the business.",
       hero: "/work/uber-social-impact/hero.jpg",
+      accent: '#06C167', // Uber green
       images: [
         { src: "/work/uber-social-impact/image-1.jpg", alt: "“Thank you Antwyan” billboard" },
         { src: "/work/uber-social-impact/image-2.jpg", alt: "A driver beside his thank-you mural" },
@@ -315,6 +330,7 @@ export const WORK = [
       subheading: "Reframe The Possible",
       intro: "Unifying a fragmented portfolio to command the elevated global cocktail occasion.",
       hero: "/work/ketel-one/hero.jpg",
+      accent: '#FF5B36', // cocktail orange-red
       images: [
         { src: "/work/ketel-one/image-1.jpg", alt: "Ketel One: Mix up your ordinary" },
         { src: "/work/ketel-one/image-2.jpg", alt: "Choose your cocktail moment, on iPad" },

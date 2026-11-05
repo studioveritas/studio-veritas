@@ -116,3 +116,85 @@ export function zoomToCaseStudy(event, work, tileImg) {
     setTimeout(go, masterLayer ? 140 : 0)
   )
 }
+
+/* ------------------------------------------------------------ case study → case study */
+
+// The case study page's shading over the master image: on the first screen, and
+// once scrolled into the copy. Shared so the crossfade ends on the same frame.
+export const HERO_SHADE =
+  'radial-gradient(70% 55% at 0% 100%, rgba(0,0,0,0.75), rgba(0,0,0,0) 70%), linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.8) 100%)'
+export const SCROLLED_SHADE = 'rgba(0, 0, 0, 0.68)'
+
+const FADE_MS = 1000
+
+// From one case study to another (Next case study, the arrows, ← →): the copy
+// fades away, this master image crossfades into the next one, and the next case
+// study opens on that frame at the top of its page.
+// `event` may be null (keyboard). Returns true if it took over the navigation.
+export function crossfadeToCaseStudy(event, work) {
+  if (event && (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) return false
+  const href = `/experience/${work.slug}`
+  const current = document.querySelector('.sv-cx-stage img')
+  const stage = document.querySelector('.sv-cx-stage')
+  const next = masterOf(work)
+  if (!current || !stage || !next.src || document.querySelector('.sv-zoom')) return false
+  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return false
+  event?.preventDefault()
+
+  const r = stage.getBoundingClientRect()
+  const cs = getComputedStyle(current)
+  const scrolled = document.querySelector('.sv-cx[data-scrolled="1"]')
+
+  const root = document.createElement('div')
+  root.className = 'sv-zoom'
+  root.setAttribute('aria-hidden', 'true')
+  root.style.cssText = 'position:fixed;inset:0;z-index:35;pointer-events:none;background:#000;opacity:0;'
+  const frame = document.createElement('div')
+  frame.style.cssText = `position:absolute;left:${r.left}px;top:0;width:${r.width}px;height:${r.height}px;overflow:hidden;background:#000;box-shadow:0 0 0 1px rgba(255,255,255,0.2);`
+  const layer = (src, pos, transform) => {
+    const im = document.createElement('img')
+    im.src = src
+    im.alt = ''
+    im.decoding = 'async'
+    im.style.cssText = `position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:${pos};transform-origin:60% 40%;transform:${transform};`
+    frame.appendChild(im)
+    return im
+  }
+  const shade = (bg, opacity) => {
+    const d = document.createElement('div')
+    d.style.cssText = `position:absolute;inset:0;background:${bg};opacity:${opacity};`
+    frame.appendChild(d)
+    return d
+  }
+  // where the page is now: the current image, mid-drift, under its current shade
+  layer(current.currentSrc || current.src, cs.objectPosition, cs.transform === 'none' ? 'none' : cs.transform)
+  const nowShade = shade(scrolled ? SCROLLED_SHADE : HERO_SHADE, 1)
+  // where the next page starts: its master at the start of the drift, first-screen shade
+  const incoming = layer(next.src, next.position, 'scale(1.1)')
+  incoming.style.opacity = '0'
+  const nextShade = shade(HERO_SHADE, 0)
+  root.appendChild(frame)
+  document.body.appendChild(root)
+
+  // the copy, arrows and X fade away; the overlay takes over beneath the nav
+  const page = document.querySelectorAll('.sv-cx-inner, .sv-cx-close, .sv-cx-arrow')
+  page.forEach((el) => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 320, easing: 'ease', fill: 'forwards' }))
+  root.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 1, delay: 300, fill: 'forwards' })
+
+  const ready = new Promise((res) => {
+    if (incoming.complete && incoming.naturalWidth) res()
+    else { incoming.onload = res; incoming.onerror = res }
+  })
+  const opts = { duration: FADE_MS, easing: 'cubic-bezier(0.45, 0, 0.2, 1)', fill: 'forwards' }
+  const run = ready.then(() => {
+    nowShade.animate([{ opacity: 1 }, { opacity: 0 }], opts)
+    nextShade.animate([{ opacity: 0 }, { opacity: 1 }], opts)
+    incoming.animate([{ transform: 'scale(1.1)' }, { transform: `scale(${START_SCALE})` }], opts)
+    return incoming.animate([{ opacity: 0 }, { opacity: 1 }], opts).finished
+  })
+
+  try { sessionStorage.setItem(ZOOM_FLAG, work.slug) } catch (e) {}
+  // wait for the image, but not forever: the next page fades it in if it's slow
+  Promise.race([run, new Promise((res) => setTimeout(res, 2400))]).then(() => setTimeout(() => window.location.assign(href), 60))
+  return true
+}

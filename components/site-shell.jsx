@@ -17,8 +17,7 @@ import { SiteFooter } from './site-chrome'
 export const CONTACT_EMAIL = 'info@studio-veritas.com'
 
 
-export const cursorSvg =
-  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='24' viewBox='0 0 18 24' fill='none'><path d='M1 1L1 18.5L5.5 14L10 22L13 20.5L8.5 12.5L14.5 12L1 1Z' fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='round'/></svg>"
+export const cursorSvg = '/sv-cursor.png' // the Studio Veritas eye-triangle, white (public/sv-cursor.png)
 
 export function SiteShell({ pageKey, srOnly, children, onEscape }) {
   const [mounted, setMounted] = useState(false)
@@ -43,10 +42,10 @@ export function SiteShell({ pageKey, srOnly, children, onEscape }) {
   return (
     <main
       className={`sv-${pageKey}-container relative w-full text-white`}
-      style={{ background: '#D8FF00', cursor: `url("${cursorSvg}") 4 2, auto` }}
+      style={{ background: '#D8FF00', cursor: `url("${cursorSvg}") 16 1, auto` }}
     >
       <style>{`
-        .${root} * { cursor: url("${cursorSvg}") 4 2, auto !important; }
+        .${root} * { cursor: url("${cursorSvg}") 16 1, auto !important; }
         .sv-${pageKey}-container { min-height: 100vh; }
         @supports (min-height: 100dvh) { .sv-${pageKey}-container { min-height: 100dvh; } }
         .${root} button, .${root} a { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }

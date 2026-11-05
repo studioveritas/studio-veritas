@@ -5,7 +5,7 @@ export const metadata = {
   description:
     'Discover, Define, Develop — how Studio Veritas turns a brief into strategy and strategy into creative work.',
   alternates: {
-    canonical: '/process',
+    canonical: '/principles',
   },
 }
 

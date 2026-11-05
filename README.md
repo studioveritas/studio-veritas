@@ -12,7 +12,7 @@ is the whole interactive site; everything else is standard scaffolding
 
 **Known gaps to fill in before/after launch:**
 - Share images (1200×630) are generated at build time by the
-  `opengraph-image.tsx` files: the site default, /experience, and one per
+  `opengraph-image.tsx` files: the site default, /work, and one per
   case study (photo + title box). Fonts for them live in `assets/fonts`.
 - The site domain is `https://www.studio-veritas.com` (`SITE_URL` in
   `app/layout.tsx`, also used by `app/sitemap.ts` and `public/robots.txt`).

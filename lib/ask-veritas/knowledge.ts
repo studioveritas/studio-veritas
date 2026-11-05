@@ -14,7 +14,8 @@ export const KNOWLEDGE = `
 
 ## What it is
 Studio Veritas is a creative strategy studio, described in its credentials as a "strategy and design studio" and a "freelance team for strategy + design + innovation". Offices/locations listed: Amsterdam, London, Paris, Portland.
-Tagline: "The truth will set you free." Also used: "Growth in truth."
+Tagline: "The truth will set you free." Also used: "Truth brought to life." (formerly "Growth in truth.")
+Home page: "Studio Veritas is a small team of big agency talent. No layers, no waste. Just sharp strategy and big ideas. We find the truth in products, brands, categories and cultures. Then we find the tension between them. That’s where the strategy starts, and where big ideas are born. We build everything on the best idea: identity, product, spaces, activation, campaigns. One idea. Everywhere."
 Positioning line: "360º human-centric storytelling. Brand and platform thinking: bold ideas that inform culture and add value to people's lives."
 Work is framed as "the ideas behind the ideas". Clients are framed as "iconic brands need iconic work".
 

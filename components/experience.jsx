@@ -22,9 +22,10 @@ const CONTACT_PANELS = {
 
 // The centre copy on the home page (typed in on load).
 const HOME_COPY = [
-  'Studio Veritas is an agile strategy,\ndesign and innovation team.',
-  'We partner to isolate the fundamental\ntruths behind a brand.',
-  'We deliver nimble, sharp decision-making\nto solve complex challenges and drive\nlasting commercial growth.',
+  'Studio Veritas is a small team of big agency talent.\nNo layers, no waste. Just sharp strategy and big ideas.',
+  'We find the truth in products, brands, categories and cultures.\nThen we find the tension between them. That’s where the strategy\nstarts, and where big ideas are born.',
+  'We build everything on the best idea:\nidentity, product, spaces, activation, campaigns.',
+  'One idea. Everywhere.',
 ]
 
 const POPUP_PARAGRAPHS = [
@@ -123,15 +124,14 @@ export function Experience() {
     return () => clearInterval(interval)
   }, [infoOpen])
 
-  const cursorSvg =
-    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='24' viewBox='0 0 18 24' fill='none'><path d='M1 1L1 18.5L5.5 14L10 22L13 20.5L8.5 12.5L14.5 12L1 1Z' fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='round'/></svg>"
+  const cursorSvg = '/sv-cursor.png' // the Studio Veritas eye-triangle, white (public/sv-cursor.png)
 
   return (
     <main
       className="sv-container relative w-full overflow-hidden text-white"
       style={{
         background: '#D8FF00',
-        cursor: `url("${cursorSvg}") 4 2, auto`,
+        cursor: `url("${cursorSvg}") 16 1, auto`,
       }}
     >
       <script
@@ -153,7 +153,7 @@ export function Experience() {
         }}
       />
       <style>{`
-        .sv-root * { cursor: url("${cursorSvg}") 4 2, auto !important; }
+        .sv-root * { cursor: url("${cursorSvg}") 16 1, auto !important; }
         .sv-container { height: 100vh; }
         @supports (height: 100dvh) { .sv-container { height: 100dvh; } }
         .sv-root button, .sv-root a { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
@@ -170,10 +170,10 @@ export function Experience() {
         }
         .sv-case-copy { font-size: 18pt; }
         @media (min-width: 768px) { .sv-case-copy { font-size: 28px; } }
-        .sv-home-copy { font-size: 17px; line-height: 1.2; max-width: 34ch; margin: 0 auto; }
+        .sv-home-copy { font-size: 15px; line-height: 1.25; max-width: 34ch; margin: 0 auto; }
         .sv-home-copy p + p { margin-top: 1.05em; }
-        @media (min-width: 768px) { .sv-home-copy { font-size: 22px; line-height: 1.14; max-width: none; white-space: pre-line; } }
-        @media (min-width: 1280px) { .sv-home-copy { font-size: 28px; } }
+        @media (min-width: 768px) { .sv-home-copy { font-size: 19px; line-height: 1.18; max-width: none; white-space: pre-line; } }
+        @media (min-width: 1280px) { .sv-home-copy { font-size: 24px; } }
         .sv-home-tag { font-size: 26px; }
         @media (min-width: 768px) { .sv-home-tag { font-size: 34px; } }
         @media (min-width: 1280px) { .sv-home-tag { font-size: 44px; } }
@@ -200,7 +200,7 @@ export function Experience() {
         ))}
         <h2>Selected work</h2>
         <p>
-          See <a href="/experience">Work</a>:{' '}
+          See <a href="/work">Work</a>:{' '}
           {WORK.map((w) => `${w.client} (${w.subheading})`).join(', ')}.
         </p>
         <h2>{CONTACT_PANELS.companies.heading}</h2>
@@ -249,7 +249,7 @@ export function Experience() {
           </svg>
         </div>
 
-        {/* CENTRE COPY: typed in on load (after the intro on a first visit); GROWTH IN TRUTH on rollover */}
+        {/* CENTRE COPY: typed in on load (after the intro on a first visit); TRUTH BROUGHT TO LIFE on rollover */}
         <div className="absolute inset-0 flex items-center justify-center px-6" style={{ zIndex: 30, pointerEvents: 'none' }}>
           <div
             data-sv-intro="copy"
@@ -287,7 +287,7 @@ export function Experience() {
                     style={{ fontFamily: "'IBM Plex Mono', monospace", letterSpacing: '-0.01em' }}
                     className="sv-home-tag absolute inset-0 flex items-center justify-center font-medium text-black whitespace-nowrap"
                   >
-                    GROWTH IN TRUTH
+                    TRUTH BROUGHT TO LIFE
                   </motion.p>
                 )}
               </AnimatePresence>

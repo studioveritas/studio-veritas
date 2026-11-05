@@ -10,7 +10,7 @@
 // comes into view), the extra images between them, and The Results.
 // Headings in the pop-outs use the case study's own `accent` colour.
 //
-// The Experience page is unchanged: its tiles still link to /experience/<slug>,
+// The Work page is unchanged: its tiles still link to /work/<slug>,
 // zooming into the master image on the way (components/case-zoom.js). Moving on
 // to another case study crossfades master image to master image. Arriving either
 // way, the master image shows at once instead of fading in.
@@ -175,7 +175,7 @@ function Arrow({ dir, target }) {
   const cls = `sv-cx-arrow sv-cx-arrow-${dir}`
   if (!target) return <span className={cls} aria-hidden="true" data-state="end">{icon}</span>
   return (
-    <a className={cls} href={`/experience/${target.slug}`} onClick={(e) => crossfadeToCaseStudy(e, target)} aria-label={`${prev ? 'Previous' : 'Next'} case study: ${target.client}`}>
+    <a className={cls} href={`/work/${target.slug}`} onClick={(e) => crossfadeToCaseStudy(e, target)} aria-label={`${prev ? 'Previous' : 'Next'} case study: ${target.client}`}>
       {icon}
     </a>
   )
@@ -192,7 +192,7 @@ export function CaseStudy({ slug }) {
   const [scrolled, setScrolled] = useState(false)
   const [zoom, setZoom] = useState(null)
 
-  const backToExperience = useCallback(() => { window.location.href = '/experience' }, [])
+  const backToExperience = useCallback(() => { window.location.href = '/work' }, [])
 
   // Entrance, scroll state, and white eye / footer triangle over the dark page.
   useEffect(() => {
@@ -225,7 +225,7 @@ export function CaseStudy({ slug }) {
       if (e.target instanceof HTMLElement && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return
       if (document.querySelector('.av-panel, [data-sv-modal="open"]')) return
       const to = e.key === 'ArrowLeft' ? prev : e.key === 'ArrowRight' ? next : null
-      if (to && !crossfadeToCaseStudy(null, to)) window.location.href = `/experience/${to.slug}`
+      if (to && !crossfadeToCaseStudy(null, to)) window.location.href = `/work/${to.slug}`
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -466,19 +466,19 @@ export function CaseStudy({ slug }) {
           </div>
 
           {next ? (
-            <a className="sv-cx-next" href={`/experience/${next.slug}`} onClick={(e) => crossfadeToCaseStudy(e, next)}>
+            <a className="sv-cx-next" href={`/work/${next.slug}`} onClick={(e) => crossfadeToCaseStudy(e, next)}>
               <small>Next case study</small>
               <strong>{next.name} →</strong>
             </a>
           ) : (
-            <a className="sv-cx-next" href="/experience">
+            <a className="sv-cx-next" href="/work">
               <small>That’s the last one</small>
-              <strong>Back to Experience →</strong>
+              <strong>Back to Work →</strong>
             </a>
           )}
         </div>
 
-        <a className="sv-cx-close" href="/experience" aria-label="Close case study, back to Experience">
+        <a className="sv-cx-close" href="/work" aria-label="Close case study, back to Work">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" /></svg>
         </a>
         <nav aria-label="Case studies">

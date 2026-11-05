@@ -209,15 +209,14 @@ export function Process() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  const cursorSvg =
-    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='24' viewBox='0 0 18 24' fill='none'><path d='M1 1L1 18.5L5.5 14L10 22L13 20.5L8.5 12.5L14.5 12L1 1Z' fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='round'/></svg>"
+  const cursorSvg = '/sv-cursor.png' // the Studio Veritas eye-triangle, white (public/sv-cursor.png)
 
   const activeStep = STEPS.find((s) => s.id === active)
 
   return (
     <main
       className="sv-process-container relative w-full overflow-hidden text-white"
-      style={{ background: '#D8FF00', cursor: `url("${cursorSvg}") 4 2, auto` }}
+      style={{ background: '#D8FF00', cursor: `url("${cursorSvg}") 16 1, auto` }}
     >
       <script
         type="application/ld+json"
@@ -236,7 +235,7 @@ export function Process() {
         }}
       />
       <style>{`
-        .sv-process-root * { cursor: url("${cursorSvg}") 4 2, auto !important; }
+        .sv-process-root * { cursor: url("${cursorSvg}") 16 1, auto !important; }
         .sv-process-container { height: 100vh; }
         @supports (height: 100dvh) { .sv-process-container { height: 100dvh; } }
         .sv-process-root button, .sv-process-root a { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }

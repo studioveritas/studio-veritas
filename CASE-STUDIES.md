@@ -3,7 +3,7 @@
 Each case study takes one entry in `components/work-data.js` and two photos. Once you commit them, the following update automatically:
 
 - the tile becomes a link
-- the case study page goes live at `/experience/<slug>`
+- the case study page goes live at `/work/<slug>`
 - the arrows include it
 - it gets a share image for LinkedIn and others
 - it's added to the sitemap
@@ -16,7 +16,7 @@ You can do it all in the browser on GitHub. Vercel deploys within a couple of mi
 
 | | |
 |---|---|
-| **Slug** | The web address, in lowercase with hyphens, e.g. `ketel-one` → `/experience/ketel-one` |
+| **Slug** | The web address, in lowercase with hyphens, e.g. `ketel-one` → `/work/ketel-one` |
 | **Name** | On the tile and the title box, e.g. `KETEL ONE` |
 | **Client** | The brand as normally written, e.g. `Ketel One` |
 | **Tile line** | The line under the tile, e.g. `Reframing the cocktail moment` |

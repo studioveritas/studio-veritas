@@ -19,7 +19,7 @@ export default async function Image() {
         <div style={{ position: 'absolute', top: 0, left: 0, width: 1200, height: 630, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={LOGO_SRC_BLACK} alt="Studio Veritas" width={560} height={133} style={{ width: 560, height: 133 }} />
-          <div style={{ marginTop: 26, fontSize: 30, fontWeight: 500, letterSpacing: 6, color: '#000', textTransform: 'uppercase' }}>Growth in truth</div>
+          <div style={{ marginTop: 26, fontSize: 30, fontWeight: 500, letterSpacing: 6, color: '#000', textTransform: 'uppercase' }}>Truth brought to life</div>
           <div style={{ marginTop: 12, fontSize: 24, fontWeight: 400, color: '#000' }}>Freelance team for strategy + design + innovation</div>
         </div>
       </div>

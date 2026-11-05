@@ -122,7 +122,7 @@ export function zoomToCaseStudy(event, work, tileImg) {
 // The case study page's shading over the master image: on the first screen, and
 // once scrolled into the copy. Shared so the crossfade ends on the same frame.
 export const HERO_SHADE =
-  'radial-gradient(70% 55% at 0% 100%, rgba(0,0,0,0.75), rgba(0,0,0,0) 70%), linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.8) 100%)'
+  'radial-gradient(80% 65% at 0% 100%, rgba(0,0,0,0.85), rgba(0,0,0,0) 72%), linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.8) 100%)'
 export const SCROLLED_SHADE = 'rgba(0, 0, 0, 0.68)'
 
 const FADE_MS = 1000

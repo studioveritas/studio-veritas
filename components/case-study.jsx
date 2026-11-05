@@ -11,8 +11,9 @@
 // Headings in the pop-outs use the case study's own `accent` colour.
 //
 // The Experience page is unchanged: its tiles still link to /experience/<slug>,
-// zooming into the master image on the way (components/case-zoom.js). Arriving
-// that way, the master image shows at once instead of fading in.
+// zooming into the master image on the way (components/case-zoom.js). Moving on
+// to another case study crossfades master image to master image. Arriving either
+// way, the master image shows at once instead of fading in.
 // Everything comes from components/work-data.js (see CASE-STUDIES.md):
 //   hero / heroPosition       the master image and which part stays in view
 //   portrait                  used as the master on phones held upright
@@ -26,7 +27,7 @@ import { SiteShell } from './site-shell'
 import { getCaseStudy, getNeighbours, caseSubheading, caseTitle } from './work-data'
 import { CASE_STUDY_HEROES } from './case-images'
 import { paragraphs } from './typed-sections'
-import { zoomArrivalScript, clearZoomArrival } from './case-zoom'
+import { zoomArrivalScript, clearZoomArrival, clearZoomOverlays, crossfadeToCaseStudy, HERO_SHADE, SCROLLED_SHADE } from './case-zoom'
 
 const MONO = "'IBM Plex Mono', monospace"
 const DISPLAY = "'Chakra Petch', sans-serif"
@@ -174,7 +175,7 @@ function Arrow({ dir, target }) {
   const cls = `sv-cx-arrow sv-cx-arrow-${dir}`
   if (!target) return <span className={cls} aria-hidden="true" data-state="end">{icon}</span>
   return (
-    <a className={cls} href={`/experience/${target.slug}`} aria-label={`${prev ? 'Previous' : 'Next'} case study: ${target.client}`}>
+    <a className={cls} href={`/experience/${target.slug}`} onClick={(e) => crossfadeToCaseStudy(e, target)} aria-label={`${prev ? 'Previous' : 'Next'} case study: ${target.client}`}>
       {icon}
     </a>
   )
@@ -203,10 +204,18 @@ export function CaseStudy({ slug }) {
     const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.55)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
+    // Back from the next case study can restore this page as it was left, mid-crossfade
+    const onShow = (e) => {
+      if (!e.persisted) return
+      clearZoomOverlays()
+      document.querySelectorAll('.sv-cx-inner, .sv-cx-close, .sv-cx-arrow').forEach((el) => el.getAnimations().forEach((an) => an.cancel()))
+    }
+    window.addEventListener('pageshow', onShow)
     return () => {
       cancelAnimationFrame(raf)
       clearTimeout(clear)
       window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('pageshow', onShow)
       delete root.dataset.svDarkBottom
     }
   }, [])
@@ -215,8 +224,8 @@ export function CaseStudy({ slug }) {
     const onKey = (e) => {
       if (e.target instanceof HTMLElement && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return
       if (document.querySelector('.av-panel, [data-sv-modal="open"]')) return
-      if (e.key === 'ArrowLeft' && prev) window.location.href = `/experience/${prev.slug}`
-      if (e.key === 'ArrowRight' && next) window.location.href = `/experience/${next.slug}`
+      const to = e.key === 'ArrowLeft' ? prev : e.key === 'ArrowRight' ? next : null
+      if (to && !crossfadeToCaseStudy(null, to)) window.location.href = `/experience/${to.slug}`
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -301,14 +310,14 @@ export function CaseStudy({ slug }) {
         .sv-cx[data-ready='1'] .sv-cx-stage img { opacity: 1; }
         /* arriving by the zoom from Experience: the master is already in place */
         html[data-sv-zoom='1'] .sv-cx-stage img { opacity: 1; transition: none; }
+        /* …and the nav bar stays put instead of fading in with the new page */
+        html[data-sv-zoom='1'] .sv-nav { opacity: 1 !important; transform: translateX(-50%) !important; }
         @keyframes sv-cx-drift { 0% { transform: scale(1.02); } 100% { transform: scale(1.09) translate(-1.2%, -0.8%); } }
         .sv-cx-shade {
           position: absolute; inset: 0; transition: background 0.5s;
-          background:
-            radial-gradient(70% 55% at 0% 100%, rgba(0,0,0,0.75), rgba(0,0,0,0) 70%),
-            linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.8) 100%);
+          background: ${HERO_SHADE};
         }
-        .sv-cx[data-scrolled='1'] .sv-cx-shade { background: rgba(0, 0, 0, 0.68); }
+        .sv-cx[data-scrolled='1'] .sv-cx-shade { background: ${SCROLLED_SHADE}; }
 
         .sv-cx-inner { position: relative; z-index: 1; width: min(100vw, var(--maxw)); margin: 0 auto; }
 
@@ -457,7 +466,7 @@ export function CaseStudy({ slug }) {
           </div>
 
           {next ? (
-            <a className="sv-cx-next" href={`/experience/${next.slug}`}>
+            <a className="sv-cx-next" href={`/experience/${next.slug}`} onClick={(e) => crossfadeToCaseStudy(e, next)}>
               <small>Next case study</small>
               <strong>{next.name} →</strong>
             </a>

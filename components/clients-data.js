@@ -21,6 +21,8 @@ export const CLIENTS = [
   { id: 'adidas', name: 'Adidas', logo: CLIENT_LOGOS.adidas },
   { id: 'heineken', name: 'Heineken', logo: CLIENT_LOGOS.heineken },
   { id: 'vfcorp', name: 'VF Corporation', logo: CLIENT_LOGOS.vfcorp },
+  { id: 'icebreaker', name: 'Icebreaker', logo: CLIENT_LOGOS.icebreaker },
+  { id: 'pacmodo', name: 'Pacmodo', logo: CLIENT_LOGOS.pacmodo },
   { id: 'booking', name: 'Booking.com', logo: CLIENT_LOGOS.booking },
   { id: 'reckitt', name: 'Reckitt', logo: CLIENT_LOGOS.reckitt },
 ]

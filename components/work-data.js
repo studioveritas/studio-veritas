@@ -329,6 +329,7 @@ export const WORK = [
       subheading: "The Endless Pursuit of Progress",
       intro: "Putting performance, not sustainability, at the heart of a natural-fibre brand.",
       hero: "/work/icebreaker/hero.jpg",
+      positioning: "“The Endless Pursuit of Progress”",
       accent: "#F2A33A",
       images: [
         { src: "/work/icebreaker/image-1.jpg", alt: "Be More Merino: So it took 6 months to develop your fancy synthetic fibre? Try 6 million years of evolution." },
@@ -440,6 +441,7 @@ export const WORK = [
       subheading: "Our Kind of Energy",
       intro: "An energy drink for Africa, brewed with malt for energy that lasts as long as the hustle.",
       hero: "/work/zagg/hero.jpg",
+      positioning: "“Our kind of energy”",
       accent: "#FFC72C",
       images: [
         { src: "/work/zagg/image-1.jpg", alt: "ZAGG mural: When the world zigs… we zagg" },

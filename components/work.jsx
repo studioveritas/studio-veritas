@@ -5,7 +5,8 @@
 // view; LOAD MORE adds the next nine once the first nine are on the page. Below the band, the
 // client logos scroll past on a ticker.
 //
-// Tiles with a case study link to /experience/<slug>; the rest show COMING SOON on rollover.
+// Tiles with a case study link to /experience/<slug>, zooming into it (components/case-zoom.js);
+// the rest show COMING SOON on rollover.
 // Filters (Brand, Comms, ...) sit beside the title; the choice is kept in the URL as ?tag=brand.
 //
 // Tile images: `portrait` in work-data.js (4:5, about 880 x 1100). Square tiles crop the same image.
@@ -19,6 +20,7 @@ import { PageTag } from './site-chrome'
 import { LogoTicker } from './logo-ticker'
 import { WORK, TAGS } from './work-data'
 import { WORK_TILES } from './work-images'
+import { zoomToCaseStudy, clearZoomOverlays } from './case-zoom'
 
 const MONO = "'IBM Plex Mono', monospace"
 const PAGE = 9 // tiles per load
@@ -56,7 +58,11 @@ function Tile({ work, order }) {
       transition={{ duration: 0.7, delay: (order % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
     >
       {live ? (
-        <a href={`/experience/${work.slug}`} className="sv-tile sv-tile-live" aria-label={`${work.client}: ${work.subheading}. Read the case study`}>
+        <a
+          href={`/experience/${work.slug}`}
+          className="sv-tile sv-tile-live"
+          onClick={(e) => zoomToCaseStudy(e, work, e.currentTarget.querySelector('.sv-tile-media img'))}
+          aria-label={`${work.client}: ${work.subheading}. Read the case study`}>
           {inner}
         </a>
       ) : (
@@ -83,6 +89,13 @@ export function Work() {
       const found = TAGS.find((t) => slug(t) === (q || '').toLowerCase())
       if (found) setTag(found)
     } catch {}
+  }, [])
+
+  // Coming back with the Back button can restore this page as it was left, mid-zoom: clear it.
+  useEffect(() => {
+    const onShow = () => clearZoomOverlays()
+    window.addEventListener('pageshow', onShow)
+    return () => window.removeEventListener('pageshow', onShow)
   }, [])
 
   // While the black band is behind the bottom corners, the eye and footer triangle turn white.

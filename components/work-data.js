@@ -82,7 +82,7 @@ export const WORK = [
       // these percentages, which reproduces the crop in the design at 1920x1080
       // (template-matched against the original photo). Mobile keeps the bottle
       // in view instead.
-      hero: 'windhoekHero',
+      hero: '/work/windhoek/hero.jpg',
       accent: '#C9A44C', // Windhoek gold
       masterPosition: '30% 50%',
       images: [
@@ -204,7 +204,7 @@ export const WORK = [
     caseStudy: {
       // The case study's title box carries the platform name; the tile keeps its line.
       subheading: 'Hello Curious',
-      hero: 'seedlipHero',
+      hero: '/work/seedlip/hero.jpg',
       accent: '#E98A4F', // Seedlip copper-orange
       images: [
         { src: "/work/seedlip/image-1.jpg", alt: "Orange and ice, close up" },

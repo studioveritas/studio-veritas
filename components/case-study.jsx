@@ -10,7 +10,9 @@
 // comes into view), the extra images between them, and The Results.
 // Headings in the pop-outs use the case study's own `accent` colour.
 //
-// The Experience page is unchanged: its tiles still link to /experience/<slug>.
+// The Experience page is unchanged: its tiles still link to /experience/<slug>,
+// zooming into the master image on the way (components/case-zoom.js). Arriving
+// that way, the master image shows at once instead of fading in.
 // Everything comes from components/work-data.js (see CASE-STUDIES.md):
 //   hero / heroPosition       the master image and which part stays in view
 //   portrait                  used as the master on phones held upright
@@ -24,6 +26,7 @@ import { SiteShell } from './site-shell'
 import { getCaseStudy, getNeighbours, caseSubheading, caseTitle } from './work-data'
 import { CASE_STUDY_HEROES } from './case-images'
 import { paragraphs } from './typed-sections'
+import { zoomArrivalScript, clearZoomArrival } from './case-zoom'
 
 const MONO = "'IBM Plex Mono', monospace"
 const DISPLAY = "'Chakra Petch', sans-serif"
@@ -195,11 +198,14 @@ export function CaseStudy({ slug }) {
     const root = document.documentElement
     root.dataset.svDarkBottom = '1'
     const raf = requestAnimationFrame(() => setReady(true))
+    // the zoom's hand-off is done once the page has painted
+    const clear = setTimeout(clearZoomArrival, 1200)
     const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.55)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => {
       cancelAnimationFrame(raf)
+      clearTimeout(clear)
       window.removeEventListener('scroll', onScroll)
       delete root.dataset.svDarkBottom
     }
@@ -293,6 +299,8 @@ export function CaseStudy({ slug }) {
           opacity: 0; transition: opacity 1.1s ease;
         }
         .sv-cx[data-ready='1'] .sv-cx-stage img { opacity: 1; }
+        /* arriving by the zoom from Experience: the master is already in place */
+        html[data-sv-zoom='1'] .sv-cx-stage img { opacity: 1; transition: none; }
         @keyframes sv-cx-drift { 0% { transform: scale(1.02); } 100% { transform: scale(1.09) translate(-1.2%, -0.8%); } }
         .sv-cx-shade {
           position: absolute; inset: 0; transition: background 0.5s;
@@ -409,6 +417,7 @@ export function CaseStudy({ slug }) {
         }
       `}</style>
 
+      <script dangerouslySetInnerHTML={{ __html: zoomArrivalScript(slug) }} />
       <article className="sv-cx" data-ready={ready ? '1' : '0'} data-scrolled={scrolled ? '1' : '0'} aria-labelledby="sv-cx-title">
         <div className="sv-cx-black" aria-hidden="true" />
         <div className="sv-cx-stage" aria-hidden="true">

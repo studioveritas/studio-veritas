@@ -22,17 +22,17 @@ const sectionText = (s: Section) => (s.body ? s.body : (s.list || []).join(' '))
 // For the Ask Veritas knowledge base.
 export function workForKnowledge(): string {
   const list = ALL.map(
-    (w) => `- ${w.client}${w.name.toUpperCase() !== w.client.toUpperCase() ? ` (${w.name})` : ''}: ${w.subheading}.${w.caseStudy ? ` Case study: "${caseSubheading(w)}" (/experience/${w.slug}).` : ''}`
+    (w) => `- ${w.client}${w.name.toUpperCase() !== w.client.toUpperCase() ? ` (${w.name})` : ''}: ${w.subheading}.${w.caseStudy ? ` Case study: "${caseSubheading(w)}" (/work/${w.slug}).` : ''}`
   ).join('\n')
   const cases = CASES.map((w) =>
     [
-      `### ${w.client} case study, "${caseSubheading(w)}" (site, /experience/${w.slug})`,
+      `### ${w.client} case study, "${caseSubheading(w)}" (site, /work/${w.slug})`,
       ...(w.caseStudy!.intro ? [`- Summary: ${w.caseStudy!.intro}`] : []),
       ...w.caseStudy!.sections.map((s) => `- ${s.heading}: ${sectionText(s)}`),
     ].join('\n')
   ).join('\n\n')
   return `## Selected work (site)
-The Work page (/experience on studio-veritas.com, "Work" in the menu) shows the work as tiles, filterable by ${TAGS.join(', ')}; client logos scroll along the bottom of the Work page. News + Insights (/news) carries the In Signo Veritas articles. Full case studies so far: ${CASES.map((w) => `${w.client} (/experience/${w.slug})`).join(', ')}. The others are marked "coming soon".
+The Work page (/work on studio-veritas.com, "Work" in the menu) shows the work as tiles, filterable by ${TAGS.join(', ')}; client logos scroll along the bottom of the Work page. News + Insights (/news) carries the In Signo Veritas articles. Full case studies so far: ${CASES.map((w) => `${w.client} (/work/${w.slug})`).join(', ')}. The others are marked "coming soon".
 ${list}
 
 ${cases}`
@@ -44,11 +44,11 @@ export function workForLlms(): string {
     const head = `- **${w.client}** (${w.name}) — ${w.subheading}.`
     if (!w.caseStudy) return head
     const parts = [w.caseStudy.intro, ...w.caseStudy.sections.map((s) => `${s.heading}: ${sectionText(s)}`)].filter(Boolean).join(' ')
-    return `${head}\n  Case study "${caseSubheading(w)}": /experience/${w.slug}. ${parts}`
+    return `${head}\n  Case study "${caseSubheading(w)}": /work/${w.slug}. ${parts}`
   }).join('\n')
   return `## Work (selected case studies)
 
-Page: /experience. Tiles of work, filterable by ${TAGS.join(', ')} (e.g. /experience?tag=${TAGS[0].toLowerCase()}); full case studies are linked, the rest are marked "coming soon". Client logos run on a ticker under the Work grid. News + Insights: /news.
+Page: /work. Tiles of work, filterable by ${TAGS.join(', ')} (e.g. /work?tag=${TAGS[0].toLowerCase()}); full case studies are linked, the rest are marked "coming soon". Client logos run on a ticker under the Work grid. News + Insights: /news.
 
 ${items}`
 }

@@ -5,7 +5,7 @@
 // view; LOAD MORE adds the next nine once the first nine are on the page. Below the band, the
 // client logos scroll past on a ticker.
 //
-// Tiles with a case study link to /experience/<slug>, zooming into it (components/case-zoom.js);
+// Tiles with a case study link to /work/<slug>, zooming into it (components/case-zoom.js);
 // the rest show COMING SOON on rollover.
 // Filters (Brand, Comms, ...) sit beside the title; the choice is kept in the URL as ?tag=brand.
 //
@@ -59,7 +59,7 @@ function Tile({ work, order }) {
     >
       {live ? (
         <a
-          href={`/experience/${work.slug}`}
+          href={`/work/${work.slug}`}
           className="sv-tile sv-tile-live"
           onClick={(e) => zoomToCaseStudy(e, work, e.currentTarget.querySelector('.sv-tile-media img'))}
           aria-label={`${work.client}: ${work.subheading}. Read the case study`}>
@@ -148,7 +148,7 @@ export function Work() {
           <ul>
             {WORK.map((w) => (
               <li key={w.slug}>
-                {w.client} ({w.name}): {w.subheading}.{w.caseStudy ? ` Case study: /experience/${w.slug}` : ''}
+                {w.client} ({w.name}): {w.subheading}.{w.caseStudy ? ` Case study: /work/${w.slug}` : ''}
               </li>
             ))}
           </ul>
@@ -170,7 +170,7 @@ export function Work() {
                 name: w.name,
                 about: w.client,
                 description: w.subheading,
-                ...(w.caseStudy ? { url: `/experience/${w.slug}` } : {}),
+                ...(w.caseStudy ? { url: `/work/${w.slug}` } : {}),
               },
             })),
           }),

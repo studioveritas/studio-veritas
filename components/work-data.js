@@ -18,7 +18,7 @@
 //
 // ─── TEMPLATE (copy from { to }, ) ───────────────────────────────────────────
 //  {
-//    slug: 'ketel-one',                           // the web address: /experience/ketel-one
+//    slug: 'ketel-one',                           // the web address: /work/ketel-one
 //    name: 'KETEL ONE',                           // on the tile and the title box
 //    client: 'Ketel One',                         // brand name, as written normally
 //    subheading: 'Reframing the cocktail moment', // the line under the tile

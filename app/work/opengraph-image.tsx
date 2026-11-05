@@ -1,4 +1,4 @@
-// Share image for /experience: the work tiles as a 3x3 mosaic with a title box.
+// Share image for /work: the work tiles as a 3x3 mosaic with a title box.
 
 import { ImageResponse } from 'next/og'
 import { WORK } from '@/components/work-data'

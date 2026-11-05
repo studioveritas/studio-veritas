@@ -143,7 +143,7 @@ export default function AskVeritas({
   // nav triangle a moment after the page opens, and the first chips in the panel.
   // On /news, the chips lead with a question about the studio's point of view.
   const pathname = usePathname() || "";
-  const caseWork = getCaseStudy(pathname.match(/^\/experience\/([^/]+)\/?$/)?.[1] ?? "");
+  const caseWork = getCaseStudy(pathname.match(/^\/work\/([^/]+)\/?$/)?.[1] ?? "");
   const article = getArticle(pathname.match(/^\/news\/([^/]+)\/?$/)?.[1] ?? "");
   const casePrompts: string[] = caseWork
     ? askPromptsFor(caseWork)

@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props) {
   const truth = work.caseStudy?.sections.find((s: { heading: string }) => s.heading === 'Truth')?.body
   const intro = work.caseStudy?.intro
   const description = intro || (truth ? `${truth} A Studio Veritas case study.` : `${work.subheading}. A Studio Veritas case study.`)
-  const url = `/experience/${work.slug}`
+  const url = `/work/${work.slug}`
   return {
     title,
     description,

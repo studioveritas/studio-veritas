@@ -446,22 +446,41 @@ export function SiteFooter({ open, onClose }) {
 // tone="light": off-white with black type, for pages on black (WORK).
 // tone="ink": black with warm beige type, for News + Insights.
 // The plain one-line title that sits above a page's content when its tag is in the nav bar.
-export function PageTitle({ children, className = '' }) {
+// It types out once, in the site's typewriter style. The full line is reserved invisibly underneath,
+// so nothing below it shifts while it types; screen readers and crawlers get the whole line at once.
+export function PageTitle({ children, className = '', delay = 450, speed = 55 }) {
+  const text = String(children)
+  const [typed, setTyped] = useState(0)
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { setTyped(text.length); return }
+    setTyped(0)
+    let iv
+    const t = setTimeout(() => {
+      iv = setInterval(() => setTyped((n) => { if (n + 1 >= text.length) clearInterval(iv); return Math.min(n + 1, text.length) }), speed)
+    }, delay)
+    return () => { clearTimeout(t); clearInterval(iv) }
+  }, [text, delay, speed])
+  const done = typed >= text.length
   return (
     <>
       <style>{`
-        .sv-page-title { font-size: 17px; }
+        .sv-page-title { font-size: 17px; position: relative; width: fit-content; margin-left: auto; margin-right: auto; }
         @media (min-width: 768px) { .sv-page-title { font-size: 26px; } }
+        .sv-page-title-typed { position: absolute; inset: 0; white-space: pre; }
+        .sv-page-title-caret::after { content: '\\2588'; animation: sv-title-blink 0.8s step-end infinite; margin-left: 2px; }
+        @keyframes sv-title-blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
       `}</style>
-      <motion.h2
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.15 }}
+      <h2
+        aria-label={text}
         className={`sv-page-title text-black text-center ${className}`}
         style={{ fontFamily: MONO, fontWeight: 400, lineHeight: 1.3 }}
       >
-        {children}
-      </motion.h2>
+        <span aria-hidden="true" style={{ visibility: 'hidden', whiteSpace: 'pre' }}>{text}</span>
+        <span aria-hidden="true" className="sv-page-title-typed" style={{ textAlign: 'left' }}>
+          {text.slice(0, typed)}
+          {!done && <span className="sv-page-title-caret" />}
+        </span>
+      </h2>
     </>
   )
 }

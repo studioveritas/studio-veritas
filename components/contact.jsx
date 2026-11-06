@@ -150,7 +150,7 @@ export function Contact() {
                   className="sv-contact-subline mt-3 md:mt-4 text-black"
                   style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                 >
-                  Freelance team. Strategy + Creative + Innovation
+                  Your team for Strategy + Design + Innovation
                 </p>
               </div>
               <img
@@ -189,7 +189,7 @@ export function Contact() {
           </motion.div>
         </div>
 
-        {/* BOTTOM-RIGHT: FOR COMPANIES / FOR AGENCIES + footer trigger */}
+        {/* BOTTOM-RIGHT: footer trigger (For Companies / For Agencies live in the shared bottom-centre buttons) */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: mounted ? 1 : 0 }}
@@ -197,19 +197,6 @@ export function Contact() {
           className="sv-contact-row fixed sv-safe-bottom sv-safe-right flex flex-row items-center gap-3 md:gap-4"
           style={{ zIndex: 40 }}
         >
-          {['companies', 'agencies'].map((key) => {
-            const activeContact = contactPanel === key
-            return (
-              <button
-                key={key}
-                onClick={() => setContactPanel((v) => (v === key ? null : key))}
-                className="text-[11px] md:text-xs font-medium tracking-[0.12em] uppercase hover:opacity-70 transition-opacity whitespace-nowrap p-2 -m-2"
-                style={{ color: activeContact ? '#5683DD' : '#000000', fontFamily: "'IBM Plex Mono', monospace" }}
-              >
-                {key === 'companies' ? 'FOR COMPANIES' : 'FOR AGENCIES'}
-              </button>
-            )
-          })}
           <button
             onClick={() => setFooterOpen(true)}
             className="p-2 -m-2 touch-manipulation hover:opacity-70 transition-opacity"

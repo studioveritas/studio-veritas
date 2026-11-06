@@ -258,7 +258,7 @@ export function CaseStudy({ slug }) {
   body.forEach((s, i) => {
     blocks.push({ type: 'pop', key: s.heading, s, side: side++ % 2 ? 'right' : 'left' })
     if (/^truth$/i.test(s.heading) && cs.positioning) {
-      blocks.push({ type: 'pop', key: 'positioning', s: { heading: 'The Positioning', body: cs.positioning }, side: side++ % 2 ? 'right' : 'left' })
+      blocks.push({ type: 'pop', key: 'positioning', s: { heading: 'The Big Idea', body: cs.positioning }, side: side++ % 2 ? 'right' : 'left' })
     }
     if (i === 0 && images[0]) blocks.push({ type: 'fig', key: 'fig0', im: images[0] })
   })

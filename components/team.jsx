@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC, ICON_SRC, ICON_SRC_BLACK, LANDING_IMG_DESKTOP, LANDING_IMG_MOBILE, TEAM_PHOTO_GUILLAUME, TEAM_PHOTO_ALI } from './media'
-import { SiteFooter, PageTag } from './site-chrome'
+import { SiteFooter, PageTitle } from './site-chrome'
 
 const CONTACT_EMAIL = 'info@studio-veritas.com'
 
@@ -170,8 +170,8 @@ export function Team() {
             the photo itself, in the same rounded/bordered/shadowed style
             with spring entrance + typewriter reveal used everywhere else
             on the site (info popup, contact panel, process step pop-outs). */}
-        <div className="relative min-h-screen flex flex-col items-center justify-start md:justify-center px-4 pt-[96px] pb-36 md:pt-[150px] md:pb-32" style={{ zIndex: 1 }}>
-          <PageTag label="Team" className="mb-8 md:mb-9" />
+        <div className="relative min-h-screen flex flex-col items-center justify-start md:justify-center px-4 pt-[124px] pb-36 md:pt-[150px] md:pb-32" style={{ zIndex: 1 }}>
+          <PageTitle className="mb-10 md:mb-16">Team Studio Veritas</PageTitle>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12 max-w-[900px] w-full">
             {TEAM.map((member) => {
               const open = !!openIds[member.id]

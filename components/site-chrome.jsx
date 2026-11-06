@@ -6,7 +6,9 @@
 //                                  you down the page (Ask Veritas · wordmark · menu), the menu itself,
 //                                  and the eye in the bottom-left corner.
 //   <SiteFooter open onClose />    the slide-up footer, opened by each page's bottom-right triangle.
-//   <PageTag label onClose />      the black title tag above a page's content (TEAM, PRINCIPLES, CONTACT US).
+//   NAV_TAGS                       the black title tag that sits in the nav bar, left of the menu, on
+//                                  Team, Principles and Contact. Add a path here to give a page one.
+//   <PageTag label onClose />      the larger black title tag above a page's content (Work, News).
 //
 // Layers: content 1 · nav, eye, bottom controls 40 · menu & pop-outs 50 · Ask panel 55 · footer 60 · grain 100.
 
@@ -23,6 +25,9 @@ export const ABOUT_EVENT = 'sv:about-toggle'
 
 const MONO = "'IBM Plex Mono', monospace"
 
+// Pages whose black title tag lives in the nav bar.
+export const NAV_TAGS = { '/team': 'Team', '/principles': 'Principles', '/contact': 'Contact Us' }
+
 // X on a page tag: back to wherever the visitor came from on this site, or home.
 export function leavePage() {
   const cameFromSite = document.referrer && document.referrer.startsWith(window.location.origin)
@@ -36,6 +41,7 @@ export function SiteNav() {
   const pathname = usePathname() || '/'
   const [menuOpen, setMenuOpen] = useState(false)
   const [askOpen, setAskOpen] = useState(false)
+  const navTag = NAV_TAGS[pathname.replace(/\/$/, '') || '/']
 
   useEffect(() => setMenuOpen(false), [pathname])
 
@@ -86,6 +92,23 @@ export function SiteNav() {
         .sv-nav-logo:hover, .sv-nav-logo:focus-visible { opacity: .6; outline: none; }
         .sv-nav-logo img { display: block; height: 24px; width: auto; }
         @media (min-width: 768px) { .sv-nav-logo img { height: 34px; } }
+        .sv-nav-right { justify-self: end; display: flex; align-items: center; gap: 10px; min-width: 0; position: relative; }
+        @media (min-width: 768px) { .sv-nav-right { gap: 22px; } }
+        .sv-nav-tag { display: flex; align-items: center; background: #000; color: #fff; border-radius: 4px; white-space: nowrap; box-shadow: 0 6px 18px -10px rgba(0,0,0,.5); }
+        /* phones: no room beside the wordmark, so the tag hangs just under the bar's right edge */
+        .sv-nav-tag { position: absolute; top: calc(100% + 8px); right: 0; padding: 6px 24px 5px 10px; }
+        .sv-nav-tag h1 { font: 500 15px/1 ${MONO}; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; }
+        .sv-nav-tag button { position: absolute; top: 0; right: 0; padding: 3px 6px 9px 9px; background: none; border: 0; color: rgba(255,255,255,.8); font: 400 10px/1 ${MONO}; transition: color .2s; }
+        .sv-nav-tag button:hover, .sv-nav-tag button:focus-visible { color: #5683DD; outline: none; }
+        @media (min-width: 768px) {
+          .sv-nav-tag { position: relative; top: auto; right: auto; box-shadow: none; padding: 5px 22px 4px 10px; }
+          .sv-nav-tag h1 { font-size: 16px; }
+        }
+        @media (min-width: 1024px) {
+          .sv-nav-tag { padding: 6px 26px 5px 12px; }
+          .sv-nav-tag h1 { font-size: 22px; }
+          .sv-nav-tag button { font-size: 11px; padding: 3px 7px 10px 10px; }
+        }
         .sv-nav-burger { justify-self: end; display: flex; flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; align-items: flex-end; padding: 0 8px; margin-right: -8px; background: none; border: 0; }
         .sv-nav-burger span { display: block; width: 24px; height: 2px; background: #000; transition: background-color .2s, transform .25s, opacity .2s; }
         @media (min-width: 768px) { .sv-nav-burger span { width: 36px; height: 2.5px; } .sv-nav-burger { gap: 7px; width: 56px; } }
@@ -136,6 +159,19 @@ export function SiteNav() {
           <img src={LOGO_SRC_BLACK} alt="Studio Veritas" draggable={false} data-sv-intro="logo" />
         </a>
 
+        <div className="sv-nav-right">
+        {navTag && (
+          <motion.div
+            key={navTag}
+            className="sv-nav-tag"
+            initial={{ opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: 'spring', damping: 26, stiffness: 300, delay: 0.2 }}
+          >
+            <h1>{navTag}</h1>
+            <button type="button" onClick={leavePage} aria-label={`Close ${navTag.toLowerCase()} page`}>X</button>
+          </motion.div>
+        )}
         <button
           type="button"
           className="sv-nav-burger"
@@ -145,6 +181,7 @@ export function SiteNav() {
         >
           <span /><span /><span />
         </button>
+        </div>
       </motion.header>
 
       <AnimatePresence>
@@ -408,6 +445,27 @@ export function SiteFooter({ open, onClose }) {
 
 // tone="light": off-white with black type, for pages on black (WORK).
 // tone="ink": black with warm beige type, for News + Insights.
+// The plain one-line title that sits above a page's content when its tag is in the nav bar.
+export function PageTitle({ children, className = '' }) {
+  return (
+    <>
+      <style>{`
+        .sv-page-title { font-size: 17px; }
+        @media (min-width: 768px) { .sv-page-title { font-size: 26px; } }
+      `}</style>
+      <motion.h2
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.15 }}
+        className={`sv-page-title text-black text-center ${className}`}
+        style={{ fontFamily: MONO, fontWeight: 400, lineHeight: 1.3 }}
+      >
+        {children}
+      </motion.h2>
+    </>
+  )
+}
+
 export function PageTag({ label, onClose = leavePage, closeLabel, className = '', tone = 'dark', align = 'center' }) {
   const light = tone === 'light'
   const ink = tone === 'ink'

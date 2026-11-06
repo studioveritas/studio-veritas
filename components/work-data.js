@@ -126,7 +126,7 @@ export const WORK = [
     slug: "gallagher-prem",
     name: "PREM",
     client: "Premiership Rugby",
-    subheading: "A platform the raw spectacle",
+    subheading: "A platform for the raw spectacle",
     img: "prem",
     portrait: '/work/gallagher-prem/portrait.jpg',
     tags: ["Brand", "Comms"],

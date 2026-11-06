@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC, LOGO_SRC_BLACK, ICON_SRC, ICON_SRC_BLACK, PROCESS_ICON_SRC, LANDING_IMG_DESKTOP, LANDING_IMG_MOBILE } from './media'
-import { SiteFooter, PageTag } from './site-chrome'
+import { SiteFooter, PageTitle } from './site-chrome'
 
 const CONTACT_EMAIL = 'info@studio-veritas.com'
 const LINKEDIN_URL = 'https://www.linkedin.com/company/team-studio-veritas'
@@ -127,7 +127,7 @@ export function Contact() {
         {/* CONTACT CONTENT */}
         <div className="relative min-h-screen flex flex-col items-center justify-center px-4 md:px-8 pt-24 pb-36 md:py-28" style={{ zIndex: 1 }}>
           {/* CONTACT US tag */}
-          <PageTag label="Contact Us" onClose={closeContact} closeLabel="Close contact page" />
+          <PageTitle className="mb-10 md:mb-16">Let’s work together</PageTitle>
 
           {/* STUDIO VERITAS card */}
           <motion.div

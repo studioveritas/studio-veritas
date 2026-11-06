@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC, ICON_SRC, ICON_SRC_BLACK, PROCESS_ICON_SRC, LANDING_IMG_DESKTOP, LANDING_IMG_MOBILE } from './media'
-import { SiteFooter, PageTag } from './site-chrome'
+import { SiteFooter, PageTitle } from './site-chrome'
 
 const CONTACT_EMAIL = 'info@studio-veritas.com'
 
@@ -319,7 +319,7 @@ export function Process() {
             ref collision between the two layouts. */}
         {isMobile ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-10 px-6 pt-[76px]" style={{ zIndex: 5 }}>
-            <PageTag label="Principles" className="-mb-2" />
+            <PageTitle className="-mb-2">Our principles</PageTitle>
             <motion.div
               style={{ width: '48vw', maxWidth: 220, cursor: 'pointer' }}
               animate={{ rotate: spinCount * 360 }}
@@ -374,11 +374,11 @@ export function Process() {
                 style={{
                   left: '50%',
                   top: `${Math.min(...dynamicSteps.map((s) => s.y))}%`,
-                  transform: 'translate(-50%, calc(-100% - 50px))',
+                  transform: 'translate(-50%, calc(-100% - 70px))',
                   zIndex: 25,
                 }}
               >
-                <PageTag label="Principles" />
+                <PageTitle>Our principles</PageTitle>
               </div>
 
               {/* Rotating group: the new triangle-eye icon replaces the old polygon + logo */}

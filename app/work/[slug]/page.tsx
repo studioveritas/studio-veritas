@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { CaseStudy } from '@/components/case-study'
 import { CASE_STUDIES, getCaseStudy, caseSubheading } from '@/components/work-data'
+import { clip } from '@/lib/seo'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: Props) {
   const title = `${work.client}: ${caseSubheading(work)} — Studio Veritas`
   const truth = work.caseStudy?.sections.find((s: { heading: string }) => s.heading === 'Truth')?.body
   const intro = work.caseStudy?.intro
-  const description = intro || (truth ? `${truth} A Studio Veritas case study.` : `${work.subheading}. A Studio Veritas case study.`)
+  const description = clip(intro || truth || `${work.subheading}. A Studio Veritas case study.`)
   const url = `/work/${work.slug}`
   return {
     title,

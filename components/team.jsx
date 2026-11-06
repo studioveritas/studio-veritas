@@ -18,7 +18,7 @@ const TEAM = [
     id: 'guillaume',
     name: 'Guillaume Furminger',
     photo: TEAM_PHOTO_GUILLAUME,
-    bio: "Born in the the UK, I'm a Amsterdam-based Senior Creative Director and Global Brand Lead, bringing over 20 years of expertise to brand transformation and creative innovation.\n\nWith deep experience across sports, lifestyle, technology, and mobility, I shape global campaigns for iconic brands including ASICS, Uber, adidas, and Volvo.\n\nA collaborative brand and commercial thinker, I'll bridge overarching brand strategy with hands-on execution to deliver impactful, purpose-led storytelling.",
+    bio: "Born in the UK, I'm an Amsterdam-based Senior Creative Director and Global Brand Lead, bringing over 20 years of expertise to brand transformation and creative innovation.\n\nWith deep experience across sports, lifestyle, technology, and mobility, I shape global campaigns for iconic brands including ASICS, Uber, adidas, and Volvo.\n\nA collaborative brand and commercial thinker, I'll bridge overarching brand strategy with hands-on execution to deliver impactful, purpose-led storytelling.",
     linkedin: 'https://www.linkedin.com/in/gfurminger/',
     contactEmail: 'guillaume@studio-veritas.com',
   },
@@ -136,7 +136,7 @@ export function Team() {
       <div className="sv-team-root relative">
         {/* SEO / LLM-readable content */}
         <section className="sv-sr-only">
-          <h1>Studio Veritas — Team</h1>
+          <h2>Studio Veritas — Team</h2>
           {TEAM.map((m) => (
             <p key={m.id}>{m.name}: {m.bio.replace(/\n/g, ' ')}</p>
           ))}

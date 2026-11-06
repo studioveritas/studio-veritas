@@ -32,7 +32,16 @@ that's built on truth and made to work in the real world.
 
 `
 
-const TAIL = `## Contact
+const TAIL = `## Principles
+
+Page: /principles. Every idea is tested against three principles: Truthful,
+Noticeable, Memorable.
+
+## Team
+
+Page: /team. Guillaume Furminger and Ali Marmaduke.
+
+## Contact
 
 Contact page: /contact
 Email: info@studio-veritas.com

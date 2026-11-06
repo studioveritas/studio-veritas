@@ -1,12 +1,11 @@
 import { Process } from '@/components/process'
 
 export const metadata = {
-  title: 'Process — Studio Veritas',
-  description:
-    'Discover, Define, Develop — how Studio Veritas turns a brief into strategy and strategy into creative work.',
-  alternates: {
-    canonical: '/principles',
-  },
+  title: 'Principles — Studio Veritas',
+  description: 'Truthful, Noticeable, Memorable: the three principles Studio Veritas tests every idea against.',
+  alternates: { canonical: '/principles' },
+  openGraph: { title: 'Principles — Studio Veritas', description: 'Truthful, Noticeable, Memorable: the three principles Studio Veritas tests every idea against.', url: '/principles', siteName: 'Studio Veritas', type: 'website' },
+  twitter: { card: 'summary_large_image', title: 'Principles — Studio Veritas', description: 'Truthful, Noticeable, Memorable: the three principles Studio Veritas tests every idea against.' },
 }
 
 export default function ProcessPage() {

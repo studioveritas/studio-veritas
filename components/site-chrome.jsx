@@ -97,16 +97,16 @@ export function SiteNav() {
         .sv-nav-tag { display: flex; align-items: center; background: #000; color: #fff; border-radius: 4px; white-space: nowrap; box-shadow: 0 6px 18px -10px rgba(0,0,0,.5); }
         /* phones: no room beside the wordmark, so the tag hangs just under the bar's right edge */
         .sv-nav-tag { position: absolute; top: calc(100% + 8px); right: 0; padding: 6px 24px 5px 10px; }
-        .sv-nav-tag h1 { font: 500 15px/1 ${MONO}; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; }
+        .sv-nav-tag p { font: 500 15px/1 ${MONO}; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; }
         .sv-nav-tag button { position: absolute; top: 0; right: 0; padding: 3px 6px 9px 9px; background: none; border: 0; color: rgba(255,255,255,.8); font: 400 10px/1 ${MONO}; transition: color .2s; }
         .sv-nav-tag button:hover, .sv-nav-tag button:focus-visible { color: #5683DD; outline: none; }
         @media (min-width: 768px) {
           .sv-nav-tag { position: relative; top: auto; right: auto; box-shadow: none; padding: 5px 22px 4px 10px; }
-          .sv-nav-tag h1 { font-size: 16px; }
+          .sv-nav-tag p { font-size: 16px; }
         }
         @media (min-width: 1024px) {
           .sv-nav-tag { padding: 6px 26px 5px 12px; }
-          .sv-nav-tag h1 { font-size: 22px; }
+          .sv-nav-tag p { font-size: 22px; }
           .sv-nav-tag button { font-size: 11px; padding: 3px 7px 10px 10px; }
         }
         .sv-nav-burger { justify-self: end; display: flex; flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; align-items: flex-end; padding: 0 8px; margin-right: -8px; background: none; border: 0; }
@@ -168,7 +168,7 @@ export function SiteNav() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: 'spring', damping: 26, stiffness: 300, delay: 0.2 }}
           >
-            <h1>{navTag}</h1>
+            <p>{navTag}</p>
             <button type="button" onClick={leavePage} aria-label={`Close ${navTag.toLowerCase()} page`}>X</button>
           </motion.div>
         )}
@@ -470,7 +470,7 @@ export function PageTitle({ children, className = '', delay = 450, speed = 55 })
         .sv-page-title-caret::after { content: '\\2588'; animation: sv-title-blink 0.8s step-end infinite; margin-left: 2px; }
         @keyframes sv-title-blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
       `}</style>
-      <h2
+      <h1
         aria-label={text}
         className={`sv-page-title text-black text-center ${className}`}
         style={{ fontFamily: MONO, fontWeight: 400, lineHeight: 1.3 }}
@@ -480,7 +480,7 @@ export function PageTitle({ children, className = '', delay = 450, speed = 55 })
           {text.slice(0, typed)}
           {!done && <span className="sv-page-title-caret" />}
         </span>
-      </h2>
+      </h1>
     </>
   )
 }

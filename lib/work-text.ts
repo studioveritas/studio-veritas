@@ -17,7 +17,7 @@ type Work = {
 const ALL = WORK as Work[]
 const CASES = ALL.filter((w) => w.caseStudy)
 
-const sectionText = (s: Section) => (s.body ? s.body : (s.list || []).join(' '))
+const sectionText = (s: Section) => [s.body, ...(s.list || [])].filter(Boolean).join(' ')
 
 // For the Ask Veritas knowledge base.
 export function workForKnowledge(): string {

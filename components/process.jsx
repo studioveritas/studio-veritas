@@ -224,7 +224,7 @@ export function Process() {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'HowTo',
-            name: 'Studio Veritas — Process',
+            name: 'Studio Veritas — Principles',
             step: STEPS.map((s, i) => ({
               '@type': 'HowToStep',
               position: i + 1,
@@ -271,7 +271,7 @@ export function Process() {
       <div className="sv-process-root absolute inset-0">
         {/* SEO / LLM-readable content — visually hidden, real text in the DOM */}
         <section className="sv-sr-only">
-          <h1>Studio Veritas — Process: Discover, Define, Develop.</h1>
+          <h2>Studio Veritas — Principles: Truthful, Noticeable, Memorable.</h2>
           {STEPS.map((s) => (
             <div key={s.id}>
               <h2>{s.label}</h2>

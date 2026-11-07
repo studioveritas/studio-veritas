@@ -138,3 +138,26 @@ Each article takes one entry in `components/news-data.js` and two images. Once c
 ## How it reads
 
 Tiles sit in a brown monotone and come into colour on rollover (on phones, as they reach mid-screen). The article shows THE SUBJECT and THE SIGNAL; MORE types out THE TRUTH and WORTH ASKING, then the closing line, where "Get in touch" links to the Contact page. To show a tile before the article is ready, add `comingSoon: true`: it shows COMING SOON and doesn't link.
+
+## Public or client-only (the client space)
+
+Every case study is public unless you hide it. To move one behind the client login, add one line under its slug in `components/work-data.js`:
+
+```js
+  {
+    slug: 'ketel-one',
+    private: true,
+    ...
+```
+
+Commit, and once Vercel has deployed:
+
+- it disappears from the public Work page, `/work/<slug>`, the sitemap, share images, Ask Veritas and `/llms.txt`
+- its photos in `public/work/<slug>/` stop loading for anyone who isn't logged in
+- it appears in the client space at `/clients` with a small "Client only" badge, at `/clients/work/<slug>`
+
+Delete the line to make it public again.
+
+**The client space** (`/clients`, "Client login" in the menu) shows every case study, public and private. Clients get in with one shared password, kept in Vercel: Project → Settings → Environment Variables → `CLIENT_PASSWORD`. To change it, edit the value and redeploy; everyone who was logged in is logged out. A login lasts 30 days. With no password set, nobody can get in.
+
+Private content never reaches a visitor's browser unless they're logged in: pages are built on the server from `lib/work-view.js`, and the build fails if a browser component imports `work-data.js` directly.

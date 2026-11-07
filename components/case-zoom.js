@@ -46,7 +46,7 @@ export function clearZoomOverlays() {
 
 export function zoomToCaseStudy(event, work, tileImg) {
   if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
-  const href = `/work/${work.slug}`
+  const href = work.href || `/work/${work.slug}`
   if (!tileImg || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
   event.preventDefault()
 
@@ -133,7 +133,7 @@ const FADE_MS = 1000
 // `event` may be null (keyboard). Returns true if it took over the navigation.
 export function crossfadeToCaseStudy(event, work) {
   if (event && (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) return false
-  const href = `/work/${work.slug}`
+  const href = work.href || `/work/${work.slug}`
   const current = document.querySelector('.sv-cx-stage img')
   const stage = document.querySelector('.sv-cx-stage')
   const next = masterOf(work)

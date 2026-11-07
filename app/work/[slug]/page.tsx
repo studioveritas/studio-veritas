@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { CaseStudy } from '@/components/case-study'
 import { CASE_STUDIES, getCaseStudy, caseSubheading } from '@/components/work-data'
 import { clip } from '@/lib/seo'
+import { caseStudyView } from '@/lib/work-view'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -32,6 +33,7 @@ export async function generateMetadata({ params }: Props) {
 // Only projects with a published case study have a page; anything else is a 404.
 export default async function CaseStudyPage({ params }: Props) {
   const { slug } = await params
-  if (!getCaseStudy(slug)) notFound()
-  return <CaseStudy slug={slug} />
+  const view = caseStudyView(slug, 'public')
+  if (!view) notFound()
+  return <CaseStudy {...view} />
 }

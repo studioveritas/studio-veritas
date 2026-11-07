@@ -24,8 +24,6 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { SiteShell } from './site-shell'
-import { getCaseStudy, getNeighbours, caseSubheading, caseTitle } from './work-data'
-import { CASE_STUDY_HEROES } from './case-images'
 import { paragraphs } from './typed-sections'
 import { zoomArrivalScript, clearZoomArrival, clearZoomOverlays, crossfadeToCaseStudy, HERO_SHADE, SCROLLED_SHADE } from './case-zoom'
 
@@ -175,7 +173,7 @@ function Arrow({ dir, target }) {
   const cls = `sv-cx-arrow sv-cx-arrow-${dir}`
   if (!target) return <span className={cls} aria-hidden="true" data-state="end">{icon}</span>
   return (
-    <a className={cls} href={`/work/${target.slug}`} onClick={(e) => crossfadeToCaseStudy(e, target)} aria-label={`${prev ? 'Previous' : 'Next'} case study: ${target.client}`}>
+    <a className={cls} href={target.href} onClick={(e) => crossfadeToCaseStudy(e, target)} aria-label={`${prev ? 'Previous' : 'Next'} case study: ${target.client}`}>
       {icon}
     </a>
   )
@@ -183,16 +181,16 @@ function Arrow({ dir, target }) {
 
 /* ------------------------------------------------------------ page */
 
-export function CaseStudy({ slug }) {
-  const work = getCaseStudy(slug)
-  const { prev, next } = getNeighbours(slug)
+// work / prev / next / home come from caseStudyView() in lib/work-view.js, on the server.
+export function CaseStudy({ work, prev, next, home = '/work' }) {
+  const slug = work.slug
   const cs = work?.caseStudy
 
   const [ready, setReady] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [zoom, setZoom] = useState(null)
 
-  const backToExperience = useCallback(() => { window.location.href = '/work' }, [])
+  const backToExperience = useCallback(() => { window.location.href = home }, [home])
 
   // Entrance, scroll state, and white eye / footer triangle over the dark page.
   useEffect(() => {
@@ -225,7 +223,7 @@ export function CaseStudy({ slug }) {
       if (e.target instanceof HTMLElement && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return
       if (document.querySelector('.av-panel, [data-sv-modal="open"]')) return
       const to = e.key === 'ArrowLeft' ? prev : e.key === 'ArrowRight' ? next : null
-      if (to && !crossfadeToCaseStudy(null, to)) window.location.href = `/work/${to.slug}`
+      if (to && !crossfadeToCaseStudy(null, to)) window.location.href = to.href
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -240,8 +238,8 @@ export function CaseStudy({ slug }) {
 
   if (!work || !cs) return null
 
-  // A file path (e.g. /work/ketel-one/hero.jpg in /public) or a key in case-images.js.
-  const master = cs.hero?.startsWith('/') ? cs.hero : CASE_STUDY_HEROES[cs.hero]
+  // Resolved on the server: a file path (e.g. /work/ketel-one/hero.jpg) or an embedded photo.
+  const master = cs.masterSrc
   const masterPos = cs.masterPosition || '50% 50%'
   const portrait = cs.masterPortrait || work.portrait
   const accent = cs.accent || SV_BLUE
@@ -273,7 +271,7 @@ export function CaseStudy({ slug }) {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'CreativeWork',
-            name: `${work.client} — ${caseSubheading(work)}`,
+            name: `${work.client} — ${work.sub}`,
             about: work.client,
             creator: { '@type': 'Organization', name: 'Studio Veritas' },
             text: [cs.intro, ...cs.sections.map((s) => `${s.heading}: ${s.body || (s.list || []).join(' ')}`)]
@@ -440,8 +438,8 @@ export function CaseStudy({ slug }) {
         <div className="sv-cx-inner">
           <header className="sv-cx-hero">
             <p className="sv-cx-kicker sv-cx-rv">{work.client}{discipline ? ` — ${discipline}` : ''}</p>
-            <h1 id="sv-cx-title" className="sv-cx-title sv-cx-rv d2">{caseTitle(work)}</h1>
-            <p className="sv-cx-sub sv-cx-rv d3">{caseSubheading(work)}</p>
+            <h1 id="sv-cx-title" className="sv-cx-title sv-cx-rv d2">{work.title}</h1>
+            <p className="sv-cx-sub sv-cx-rv d3">{work.sub}</p>
             {cs.intro && <p className="sv-cx-intro sv-cx-rv d4">{cs.intro}</p>}
             <dl className="sv-cx-meta sv-cx-rv d5">
               <div><dt>Client</dt><dd>{work.client}</dd></div>
@@ -466,19 +464,19 @@ export function CaseStudy({ slug }) {
           </div>
 
           {next ? (
-            <a className="sv-cx-next" href={`/work/${next.slug}`} onClick={(e) => crossfadeToCaseStudy(e, next)}>
+            <a className="sv-cx-next" href={next.href} onClick={(e) => crossfadeToCaseStudy(e, next)}>
               <small>Next case study</small>
               <strong>{next.name} →</strong>
             </a>
           ) : (
-            <a className="sv-cx-next" href="/work">
+            <a className="sv-cx-next" href={home}>
               <small>That’s the last one</small>
               <strong>Back to Work →</strong>
             </a>
           )}
         </div>
 
-        <a className="sv-cx-close" href="/work" aria-label="Close case study, back to Work">
+        <a className="sv-cx-close" href={home} aria-label="Close case study, back to Work">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" /></svg>
         </a>
         <nav aria-label="Case studies">

@@ -1,4 +1,5 @@
 import { Work } from '@/components/work'
+import { workView } from '@/lib/work-view'
 import { CASE_STUDIES } from '@/components/work-data'
 
 const DESC = `Selected case studies by Studio Veritas: ${CASE_STUDIES.map((w: { client: string }) => w.client).join(', ')}.`
@@ -12,5 +13,6 @@ export const metadata = {
 }
 
 export default function ExperiencePage() {
-  return <Work />
+  const { items, tags } = workView('public')
+  return <Work items={items} tags={tags} />
 }

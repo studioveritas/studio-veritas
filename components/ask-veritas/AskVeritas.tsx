@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { askPromptsFor, getCaseStudy } from "@/components/work-data";
 import { getArticle, askPromptsForArticle, NEWS_PROMPTS } from "@/components/news-data";
 import { PROCESS, processReady } from "@/lib/ask-veritas/process";
 import { parseVerdict, type Verdict } from "@/lib/ask-veritas/truth";
@@ -106,6 +105,7 @@ export default function AskVeritas({
   trigger,
   showTrigger = false,
   side = "right",
+  casePrompts: CASE_PROMPTS = {},
 }: {
   /**
    * What opens the panel:
@@ -118,6 +118,8 @@ export default function AskVeritas({
   showTrigger?: boolean;
   /** Where the triangle sits and the panel opens: "top" opens under the nav bar's triangle (the site default, with trigger="none"). */
   side?: "left" | "right" | "center" | "top";
+  /** Each public case study's slug, client name and suggested questions, built on the server (app/layout.tsx). */
+  casePrompts?: Record<string, { slug: string; client: string; prompts: string[] }>;
 }) {
   const triggerKind = trigger ?? (showTrigger ? "pill" : "none");
   const reduce = useReducedMotion() ?? false;
@@ -143,10 +145,10 @@ export default function AskVeritas({
   // nav triangle a moment after the page opens, and the first chips in the panel.
   // On /news, the chips lead with a question about the studio's point of view.
   const pathname = usePathname() || "";
-  const caseWork = getCaseStudy(pathname.match(/^\/work\/([^/]+)\/?$/)?.[1] ?? "");
+  const caseWork = CASE_PROMPTS[pathname.match(/^\/work\/([^/]+)\/?$/)?.[1] ?? ""];
   const article = getArticle(pathname.match(/^\/news\/([^/]+)\/?$/)?.[1] ?? "");
   const casePrompts: string[] = caseWork
-    ? askPromptsFor(caseWork)
+    ? caseWork.prompts
     : article
       ? askPromptsForArticle(article)
       : /^\/news\/?$/.test(pathname)

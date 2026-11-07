@@ -5,7 +5,7 @@
 // view; LOAD MORE adds the next nine once the first nine are on the page. Below the band, the
 // client logos scroll past on a ticker.
 //
-// Tiles with a case study link to /work/<slug>, zooming into it (components/case-zoom.js);
+// Tiles with a case study link to their page (work.href: /work/<slug>, or /clients/work/<slug> in the client space), zooming into it (components/case-zoom.js);
 // the rest show COMING SOON on rollover.
 // Filters (Brand, Comms, ...) sit beside the title; the choice is kept in the URL as ?tag=brand.
 //
@@ -18,8 +18,6 @@ import { SiteShell } from './site-shell'
 import { useColumns } from './use-columns'
 import { PageTag } from './site-chrome'
 import { LogoTicker } from './logo-ticker'
-import { WORK, TAGS } from './work-data'
-import { WORK_TILES } from './work-images'
 import { zoomToCaseStudy, clearZoomOverlays } from './case-zoom'
 
 const MONO = "'IBM Plex Mono', monospace"
@@ -27,21 +25,21 @@ const PAGE = 9 // tiles per load
 const SQUARES = [0, 2] // in each run of nine, these positions are square; the rest are 4:5
 
 const slug = (t) => t.toLowerCase()
-const shapeOf = (w) => w.tile || (SQUARES.includes(WORK.indexOf(w) % PAGE) ? 'square' : 'portrait')
-const srcOf = (w) => w.portrait || (w.img?.startsWith('/') ? w.img : WORK_TILES[w.img])
+const shapeOf = (w, index) => w.tile || (SQUARES.includes(index % PAGE) ? 'square' : 'portrait')
 
 
-function Tile({ work, order }) {
-  const live = Boolean(work.caseStudy)
+function Tile({ work, order, index }) {
+  const live = Boolean(work.href)
   const inner = (
     <>
-      <div className={`sv-tile-media sv-tile-${shapeOf(work)}`}>
-        <img src={srcOf(work)} alt="" loading={order < 6 ? 'eager' : 'lazy'} draggable={false} />
+      <div className={`sv-tile-media sv-tile-${shapeOf(work, index)}`}>
+        <img src={work.src} alt="" loading={order < 6 ? 'eager' : 'lazy'} draggable={false} />
         {!live && (
           <div className="sv-tile-soon" aria-hidden="true">
             <span>Coming soon</span>
           </div>
         )}
+        {work.private && <span className="sv-tile-private">Client only</span>}
         <div className="sv-tile-box">
           <p className="sv-tile-name">{work.name}</p>
           <p className="sv-tile-sub">{work.subheading}</p>
@@ -59,7 +57,7 @@ function Tile({ work, order }) {
     >
       {live ? (
         <a
-          href={`/work/${work.slug}`}
+          href={work.href}
           className="sv-tile sv-tile-live"
           onClick={(e) => zoomToCaseStudy(e, work, e.currentTarget.querySelector('.sv-tile-media img'))}
           aria-label={`${work.client}: ${work.subheading}. Read the case study`}>
@@ -74,7 +72,10 @@ function Tile({ work, order }) {
   )
 }
 
-export function Work() {
+// items/tags come from lib/work-view.js (public on /work, everything in the client space).
+// label: the black page tag. children: anything extra at the top of the band (client space: Log out).
+/** @param {{ items: any[], tags: string[], label?: string, children?: import('react').ReactNode }} props */
+export function Work({ items: WORK, tags: TAGS, label = 'Work', children = null }) {
   // Only offer filters that have work behind them.
   const filters = TAGS.map((t) => ({ tag: t, count: WORK.filter((w) => w.tags?.includes(t)).length })).filter((f) => f.count)
   const [tag, setTag] = useState(null)
@@ -148,7 +149,7 @@ export function Work() {
           <ul>
             {WORK.map((w) => (
               <li key={w.slug}>
-                {w.client} ({w.name}): {w.subheading}.{w.caseStudy ? ` Case study: /work/${w.slug}` : ''}
+                {w.client} ({w.name}): {w.subheading}.{w.href ? ` Case study: ${w.href}` : ''}
               </li>
             ))}
           </ul>
@@ -170,7 +171,7 @@ export function Work() {
                 name: w.name,
                 about: w.client,
                 description: w.subheading,
-                ...(w.caseStudy ? { url: `/work/${w.slug}` } : {}),
+                ...(w.href ? { url: w.href } : {}),
               },
             })),
           }),
@@ -263,6 +264,9 @@ export function Work() {
           .sv-more { min-width: 260px; padding: 14px 22px; font-size: 16px; }
           .sv-work-after { height: 180px; }
         }
+        /* client space: marks work that only logged-in clients can see */
+        .sv-tile-private { position: absolute; top: 10px; right: 10px; z-index: 2; background: #000; color: #fff; font: 500 11px/1 ${MONO}; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 8px 5px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.25); pointer-events: none; }
+        @media (min-width: 768px) { .sv-tile-private { top: 14px; right: 14px; font-size: 12px; } }
         @media (prefers-reduced-motion: reduce) { .sv-tile-media img, .sv-tile-soon, .sv-more-plus { transition: none; } }
       `}</style>
 
@@ -270,7 +274,7 @@ export function Work() {
         <section ref={band} className="sv-work-band" aria-labelledby="sv-work-title">
           <div className="sv-work-inner">
             <div className="sv-work-head">
-              <PageTag label="Work" tone="light" align="left" closeLabel="Close the work page" />
+              <PageTag label={label} tone="light" align="left" closeLabel={`Close the ${label.toLowerCase()} page`} />
               <div className="sv-filters" role="group" aria-label="Filter the work">
                 <button type="button" className="sv-filter" aria-pressed={tag === null} onClick={() => choose(null)}>
                   All<sup>{WORK.length}</sup>
@@ -282,6 +286,7 @@ export function Work() {
                 ))}
               </div>
             </div>
+            {children}
             <p className="sv-sr" aria-live="polite">
               {tag ? `${shown.length} ${tag} projects` : `All ${WORK.length} projects`}
             </p>
@@ -290,7 +295,7 @@ export function Work() {
               {columns.map((col, c) => (
                 <div className="sv-mason-col" key={c}>
                   {col.map(({ w, i }) => (
-                    <Tile key={w.slug} work={w} order={i} />
+                    <Tile key={w.slug} work={w} order={i} index={WORK.indexOf(w)} />
                   ))}
                 </div>
               ))}

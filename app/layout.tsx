@@ -1,6 +1,12 @@
 import './globals.css'
 import { ChunkLoadErrorHandler } from '@/components/chunk-load-error-handler'
 import AskVeritas from '@/components/ask-veritas/AskVeritas'
+import { CASE_STUDIES, askPromptsFor } from '@/components/work-data'
+
+// Ask Veritas's suggested questions on each public case study page.
+const CASE_PROMPTS = Object.fromEntries(
+  CASE_STUDIES.map((w: { slug: string; client: string }) => [w.slug, { slug: w.slug, client: w.client, prompts: askPromptsFor(w) as string[] }])
+)
 import { SiteNav } from '@/components/site-chrome'
 import { IntroLoader } from '@/components/intro-loader'
 
@@ -83,7 +89,7 @@ export default function RootLayout({
             eye in the bottom-left corner. See components/site-chrome.jsx. */}
         <SiteNav />
         {/* Ask Veritas: AI chat, opened by the triangle in the nav bar; the panel opens beneath it. */}
-        <AskVeritas trigger="none" side="top" />
+        <AskVeritas trigger="none" side="top" casePrompts={CASE_PROMPTS} />
         <IntroLoader />
         <ChunkLoadErrorHandler />
       </body>

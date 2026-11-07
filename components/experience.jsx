@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC, LOGO_SRC_BLACK, ICON_SRC, ICON_SRC_BLACK, LANDING_IMG_DESKTOP, LANDING_IMG_MOBILE } from './media'
 import { SiteFooter, ABOUT_EVENT } from './site-chrome'
-import { WORK } from './work-data'
 
 
 const CONTACT_EMAIL = 'info@studio-veritas.com'
@@ -57,7 +56,8 @@ function Wordmark({ max = 60, className = '', src = LOGO_SRC, ...rest }) {
   )
 }
 
-export function Experience() {
+// workList: the public work as one line, for crawlers (built in app/page.tsx).
+export function Experience({ workList = '' }) {
   const [infoOpen, setInfoOpen] = useState(false)
   const [titleHover, setTitleHover] = useState(false)
   const [revealed, setRevealed] = useState([])
@@ -201,7 +201,7 @@ export function Experience() {
         <h2>Selected work</h2>
         <p>
           See <a href="/work">Work</a>:{' '}
-          {WORK.map((w) => `${w.client} (${w.subheading})`).join(', ')}.
+          {workList}.
         </p>
         <h2>{CONTACT_PANELS.companies.heading}</h2>
         <p>{CONTACT_PANELS.companies.body.replace(/\n/g, ' ')}</p>

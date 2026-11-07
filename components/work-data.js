@@ -173,6 +173,7 @@ const ALL = [
   },
   {
     slug: "jordan-wings",
+    private: true,
     name: "JORDAN WINGS",
     client: "Jordan Brand",
     subheading: "Mentorship as the truth behind the mythology",
@@ -423,6 +424,7 @@ const ALL = [
   },
   {
     slug: "albert-heijn-care",
+    private: true,
     name: "ALBERT HEIJN CARE",
     client: "Albert Heijn",
     subheading: "Feed your body beautifully",

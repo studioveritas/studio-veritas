@@ -368,6 +368,35 @@ const ALL = [
     },
   },
   {
+    slug: "philips",
+    name: "PHILIPS",
+    client: "Philips",
+    subheading: "The Analogue Kitchen",
+    img: "/work/philips/tile.jpg",
+    portrait: "/work/philips/portrait.jpg",
+    tags: ["Retail", "Comms"],
+    caseStudy: {
+      title: "PHILIPS",
+      subheading: "The Analogue Kitchen",
+      intro: "Transforming Holland’s busiest commuter terminal into a tactile, screen-free sanctuary for health and human connection.",
+      hero: "/work/philips/hero.jpg",
+      masterPosition: "55% 50%",
+      accent: "#5CB85C",
+      resultStat: { value: "200,000", label: "commuters a day through Utrecht Station, Holland’s busiest." },
+      askPrompts: ["What was the truth behind Philips?", "Why take the screens away?"],
+      sections: [
+        { heading: "Problem", body: "High-velocity transit environments are defined by digital saturation, high stress, and transient attention. Brands historically attempt to intercept this 200,000-person daily foot traffic with flashy digital billboards and complex tech activations, adding to consumer fatigue and reducing product interactions to fleeting, transactional moments. Philips needed to market wellness appliances in this chaotic space without feeling clinical, noisy, or ignorable." },
+        { heading: "Truth", body: "True wellness cuts through digital noise by removing the screens. To command attention in a hyper-digital transit hub, the most radical and effective disruption is a purely analogue, human experience." },
+        { heading: "Response", body: "We engineered the Philips Healthy Drinks Pop-Up Kitchen directly in the centre of Utrecht Station. We actively stripped away all digital interfaces to mandate genuine human interaction and centre the focus entirely on the physical product. We anchored the experience with a rotating daily health curriculum led by Men’s Health and cultural lifestyle experts, and deployed a tactile “make your own” zone. This forced commuters to stop, get their hands dirty, and physically craft their own smoothies, turning a passive product demonstration into a high-engagement social hub." },
+        { heading: "The results", list: [
+          "Intercepted a high-velocity transit hub of 200,000 daily commuters, successfully transforming rapid foot traffic into prolonged, meaningful brand engagement.",
+          "Replaced digital ad fatigue with memorable, hands-on product education, forcing physical interaction with Philips appliances in the “make your own” tactile space.",
+          "Secured sustained social visibility and cultural relevance by integrating daily programming with Men’s Health experts and prominent local lifestyle bloggers.",
+        ] },
+      ],
+    },
+  },
+  {
     slug: "icebreaker",
     name: "ICEBREAKER",
     client: "Icebreaker",
@@ -509,6 +538,10 @@ const ALL = [
       ],
     },
   },
+  // Coming soon: tiles only, no case study yet (add a caseStudy block to publish).
+  { slug: "subway-dolicious-studios", name: "SUBWAY", client: "Subway", subheading: "DÖLICIOUS STUDIOS", img: "/work/subway-dolicious-studios/tile.jpg", portrait: "/work/subway-dolicious-studios/portrait.jpg", tags: ["Comms"] },
+  { slug: "asics-cps", name: "ASICS", client: "ASICS", subheading: "CPS", img: "/work/asics-cps/tile.jpg", portrait: "/work/asics-cps/portrait.jpg", tags: ["Comms"] },
+  { slug: "adidas-clima", name: "ADIDAS", client: "adidas", subheading: "Clima Platform", img: "/work/adidas-clima/tile.jpg", portrait: "/work/adidas-clima/portrait.jpg", tags: ["Brand", "Comms"] },
 ]
 
 // Everything, for the client space (behind the login).

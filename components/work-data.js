@@ -1,5 +1,15 @@
 // Studio Veritas: Experience (selected work) and case studies.
 //
+// SERVER ONLY. This file is never sent to visitors' browsers (the build fails if
+// a browser component imports it), so private case studies stay private: pages
+// hand components just the work they're allowed to show (lib/work-view.js).
+//
+// ─── PUBLIC OR CLIENT-ONLY ───────────────────────────────────────────────────
+// Add  private: true,  under a project's slug to move it behind the client login.
+// Private work disappears from the public Work page, /work/<slug>, the sitemap,
+// share images, Ask Veritas and /llms.txt, and shows only in the client space
+// (/clients, password protected). Delete the line to make it public again.
+//
 // This one list drives everything: the Experience grid and its filters, each
 // case study page, the prev/next arrows, page titles, share images, the
 // sitemap, Ask Veritas's knowledge and /llms.txt. Step-by-step guide:
@@ -68,7 +78,9 @@
 // Older entries use keys ('windhoek', 'seedlipHero') for photos embedded in
 // components/work-images.js and components/case-images.js; both ways work.
 
-export const WORK = [
+import 'server-only'
+
+const ALL = [
   {
     slug: 'windhoek',
     name: 'WINDHOEK',
@@ -459,7 +471,15 @@ export const WORK = [
   },
 ]
 
+// Everything, for the client space (behind the login).
+export const ALL_WORK = ALL
+export const ALL_CASE_STUDIES = ALL.filter((w) => w.caseStudy)
+
+// Public work only. Everything outside the client space uses these, so private
+// work can't leak into public pages, the sitemap, share images or Ask Veritas.
+export const WORK = ALL.filter((w) => !w.private)
 export const CASE_STUDIES = WORK.filter((w) => w.caseStudy)
+export const PRIVATE_SLUGS = ALL.filter((w) => w.private).map((w) => w.slug)
 
 // Filters on the Experience page, in this order. A filter only shows when at
 // least one project carries its tag, so tags can be added here ahead of the work.
@@ -480,16 +500,20 @@ export function askPromptsFor(work) {
   return work.caseStudy?.askPrompts || [`What was the truth behind ${work.client}?`]
 }
 
-export function getCaseStudy(slug) {
-  return CASE_STUDIES.find((w) => w.slug === slug) || null
+// scope 'public' (default) or 'client' (the client space: everything).
+const scoped = (scope) => (scope === 'client' ? ALL_CASE_STUDIES : CASE_STUDIES)
+
+export function getCaseStudy(slug, scope = 'public') {
+  return scoped(scope).find((w) => w.slug === slug) || null
 }
 
 // Neighbours among published case studies, in grid order. Null at either end,
 // which the arrows show as an outline triangle (nothing further that way).
-export function getNeighbours(slug) {
-  const i = CASE_STUDIES.findIndex((w) => w.slug === slug)
+export function getNeighbours(slug, scope = 'public') {
+  const list = scoped(scope)
+  const i = list.findIndex((w) => w.slug === slug)
   return {
-    prev: i > 0 ? CASE_STUDIES[i - 1] : null,
-    next: i >= 0 && i < CASE_STUDIES.length - 1 ? CASE_STUDIES[i + 1] : null,
+    prev: i > 0 ? list[i - 1] : null,
+    next: i >= 0 && i < list.length - 1 ? list[i + 1] : null,
   }
 }

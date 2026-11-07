@@ -26,7 +26,7 @@ export const ABOUT_EVENT = 'sv:about-toggle'
 const MONO = "'IBM Plex Mono', monospace"
 
 // Pages whose black title tag lives in the nav bar.
-export const NAV_TAGS = { '/team': 'Team', '/principles': 'Principles', '/contact': 'Contact Us' }
+export const NAV_TAGS = { '/team': 'Team', '/principles': 'Principles', '/contact': 'Contact Us', '/clients/login': 'Client login' }
 
 // X on a page tag: back to wherever the visitor came from on this site, or home.
 export function leavePage() {

@@ -207,6 +207,7 @@ const ALL = [
   },
   {
     slug: 'seedlip',
+    private: true,
     name: 'SEEDLIP',
     client: 'Seedlip',
     subheading: 'What to drink when you’re not drinking',
@@ -259,6 +260,7 @@ const ALL = [
   },
   {
     slug: "allbirds",
+    private: true,
     name: "ALLBIRDS",
     client: "Allbirds",
     subheading: "Nature knows better than we do",
@@ -296,6 +298,7 @@ const ALL = [
   { slug: 'canyon', name: 'CANYON', client: 'Canyon', subheading: 'Power ON:Game ON', img: 'canyon', portrait: '/work/canyon/portrait.jpg', tags: ['Comms'] },
   {
     slug: "uber-social-impact",
+    private: true,
     name: "UBER SOCIAL IMPACT",
     client: "Uber",
     subheading: "Thanking the everyday giants",
@@ -358,6 +361,7 @@ const ALL = [
   },
   {
     slug: "ketel-one",
+    private: true,
     name: "KETEL ONE",
     client: "Ketel One",
     subheading: "Reframing the cocktail moment",

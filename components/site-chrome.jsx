@@ -18,15 +18,23 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC_BLACK, ICON_SRC_BLACK, PROCESS_ICON_SRC } from './media'
 import { MENU_ITEMS } from './site-nav'
 import { toggleAskVeritas, STATE_EVENT } from './ask-veritas/open'
+import { SERVICE_AREAS } from './services-data'
 
 export const CONTACT_EMAIL = 'info@studio-veritas.com'
 export const LINKEDIN_URL = 'https://www.linkedin.com/company/team-studio-veritas'
 export const ABOUT_EVENT = 'sv:about-toggle'
+export const CONTACT_OPEN_EVENT = 'sv:contact-open'
+
+// Opens the FOR COMPANIES / FOR AGENCIES panel from anywhere. With a service area id
+// (components/services-data.js) the panel shows that area chosen, and the email subject names it.
+export function openContactPanel(panel, area = null) {
+  window.dispatchEvent(new CustomEvent(CONTACT_OPEN_EVENT, { detail: { panel, area } }))
+}
 
 const MONO = "'IBM Plex Mono', monospace"
 
 // Pages whose black title tag lives in the nav bar.
-export const NAV_TAGS = { '/team': 'Team', '/principles': 'Principles', '/contact': 'Contact Us', '/clients/login': 'Client login' }
+export const NAV_TAGS = { '/team': 'Team', '/principles': 'Principles', '/services': 'Services', '/contact': 'Contact Us', '/clients/login': 'Client login' }
 
 // X on a page tag: back to wherever the visitor came from on this site, or home.
 export function leavePage() {
@@ -259,8 +267,20 @@ export function ContactBar() {
   const pathname = usePathname() || '/'
   const [panel, setPanel] = useState(null)
   const [revealed, setRevealed] = useState(0)
+  const [area, setArea] = useState(null)
 
-  useEffect(() => setPanel(null), [pathname])
+  useEffect(() => { setPanel(null); setArea(null) }, [pathname])
+
+  useEffect(() => {
+    const on = (e) => {
+      const next = e.detail?.panel
+      if (!CONTACT_PANELS[next]) return
+      setArea(e.detail?.area || null)
+      setPanel(next)
+    }
+    window.addEventListener(CONTACT_OPEN_EVENT, on)
+    return () => window.removeEventListener(CONTACT_OPEN_EVENT, on)
+  }, [])
 
   useEffect(() => {
     if (!panel) { setRevealed(0); return }
@@ -299,6 +319,8 @@ export function ContactBar() {
         html[data-sv-dark-bottom='1'] .sv-cbar-btn { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35); }
         @keyframes sv-cbar-blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
         .sv-cpanel .sv-typewriter-cursor::after { content: '\\2588'; animation: sv-cbar-blink 0.8s step-end infinite; margin-left: 2px; }
+        .sv-cpanel-chip { padding: 6px; margin: -6px; background: none; border: 0; color: #fff; font: 500 13px/1 ${MONO}; letter-spacing: .08em; text-transform: uppercase; transition: color .2s; }
+        .sv-cpanel-chip:hover, .sv-cpanel-chip:focus-visible, .sv-cpanel-chip[aria-pressed="true"] { color: #5683DD; outline: none; }
         .sv-cpanel { position: fixed; z-index: 50; left: 50%; bottom: calc(max(16px, env(safe-area-inset-bottom)) + 38px); width: min(340px, calc(100% - 2rem)); max-height: 55%; }
         @media (min-width: 768px) { .sv-cpanel { bottom: calc(max(28px, env(safe-area-inset-bottom)) + 46px); } }
       `}</style>
@@ -310,7 +332,7 @@ export function ContactBar() {
             type="button"
             className="sv-cbar-btn"
             aria-expanded={panel === key}
-            onClick={() => setPanel((v) => (v === key ? null : key))}
+            onClick={() => { setArea(null); setPanel((v) => (v === key ? null : key)) }}
           >
             <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
               <path d="M6 0v12M0 6h12" stroke="currentColor" strokeWidth="2" />
@@ -345,8 +367,17 @@ export function ContactBar() {
               {CONTACT_PANELS[panel].body.slice(0, revealed)}
               {revealed < CONTACT_PANELS[panel].body.length && <span className="sv-typewriter-cursor" />}
             </p>
+            {panel === 'companies' && area && (
+              <div role="group" aria-label="Service area" className="flex flex-wrap gap-x-4 gap-y-1.5 mt-5 pt-4" style={{ borderTop: '1px dashed rgba(255,255,255,0.3)' }}>
+                {SERVICE_AREAS.map((a, i) => (
+                  <button key={a.id} type="button" className="sv-cpanel-chip" aria-pressed={area === a.id} onClick={() => setArea(a.id)}>
+                    ({i + 1}) {a.title}
+                  </button>
+                ))}
+              </div>
+            )}
             <a
-              href={`mailto:${CONTACT_EMAIL}`}
+              href={`mailto:${CONTACT_EMAIL}${panel === 'companies' && area ? `?subject=${encodeURIComponent(`${SERVICE_AREAS.find((a) => a.id === area)?.title} enquiry`)}` : ''}`}
               style={{ fontFamily: MONO }}
               className="inline-block mt-6 text-[13px] md:text-sm text-white underline underline-offset-4 decoration-white/40 hover:decoration-white hover:text-[#5683DD] transition-colors"
             >

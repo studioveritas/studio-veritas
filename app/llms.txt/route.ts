@@ -4,6 +4,7 @@
 
 import { workForLlms } from '@/lib/work-text'
 import { newsForLlms } from '@/lib/news-text'
+import { servicesText } from '@/components/services-data'
 
 export const dynamic = 'force-static'
 
@@ -29,6 +30,12 @@ that's built on truth and made to work in the real world.
 - **For agencies**: Works as a freelance strategy, creative and design
   team for extra thinking, different perspectives, or specialist
   capability.
+
+## Service areas
+
+Page: /services. Three areas; /services?service=<id> opens one.
+
+${servicesText()}
 
 `
 

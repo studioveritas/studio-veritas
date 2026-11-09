@@ -424,6 +424,39 @@ const ALL = [
     },
   },
   {
+    slug: "asics-cps",
+    name: "ASICS",
+    client: "ASICS",
+    subheading: "The Core Performance Engine",
+    img: "/work/asics-cps/tile.jpg",
+    portrait: "/work/asics-cps/portrait.jpg",
+    tags: ["Brand", "Comms", "Retail"],
+    caseStudy: {
+      title: "ASICS",
+      subheading: "The Core Performance Engine",
+      intro: "Transforming elite athlete endorsements from static billboards into a relentless, year-round content ecosystem.",
+      hero: "/work/asics-cps/hero.jpg",
+      masterPosition: "45% 0%",
+      accent: "#4FA3FF",
+      images: [
+        { src: "/work/asics-cps/image-1.jpg", alt: "Novak Djokovic reviewing footage on a monitor with the crew during a content capture" },
+        { src: "/work/asics-cps/image-2.jpg", alt: "Julia Görges on court, racket behind her head" },
+      ],
+      resultStat: { value: "365 days", label: "of social storytelling, not just the Grand Slams." },
+      askPrompts: ["What was the truth behind ASICS?", "How did one shoot fuel a whole year?"],
+      sections: [
+        { heading: "Problem", body: "Performance sports marketing is historically crippled by a feast-or-famine cycle. Brands incinerate budgets on fleeting hero campaigns tied to major tournaments like Wimbledon or Roland Garros, resulting in massive content droughts the rest of the year. Concurrently, expensive elite athlete endorsements are squandered on passive, static placements rather than leveraged to build sustained, daily cultural and technical relevance with a global grassroots audience." },
+        { heading: "Truth", body: "Stop renting attention during tournaments and start owning the daily training lifecycle. Elite athlete access shouldn’t yield a single hero image; it must fuel an always-on curriculum that democratises professional performance." },
+        { heading: "Response", body: "We engineered a unified, scalable creative platform designed to drive all ASICS core performance sports, piloting the blueprint within the global tennis category. We replaced traditional promo shoots with a high-yield content capture programme starring ambassadors like Gaël Monfils and Julia Görges. By framing these athletes as active coaches, we codified a modular library of insights, technical tips, and drills. This system sustained a full year of daily social velocity while seamlessly scaling up into high-impact retail and experiential activations during peak Grand Slam moments." },
+        { heading: "The results", list: [
+          "Established the definitive global look, feel, and visual standard for the ASICS tennis category.",
+          "Deployed a relentless, 365-day social storytelling and retail ecosystem that maintained global audience engagement long after the Grand Slams ended.",
+          "Transformed passive ambassador partnerships into a high-utility coaching curriculum, driving deep technical credibility and brand loyalty with everyday players.",
+        ] },
+      ],
+    },
+  },
+  {
     slug: "ketel-one",
     private: true,
     name: "KETEL ONE",
@@ -540,7 +573,6 @@ const ALL = [
   },
   // Coming soon: tiles only, no case study yet (add a caseStudy block to publish).
   { slug: "subway-dolicious-studios", name: "SUBWAY", client: "Subway", subheading: "DÖLICIOUS STUDIOS", img: "/work/subway-dolicious-studios/tile.jpg", portrait: "/work/subway-dolicious-studios/portrait.jpg", tags: ["Comms"] },
-  { slug: "asics-cps", name: "ASICS", client: "ASICS", subheading: "CPS", img: "/work/asics-cps/tile.jpg", portrait: "/work/asics-cps/portrait.jpg", tags: ["Comms"] },
   { slug: "adidas-clima", name: "ADIDAS", client: "adidas", subheading: "Clima Platform", img: "/work/adidas-clima/tile.jpg", portrait: "/work/adidas-clima/portrait.jpg", tags: ["Brand", "Comms"] },
 ]
 

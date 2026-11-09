@@ -5,6 +5,7 @@
 
 import { workForKnowledge } from '@/lib/work-text'
 import { newsForKnowledge } from '@/lib/news-text'
+import { servicesText } from '@/components/services-data'
 
 // The Experience list and case studies are generated from components/work-data.js
 // (see lib/work-text.ts), so a new case study is known here automatically.
@@ -29,6 +30,10 @@ Work is framed as "the ideas behind the ideas". Clients are framed as "iconic br
 ## Who it works with
 - Companies: directly with brand, marketing, innovation and design teams on strategic and creative projects.
 - Agencies: freelance strategy, creative and design support when they need extra thinking, new perspectives or specialist skills.
+
+## Services (page: studio-veritas.com/services)
+Three service areas. To point a visitor to one, give its link: studio-veritas.com/services?service=strategy, ?service=world or ?service=innovation. It opens the page with that area expanded.
+${servicesText()}
 
 ## Team
 - Guillaume Furminger and Ali Marmaduke.

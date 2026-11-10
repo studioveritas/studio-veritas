@@ -7,7 +7,8 @@
  *     onExit: () => {},               // called on ESC (e.g. router.push('/'))
  *     fonts: { mono, display },       // canvas font-family strings
  *     prize: { title, code, line1, line2, line3 },
- *   }) -> { destroy, debug }
+ *     night: false,                   // night mode: pure white on pure black (switch live with setNight)
+ *   }) -> { destroy, setNight, debug }
  *
  * Controls: ← → move · ↑ / Space fire · P pause · M sound · ESC exit
  * Touch: hold and drag to steer, auto-fire while touching.
@@ -15,7 +16,16 @@
 export function createGame(canvas, opts = {}) {
   const W = 480, H = 640;
   const ctx = canvas.getContext('2d');
-  const G = (v, a = 1) => (a === 1 ? `rgb(${v},${v},${v})` : `rgba(${v},${v},${v},${a})`);
+  // Day: soft grayscale. Night ("Blackout"): every tone snaps to pure white on pure black,
+  // with three strengths of white standing in for the grays.
+  let night = !!opts.night;
+  const RAW = (v, a = 1) => (a === 1 ? `rgb(${v},${v},${v})` : `rgba(${v},${v},${v},${a})`);
+  const G = (v, a = 1) => {
+    if (!night) return RAW(v, a);
+    if (v <= 12) return a === 1 ? '#000' : `rgba(0,0,0,${a})`;
+    const k = v < 100 ? 0.22 : v < 180 ? 0.65 : 1;
+    return `rgba(255,255,255,${k * a})`;
+  };
   const MONO = (opts.fonts && opts.fonts.mono) || '"IBM Plex Mono", ui-monospace, Menlo, monospace';
   const DISPLAY = (opts.fonts && opts.fonts.display) || '"Chakra Petch", "IBM Plex Mono", ui-monospace, monospace';
   const is404 = opts.mode !== 'secret';
@@ -40,6 +50,8 @@ export function createGame(canvas, opts = {}) {
 
   /* ───────────────────────── sprites ───────────────────────── */
   const PAL = { X: 235, x: 160, o: 85, '#': 30 };
+  const PAL_NIGHT = { X: 255, x: 255, o: 0, '#': 0 };
+  const ink = (v) => (night ? (v >= 120 ? 255 : 0) : v);
   function makeSprite(rows, white = false) {
     const w = Math.max(...rows.map((r) => r.length));
     const c = document.createElement('canvas');
@@ -47,8 +59,8 @@ export function createGame(canvas, opts = {}) {
     const g = c.getContext('2d');
     rows.forEach((r, y) => {
       for (let x = 0; x < r.length; x++) {
-        const v = PAL[r[x]];
-        if (v !== undefined) { g.fillStyle = G(white ? 255 : v); g.fillRect(x, y, 1, 1); }
+        const v = (night ? PAL_NIGHT : PAL)[r[x]];
+        if (v !== undefined) { g.fillStyle = RAW(white ? 255 : v); g.fillRect(x, y, 1, 1); }
       }
     });
     return c;
@@ -103,12 +115,14 @@ export function createGame(canvas, opts = {}) {
         if (y >= 13 && y < 18 && x > 4 && x < w - 5 && x % 4 === 2 && y - 13 < 2 + (x % 3)) v = 160; // tendrils
         if (y < 4 && (x === 7 || x === w - 8) ) v = 235; // horns
         if (y < 2 && (x === 6 || x === w - 7)) v = 235;
-        if (v >= 0) { g.fillStyle = G(white ? 255 : v); g.fillRect(x, y, 1, 1); }
+        if (v >= 0) { g.fillStyle = RAW(white ? 255 : ink(v)); g.fillRect(x, y, 1, 1); }
       }
     }
     return c;
   }
-  const spr = {
+  let spr = null;
+  function buildSprites() {
+  spr = {
     ship: makeSprite(SHIP),
     shipW: makeSprite(SHIP, true),
     hype: makeSprite(HYPE),
@@ -117,6 +131,8 @@ export function createGame(canvas, opts = {}) {
     junk: {},
   };
   for (const k of Object.keys(JUNK)) spr.junk[k] = JUNK[k].map((f) => makeSprite(f));
+  }
+  buildSprites();
 
   /* ───────────────────────── audio ───────────────────────── */
   let actx = null;
@@ -763,7 +779,7 @@ export function createGame(canvas, opts = {}) {
       i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
     });
     ctx.closePath();
-    ctx.fillStyle = r.flash > 0 ? G(255) : G(r.size === 3 ? 70 : r.size === 2 ? 90 : 110);
+    ctx.fillStyle = r.flash > 0 ? G(255) : night ? '#000' : G(r.size === 3 ? 70 : r.size === 2 ? 90 : 110);
     ctx.fill();
     ctx.lineWidth = 2;
     ctx.strokeStyle = G(205);
@@ -789,9 +805,9 @@ export function createGame(canvas, opts = {}) {
     ctx.drawImage(im, bx, by, sw, sh);
     // the eye of the lie — it watches you
     const ex = Math.round(b.x), ey = Math.round(b.y - 2);
-    ctx.fillStyle = G(b.flash > 0 ? 255 : 230);
+    ctx.fillStyle = night && b.flash <= 0 ? '#000' : G(b.flash > 0 ? 255 : 230);
     ctx.beginPath(); ctx.ellipse(ex, ey, 30, 15, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = G(30); ctx.lineWidth = 3; ctx.stroke();
+    ctx.strokeStyle = night ? '#fff' : G(30); ctx.lineWidth = night ? 2 : 3; ctx.stroke();
     if (b.phase === 3) {
       ctx.strokeStyle = G(130); ctx.lineWidth = 1;
       for (let i = 0; i < 5; i++) { ctx.beginPath(); ctx.moveTo(ex - 28 + i * 3, ey - 6 + i * 3); ctx.lineTo(ex - 16 + i * 2, ey - 2 + i); ctx.stroke(); }
@@ -799,9 +815,9 @@ export function createGame(canvas, opts = {}) {
     const look = Math.atan2(P.y - ey, P.x - ex);
     const px = ex + Math.cos(look) * 13, py = ey + Math.sin(look) * 5;
     const pr = b.phase === 3 ? 6 : 9;
-    ctx.fillStyle = G(15);
+    ctx.fillStyle = night ? '#fff' : G(15);
     ctx.fillRect(Math.round(px - pr), Math.round(py - pr), pr * 2, pr * 2);
-    ctx.fillStyle = G(255);
+    ctx.fillStyle = night ? '#000' : G(255);
     ctx.fillRect(Math.round(px - pr + 2), Math.round(py - pr + 2), 3, 3);
   }
 
@@ -955,7 +971,7 @@ export function createGame(canvas, opts = {}) {
       text('/10', 238, 186, 18, { color: G(150) });
       text('OVERALL', 52, 128, 9, { align: 'left', color: G(150), ls: 2 });
       ctx.fillStyle = G(220); ctx.fillRect(306, 112, 134, 92);
-      text('RANK', 373, 132, 9, { color: G(30), ls: 3, weight: 600 });
+      text('RANK', 373, 132, 9, { color: G(10), ls: 3, weight: 600 });
       if (at(1.2)) text(R.grade, 373, 192, 62, { font: DISPLAY, weight: 700, color: G(10) });
     }
     bar('AIM', R.aim, 232, at(1.0));
@@ -1017,8 +1033,8 @@ export function createGame(canvas, opts = {}) {
     if (flash > 0) { ctx.fillStyle = G(255, Math.min(1, flash)); ctx.fillRect(0, 0, W, H); }
     // CRT
     if (scanPattern) { ctx.fillStyle = scanPattern; ctx.fillRect(0, 0, W, H); }
-    if (vignette) { ctx.fillStyle = vignette; ctx.fillRect(0, 0, W, H); }
-    ctx.fillStyle = G(255, 0.012 + Math.random() * 0.012); ctx.fillRect(0, 0, W, H);
+    if (vignette && !night) { ctx.fillStyle = vignette; ctx.fillRect(0, 0, W, H); }
+    if (!night) { ctx.fillStyle = G(255, 0.012 + Math.random() * 0.012); ctx.fillRect(0, 0, W, H); }
   }
 
   /* ───────────────────────── loop ───────────────────────── */
@@ -1070,6 +1086,11 @@ export function createGame(canvas, opts = {}) {
       try { if (actx) actx.close(); } catch (e) { /* noop */ }
     },
     // test hooks (used by the Playwright checks; harmless in production)
+    setNight(on) {
+      if (!!on === night) return;
+      night = !!on;
+      buildSprites();
+    },
     debug: {
       state: () => ({ mode, level: S && S.level, score: S && S.score, lives: S && S.lives, bossHp: boss && boss.hp }),
       start: () => newRun(1),

@@ -127,7 +127,8 @@ export function Contact() {
         {/* CONTACT CONTENT */}
         <div className="relative min-h-screen flex flex-col items-center justify-center px-4 md:px-8 pt-24 pb-36 md:py-28" style={{ zIndex: 1 }}>
           {/* CONTACT US tag */}
-          <PageTitle className="mb-10 md:mb-16">Let’s work together</PageTitle>
+          {/* Secret: roll over "work" and it becomes PLAY, which opens the Truth Invaders arcade (/play). */}
+          <PageTitle className="mb-10 md:mb-16" secret={{ word: 'work', swap: 'PLAY', href: '/play' }}>Let’s work together</PageTitle>
 
           {/* STUDIO VERITAS card */}
           <motion.div

@@ -14,6 +14,7 @@
 
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC_BLACK, ICON_SRC_BLACK, PROCESS_ICON_SRC } from './media'
 import { MENU_ITEMS } from './site-nav'
@@ -479,7 +480,10 @@ export function SiteFooter({ open, onClose }) {
 // The plain one-line title that sits above a page's content when its tag is in the nav bar.
 // It types out once, in the site's typewriter style. The full line is reserved invisibly underneath,
 // so nothing below it shifts while it types; screen readers and crawlers get the whole line at once.
-export function PageTitle({ children, className = '', delay = 450, speed = 55 }) {
+// `secret` (optional): { word, swap, href } — once the line has typed out, `word` becomes a hidden link.
+// Rolling over it (or a first tap on touch screens) swaps it for `swap` in bold; clicking goes to `href`.
+// Used on the contact page: "work" → PLAY → the Truth Invaders arcade at /play.
+export function PageTitle({ children, className = '', delay = 450, speed = 55, secret = null }) {
   const text = String(children)
   const [typed, setTyped] = useState(0)
   useEffect(() => {
@@ -492,6 +496,13 @@ export function PageTitle({ children, className = '', delay = 450, speed = 55 })
     return () => { clearTimeout(t); clearInterval(iv) }
   }, [text, delay, speed])
   const done = typed >= text.length
+  const [armed, setArmed] = useState(false)
+  const at = secret ? text.indexOf(secret.word) : -1
+  const showSecret = done && at >= 0
+  const onSecretClick = (e) => {
+    // Touch screens have no rollover: the first tap reveals PLAY, the second one follows the link.
+    if (!armed && window.matchMedia?.('(hover: none)').matches) { e.preventDefault(); setArmed(true) }
+  }
   return (
     <>
       <style>{`
@@ -500,17 +511,40 @@ export function PageTitle({ children, className = '', delay = 450, speed = 55 })
         .sv-page-title-typed { position: absolute; inset: 0; white-space: pre; }
         .sv-page-title-caret::after { content: '\\2588'; animation: sv-title-blink 0.8s step-end infinite; margin-left: 2px; }
         @keyframes sv-title-blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
+        .sv-secret { display: inline-grid; color: inherit; text-decoration: none; vertical-align: baseline; }
+        .sv-secret > span { grid-area: 1 / 1; text-align: center; }
+        .sv-secret-swap { visibility: hidden; font-weight: 700; letter-spacing: 0.02em; }
+        .sv-secret:hover .sv-secret-word, .sv-secret:focus-visible .sv-secret-word, .sv-secret.is-armed .sv-secret-word { visibility: hidden; }
+        .sv-secret:hover .sv-secret-swap, .sv-secret:focus-visible .sv-secret-swap, .sv-secret.is-armed .sv-secret-swap { visibility: visible; }
+        .sv-secret:focus-visible { outline: none; }
       `}</style>
       <h1
-        aria-label={text}
+        aria-label={showSecret ? undefined : text}
         className={`sv-page-title text-black text-center ${className}`}
         style={{ fontFamily: MONO, fontWeight: 400, lineHeight: 1.3 }}
       >
         <span aria-hidden="true" style={{ visibility: 'hidden', whiteSpace: 'pre' }}>{text}</span>
-        <span aria-hidden="true" className="sv-page-title-typed" style={{ textAlign: 'left' }}>
-          {text.slice(0, typed)}
-          {!done && <span className="sv-page-title-caret" />}
-        </span>
+        {showSecret ? (
+          <span className="sv-page-title-typed" style={{ textAlign: 'left' }}>
+            {text.slice(0, at)}
+            <Link
+              href={secret.href}
+              prefetch={false}
+              onClick={onSecretClick}
+              onMouseLeave={() => setArmed(false)}
+              className={`sv-secret${armed ? ' is-armed' : ''}`}
+            >
+              <span className="sv-secret-word">{secret.word}</span>
+              <span className="sv-secret-swap" aria-hidden="true">{secret.swap}</span>
+            </Link>
+            {text.slice(at + secret.word.length)}
+          </span>
+        ) : (
+          <span aria-hidden="true" className="sv-page-title-typed" style={{ textAlign: 'left' }}>
+            {text.slice(0, typed)}
+            {!done && <span className="sv-page-title-caret" />}
+          </span>
+        )}
       </h1>
     </>
   )

@@ -55,7 +55,7 @@ export function Contact() {
   return (
     <main
       className="sv-contactpage-container relative w-full overflow-hidden text-white"
-      style={{ background: '#D8FF00', cursor: `url("${cursorSvg}") 16 1, auto` }}
+      style={{ background: 'var(--sv-ground, #D8FF00)', cursor: `url("${cursorSvg}") 16 1, auto` }}
     >
       <style>{`
         .sv-contactpage-root * { cursor: url("${cursorSvg}") 16 1, auto !important; }
@@ -102,14 +102,14 @@ export function Contact() {
         </section>
 
         {/* BACKGROUND */}
-        <div className="absolute inset-0 overflow-hidden" style={{ background: '#D8FF00', zIndex: 0 }}>
+        <div className="absolute inset-0 overflow-hidden" style={{ background: 'var(--sv-ground, #D8FF00)', zIndex: 0 }}>
           <div
             className="absolute inset-0 hidden md:block"
-            style={{ backgroundImage: `url(${LANDING_IMG_DESKTOP})`, backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
+            style={{ backgroundImage: `url(${LANDING_IMG_DESKTOP})`, filter: 'var(--sv-sky-filter, none)', backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
           />
           <div
             className="absolute inset-0 block md:hidden"
-            style={{ backgroundImage: `url(${LANDING_IMG_MOBILE})`, backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
+            style={{ backgroundImage: `url(${LANDING_IMG_MOBILE})`, filter: 'var(--sv-sky-filter, none)', backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
           />
         </div>
 
@@ -135,7 +135,7 @@ export function Contact() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: 'spring', damping: 28, stiffness: 260, delay: 0.25 }}
-            className="w-full max-w-[1400px] mt-4 md:mt-5 rounded-md p-5 md:p-7"
+            className="w-full max-w-[1400px] mt-4 md:mt-5 rounded-md p-5 md:p-7 sv-ink"
             style={{ background: '#eeeeee', border: '1px solid rgba(0,0,0,0.45)' }}
           >
             <div className="flex items-start justify-between gap-6">

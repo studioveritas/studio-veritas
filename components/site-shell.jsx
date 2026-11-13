@@ -42,7 +42,7 @@ export function SiteShell({ pageKey, srOnly, children, onEscape }) {
   return (
     <main
       className={`sv-${pageKey}-container relative w-full text-white`}
-      style={{ background: '#D8FF00', cursor: `url("${cursorSvg}") 16 1, auto` }}
+      style={{ background: 'var(--sv-ground, #D8FF00)', cursor: `url("${cursorSvg}") 16 1, auto` }}
     >
       <style>{`
         .${root} * { cursor: url("${cursorSvg}") 16 1, auto !important; }
@@ -71,14 +71,14 @@ export function SiteShell({ pageKey, srOnly, children, onEscape }) {
 
       <div className={`${root} relative`}>
         {/* BACKGROUND (fixed: these pages scroll) */}
-        <div className="fixed inset-0 overflow-hidden" style={{ background: '#D8FF00', zIndex: 0 }}>
+        <div className="fixed inset-0 overflow-hidden" style={{ background: 'var(--sv-ground, #D8FF00)', zIndex: 0 }}>
           <div
             className="absolute inset-0 hidden md:block"
-            style={{ backgroundImage: `url(${LANDING_IMG_DESKTOP})`, backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
+            style={{ backgroundImage: `url(${LANDING_IMG_DESKTOP})`, filter: 'var(--sv-sky-filter, none)', backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
           />
           <div
             className="absolute inset-0 block md:hidden"
-            style={{ backgroundImage: `url(${LANDING_IMG_MOBILE})`, backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
+            style={{ backgroundImage: `url(${LANDING_IMG_MOBILE})`, filter: 'var(--sv-sky-filter, none)', backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
           />
         </div>
 

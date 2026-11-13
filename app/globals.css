@@ -92,3 +92,182 @@ body :is(a[href], button:not(:disabled), [role="button"], label[for], summary) *
     --sv-nav-w: min(900px, calc(100% - 80px));
   }
 }
+
+/* ═══ NIGHT MODE · "Blackout" ════════════════════════════════════════════════
+   Toggled by the switch on the right edge (components/theme-switch.jsx), which
+   puts `sv-night` on <html>. The idea: the day site, as its photographic negative.
+   - The cloud photo is graded down to faint smoke on black, with a starfield.
+   - Chrome and modules invert: black pop-outs and buttons go light, light cards
+     and the nav bar go black, black logos go white.
+   - Photography never inverts (JPEGs inside an inverted module are flipped back).
+   - Work and case studies are already dark; only their chrome changes. */
+html.sv-night {
+  --sv-ground: #000;
+  --sv-sky-filter: grayscale(1) brightness(0.3) contrast(1.6);
+  --sv-inv: invert(1) hue-rotate(180deg);
+  color-scheme: dark;
+  background: #000;
+}
+html.sv-night body { background: #000; }
+
+/* lights-off snap: only while switching */
+html.sv-theme-anim *, html.sv-theme-anim *::before, html.sv-theme-anim *::after {
+  transition: background-color .3s ease, color .3s ease, border-color .3s ease, filter .3s ease, opacity .3s ease !important;
+}
+
+/* ─── Sky ─── */
+/* home: navy wash over the sky */
+html.sv-night [data-sv-intro="bg"] > .absolute[style*="linear-gradient"] { opacity: 0; }
+.sv-stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity .8s ease .15s; }
+html.sv-night .sv-stars { opacity: 1; }
+.sv-stars span { position: absolute; border-radius: 50%; background: #fff; animation: sv-twinkle 4s ease-in-out infinite; }
+@keyframes sv-twinkle { 0%, 100% { opacity: .95; } 50% { opacity: .2; } }
+.sv-shoot { position: absolute; left: 64%; top: 12%; width: 150px; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0), #fff); transform: rotate(-24deg); opacity: 0; }
+html.sv-night .sv-shoot { animation: sv-shoot 11s ease-in 2s infinite; }
+@keyframes sv-shoot { 0% { opacity: 0; transform: rotate(-24deg) translateX(0); } 2% { opacity: 1; } 8% { opacity: 0; transform: rotate(-24deg) translateX(-440px); } 100% { opacity: 0; transform: rotate(-24deg) translateX(-440px); } }
+
+/* ─── Inverted modules ─── */
+html.sv-night :is(
+  .sv-nav, .sv-menu, .sv-cbar-btn, .sv-cpanel, .sv-foot, .av-panel, .av-nudge,
+  .sv-ink, .rounded-md.shadow-2xl:not(.sv-tag)
+) { filter: var(--sv-inv); }
+/* inverted drop shadows would glow white: swap them for a hairline edge */
+html.sv-night :is(.sv-nav, .sv-cbar-btn, .sv-ink, .sv-cpanel, .sv-menu, .rounded-md.shadow-2xl:not(.sv-tag)) { box-shadow: 0 0 0 1px rgba(0,0,0,.26) !important; }
+html.sv-night .sv-foot { box-shadow: none !important; }
+/* nested modules are already inside an inverted parent */
+html.sv-night :is(.sv-ink, .sv-nav, .sv-foot, .av-panel) :is(.rounded-md.shadow-2xl, .sv-ink) { filter: none; }
+/* photography stays photography */
+html.sv-night :is(.sv-nav, .sv-menu, .sv-cpanel, .sv-foot, .av-panel, .sv-ink, .rounded-md.shadow-2xl)
+  :is(img[src^="data:image/jpeg"], img[src*=".jpg"], img[src*=".jpeg"], img[src*=".webp"], video) { filter: var(--sv-inv); }
+html.sv-night :is(.sv-ink, .sv-nav, .sv-foot) .rounded-md.shadow-2xl :is(img[src*=".jpg"], img[src^="data:image/jpeg"]) { filter: var(--sv-inv); }
+
+/* chrome sitting straight on the sky */
+html.sv-night .sv-eye img { filter: invert(1) !important; }
+html.sv-night :is(.sv-contact-row, .sv-foot-trigger, .av-tri) { color: #fff; filter: invert(1); }
+html.sv-night .sv-foot-trigger { filter: none; }
+html.sv-night .sv-cbar-btn { box-shadow: none !important; }
+
+/* text and icons on the sky */
+html.sv-night :is(.sv-page-title, .sv-home-copy, .sv-home-tag) { color: #fff !important; }
+html.sv-night .sv-triangle-label { color: #fff !important; }
+html.sv-night .sv-triangle-label:hover { color: #5683dd !important; }
+html.sv-night .sv-process-container img:not([src*=".jpg"]) { filter: invert(1); }
+
+/* News + Insights: warm paper becomes warm dark */
+html.sv-night :is(.sv-nw-band, .sv-na-band) { background: #14110e !important; color: #ddc9b8 !important; border-top-color: rgba(221,201,184,.35) !important; }
+
+/* ─── Day / night cluster: clock(s) + pill toggle ───────────────────────────
+   Placement follows the space the nav bar leaves (nav: max 900px wide, centred, 40px from top on desktop):
+   - wide screens:   top-right corner, level with the nav bar, clock and toggle in a row
+   - a bit narrower: top-right corner, toggle under the clock
+   - otherwise:      just below the nav bar, aligned to its right edge
+   The dual clock (visitors outside Amsterdam) is wider, so it moves down a step sooner. */
+.sv-daynight {
+  --sv-nav-right: calc((100vw - min(900px, 100vw - 80px)) / 2);
+  position: fixed; z-index: 45; top: 74px; right: 16px;
+  display: flex; align-items: center; gap: 10px;
+  animation: sv-dn-in .6s ease .3s both;
+}
+@keyframes sv-dn-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.sv-clock {
+  margin: 0; display: flex; align-items: center; gap: 6px;
+  font: 500 12px/1 'IBM Plex Mono', monospace; letter-spacing: .02em; color: #000;
+  font-variant-numeric: tabular-nums; white-space: nowrap; transition: color .3s;
+}
+.sv-clock-item { display: inline-flex; align-items: center; gap: 6px; }
+.sv-clock-sep { opacity: .5; margin-right: 1px; }
+.sv-clock-city { letter-spacing: .12em; }
+/* the dots are the real sky in each city, independent of the toggle */
+.sv-clock-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #55ac32; flex: none;
+  animation: sv-dot 2.4s ease-out infinite;
+}
+.sv-clock-dot.is-dark { background: #5683dd; animation-name: sv-dot-n; }
+@keyframes sv-dot { 0% { box-shadow: 0 0 0 0 rgba(85,172,50,.45); } 70%, 100% { box-shadow: 0 0 0 5px rgba(85,172,50,0); } }
+@keyframes sv-dot-n { 0% { box-shadow: 0 0 0 0 rgba(86,131,221,.55); } 70%, 100% { box-shadow: 0 0 0 5px rgba(86,131,221,0); } }
+/* hours and minutes only in the dual clock, so the colon keeps it ticking */
+.sv-clock.is-dual .sv-clock-colon { animation: sv-colon 1s steps(1) infinite; }
+@keyframes sv-colon { 0%, 49% { opacity: 1; } 50%, 100% { opacity: .2; } }
+html.sv-night .sv-clock,
+body:has(.sv-cx-arrow-next) .sv-clock { color: #fff; } /* case studies sit on dark photography in both modes */
+
+/* the pill: grey track, blue ring with a white edge, black knob (right = night) */
+.sv-toggle {
+  position: relative; flex: none; width: 46px; height: 26px; padding: 0; margin: -9px; box-sizing: content-box;
+  border: 9px solid transparent; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.sv-toggle::before {
+  content: ''; position: absolute; inset: 0; border-radius: 13px; box-sizing: border-box;
+  background: #d9d9d9; border: 2px solid #275dc5; box-shadow: 0 0 0 1.5px #fff; transition: box-shadow .2s;
+}
+.sv-toggle-knob {
+  position: absolute; top: 4px; left: 4px; width: 18px; height: 18px; border-radius: 50%; background: #000;
+  transition: transform .35s cubic-bezier(.3, 1.35, .5, 1);
+}
+.sv-toggle[aria-checked="true"] .sv-toggle-knob { transform: translateX(20px); }
+.sv-toggle:hover::before { box-shadow: 0 0 0 1.5px #fff, 0 0 0 4px rgba(39,93,197,.25); }
+.sv-toggle:focus-visible { outline: none; }
+.sv-toggle:focus-visible::before { box-shadow: 0 0 0 1.5px #fff, 0 0 0 4px #5683dd; }
+
+/* phones: page tags (SERVICES, TEAM…) hang under the nav bar on the right, so the clock drops below them */
+@media (max-width: 767px) {
+  body:has(.sv-nav-tag) .sv-daynight { top: 108px; }
+  body:has(.sv-nav-tag) .sv-page-title { margin-top: 28px; } /* page titles step down to make room */
+}
+/* very small phones: tighten the dual clock */
+@media (max-width: 359px) {
+  .sv-daynight { gap: 8px; right: 12px; }
+  .sv-clock { font-size: 11px; gap: 5px; }
+  .sv-clock-item { gap: 4px; }
+}
+/* tablet and desktop: one size for the clock and toggle */
+@media (min-width: 768px) {
+  .sv-daynight { top: 122px; right: var(--sv-nav-right); gap: 16px; }
+  .sv-clock { font-size: 14px; gap: 8px; }
+  .sv-clock-item { gap: 8px; }
+  .sv-clock-dot { width: 8px; height: 8px; }
+  .sv-toggle { width: 52px; height: 28px; }
+  .sv-toggle::before { border-radius: 14px; }
+  .sv-toggle-knob { width: 20px; height: 20px; }
+  .sv-toggle[aria-checked="true"] .sv-toggle-knob { transform: translateX(24px); }
+  /* below the nav on a case study, keep clear of the close button */
+  body:has(.sv-cx-arrow-next) .sv-daynight { right: max(var(--sv-nav-right), 104px); }
+}
+/* corner, stacked: Amsterdam visitors from 1270px, dual clock from 1440px */
+@media (min-width: 1270px) {
+  .sv-daynight:not(.is-dual) { top: 48px; right: 40px; flex-direction: column; align-items: flex-end; gap: 10px; }
+  body:has(.sv-cx-arrow-next) .sv-daynight:not(.is-dual) { right: 40px; }
+}
+@media (min-width: 1440px) {
+  .sv-daynight.is-dual { top: 48px; right: 40px; flex-direction: column; align-items: flex-end; gap: 10px; }
+  body:has(.sv-cx-arrow-next) .sv-daynight.is-dual { right: 40px; }
+}
+/* corner, in a row: Amsterdam visitors from 1400px, dual clock from 1580px */
+@media (min-width: 1400px) {
+  .sv-daynight:not(.is-dual) { top: 61px; flex-direction: row; align-items: center; gap: 16px; }
+}
+@media (min-width: 1580px) {
+  .sv-daynight.is-dual { top: 61px; flex-direction: row; align-items: center; gap: 16px; }
+}
+/* Work, News + Insights and articles: their panels start just under the nav bar. Wherever the clock
+   sits below the nav, open up a band of sky so the clock and toggle sit on the background, clear of the panel. */
+@media (max-width: 767px) {
+  body :is(.sv-work, .sv-nw, .sv-na) { padding-top: calc(var(--sv-nav-top) + var(--sv-nav-h) + 56px); }
+}
+@media (min-width: 768px) {
+  body :is(.sv-work, .sv-nw, .sv-na) { padding-top: calc(var(--sv-nav-top) + var(--sv-nav-h) + 70px); }
+}
+/* …and back to the original spacing once the clock moves up beside the nav */
+@media (min-width: 1270px) {
+  body:has(.sv-daynight:not(.is-dual)) .sv-work { padding-top: calc(var(--sv-nav-top) + var(--sv-nav-h) + 42px); }
+  body:has(.sv-daynight:not(.is-dual)) :is(.sv-nw, .sv-na) { padding-top: calc(var(--sv-nav-top) + var(--sv-nav-h) + 26px); }
+}
+@media (min-width: 1440px) {
+  body:has(.sv-daynight.is-dual) .sv-work { padding-top: calc(var(--sv-nav-top) + var(--sv-nav-h) + 42px); }
+  body:has(.sv-daynight.is-dual) :is(.sv-nw, .sv-na) { padding-top: calc(var(--sv-nav-top) + var(--sv-nav-h) + 26px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sv-stars span, html.sv-night .sv-shoot { animation: none; }
+  .sv-clock-dot { animation: none; }
+  .sv-toggle-knob { transition: none; }
+}

@@ -216,7 +216,7 @@ export function Process() {
   return (
     <main
       className="sv-process-container relative w-full overflow-hidden text-white"
-      style={{ background: '#D8FF00', cursor: `url("${cursorSvg}") 16 1, auto` }}
+      style={{ background: 'var(--sv-ground, #D8FF00)', cursor: `url("${cursorSvg}") 16 1, auto` }}
     >
       <script
         type="application/ld+json"
@@ -281,11 +281,11 @@ export function Process() {
         </section>
 
         {/* BACKGROUND — same atmospheric photo as the homepage */}
-        <div className="absolute inset-0 overflow-hidden" style={{ background: '#D8FF00', zIndex: 0 }}>
+        <div className="absolute inset-0 overflow-hidden" style={{ background: 'var(--sv-ground, #D8FF00)', zIndex: 0 }}>
           <div
             className="absolute inset-0 hidden md:block"
             style={{
-              backgroundImage: `url(${LANDING_IMG_DESKTOP})`,
+              backgroundImage: `url(${LANDING_IMG_DESKTOP})`, filter: 'var(--sv-sky-filter, none)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               animation: 'sv-drift 26s ease-in-out infinite',
@@ -294,7 +294,7 @@ export function Process() {
           <div
             className="absolute inset-0 block md:hidden"
             style={{
-              backgroundImage: `url(${LANDING_IMG_MOBILE})`,
+              backgroundImage: `url(${LANDING_IMG_MOBILE})`, filter: 'var(--sv-sky-filter, none)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               animation: 'sv-drift 26s ease-in-out infinite',

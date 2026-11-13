@@ -46,9 +46,9 @@ export function ClientLogin({ from = '/clients' }) {
       `}</style>
 
       {/* BACKGROUND */}
-      <div className="absolute inset-0 overflow-hidden" style={{ background: '#D8FF00', zIndex: 0 }}>
-        <div className="absolute inset-0 hidden md:block" style={{ backgroundImage: `url(${LANDING_IMG_DESKTOP})`, backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }} />
-        <div className="absolute inset-0 block md:hidden" style={{ backgroundImage: `url(${LANDING_IMG_MOBILE})`, backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }} />
+      <div className="absolute inset-0 overflow-hidden" style={{ background: 'var(--sv-ground, #D8FF00)', zIndex: 0 }}>
+        <div className="absolute inset-0 hidden md:block" style={{ backgroundImage: `url(${LANDING_IMG_DESKTOP})`, filter: 'var(--sv-sky-filter, none)', backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }} />
+        <div className="absolute inset-0 block md:hidden" style={{ backgroundImage: `url(${LANDING_IMG_MOBILE})`, filter: 'var(--sv-sky-filter, none)', backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }} />
       </div>
 
       {/* GRAIN */}
@@ -69,13 +69,13 @@ export function ClientLogin({ from = '/clients' }) {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring', damping: 28, stiffness: 260, delay: 0.25 }}
-          className="w-full max-w-[900px] rounded-md p-5 md:p-7"
+          className="w-full max-w-[900px] rounded-md p-5 md:p-7 sv-ink"
           style={{ background: '#eeeeee', border: '1px solid rgba(0,0,0,0.45)' }}
         >
           <div className="flex items-start justify-between gap-6">
             <div className="min-w-0">
               <img src={LOGO_SRC_BLACK} alt="Studio Veritas" className="sv-cl-wordmark" style={{ width: 'auto', maxWidth: '100%', display: 'block' }} draggable={false} />
-              <p className="sv-cl-sub mt-3 md:mt-4 text-black" style={{ fontFamily: MONO }}>The full suite of case studies</p>
+              <p className="sv-cl-sub mt-3 md:mt-4 text-black" style={{ fontFamily: MONO }}>Access your documents here.</p>
             </div>
             <img src={PROCESS_ICON_SRC} alt="" aria-hidden="true" className="sv-cl-icon hidden sm:block flex-shrink-0" style={{ width: 'auto' }} draggable={false} />
           </div>

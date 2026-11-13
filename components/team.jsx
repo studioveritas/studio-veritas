@@ -88,7 +88,7 @@ export function Team() {
   return (
     <main
       className="sv-team-container relative w-full overflow-hidden text-white"
-      style={{ background: '#D8FF00', cursor: `url("${cursorSvg}") 16 1, auto` }}
+      style={{ background: 'var(--sv-ground, #D8FF00)', cursor: `url("${cursorSvg}") 16 1, auto` }}
     >
       <script
         type="application/ld+json"
@@ -143,14 +143,14 @@ export function Team() {
         </section>
 
         {/* BACKGROUND */}
-        <div className="absolute inset-0 overflow-hidden" style={{ background: '#D8FF00', zIndex: 0 }}>
+        <div className="absolute inset-0 overflow-hidden" style={{ background: 'var(--sv-ground, #D8FF00)', zIndex: 0 }}>
           <div
             className="absolute inset-0 hidden md:block"
-            style={{ backgroundImage: `url(${LANDING_IMG_DESKTOP})`, backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
+            style={{ backgroundImage: `url(${LANDING_IMG_DESKTOP})`, filter: 'var(--sv-sky-filter, none)', backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
           />
           <div
             className="absolute inset-0 block md:hidden"
-            style={{ backgroundImage: `url(${LANDING_IMG_MOBILE})`, backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
+            style={{ backgroundImage: `url(${LANDING_IMG_MOBILE})`, filter: 'var(--sv-sky-filter, none)', backgroundSize: 'cover', backgroundPosition: 'center', animation: 'sv-drift 26s ease-in-out infinite' }}
           />
         </div>
 

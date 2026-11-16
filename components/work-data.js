@@ -544,6 +544,7 @@ const ALL = [
   },
   {
     slug: "zagg",
+    private: true,
     name: "ZAGG",
     client: "Heineken",
     subheading: "Our kind of energy",

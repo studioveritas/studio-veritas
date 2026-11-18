@@ -39,8 +39,8 @@ function Tile({ work, order, index }) {
           srcSet={work.srcSet || undefined}
           sizes="(min-width: 1024px) 31vw, (min-width: 600px) 46vw, 92vw"
           alt=""
-          loading={order < 6 ? 'eager' : 'lazy'}
-          fetchPriority={order < 3 ? 'high' : undefined}
+          loading={order < 3 ? 'eager' : 'lazy'}
+          fetchPriority={order === 0 ? 'high' : order < 3 ? 'auto' : 'low'}
           decoding="async"
           draggable={false}
         />
@@ -60,7 +60,9 @@ function Tile({ work, order, index }) {
   return (
     <motion.article
       className="sv-tile-wrap"
-      initial={{ opacity: 0, y: 48 }}
+      style={{ order }}
+      // first row: on screen from the first paint, it only settles upward; the rest fade up as they scroll in
+      initial={order < 3 ? { y: 24 } : { opacity: 0, y: 48 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: 0.7, delay: (order % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
@@ -146,7 +148,10 @@ export function Work({ items: WORK, tags: TAGS, label = 'Work', children = null 
   const shown = tag ? WORK.filter((w) => w.tags?.includes(tag)) : WORK
   const visible = shown.slice(0, count)
   const more = shown.length > count
-  const columns = Array.from({ length: cols }, (_, c) => visible.map((w, i) => ({ w, i })).filter(({ i }) => i % cols === c))
+  // Phones keep the three-column markup the server sent and CSS lays it out as one column in
+  // order (no re-mount after the script loads, so the first photo paints once, early).
+  const groupCols = cols === 1 ? 3 : cols
+  const columns = Array.from({ length: groupCols }, (_, c) => visible.map((w, i) => ({ w, i })).filter(({ i }) => i % groupCols === c))
 
   const loadMore = () => {
     if (more) setCount((n) => n + PAGE)
@@ -227,6 +232,10 @@ export function Work({ items: WORK, tags: TAGS, label = 'Work', children = null 
 
         .sv-mason { display: flex; align-items: flex-start; gap: 12px; margin-top: 24px; }
         .sv-mason-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+        @media (max-width: 599px) {
+          .sv-mason { flex-direction: column; align-items: stretch; }
+          .sv-mason-col { display: contents; }
+        }
 
         .sv-tile { display: block; color: #fff; text-decoration: none; outline: none; }
         .sv-tile-media { position: relative; overflow: hidden; border-radius: 3px; background: #141414; }
@@ -324,7 +333,7 @@ export function Work({ items: WORK, tags: TAGS, label = 'Work', children = null 
               {tag ? `${shown.length} ${tag} projects` : `All ${WORK.length} projects`}
             </p>
 
-            <div className="sv-mason" key={`${tag}-${cols}`}>
+            <div className="sv-mason" key={`${tag}-${groupCols}`}>
               {columns.map((col, c) => (
                 <div className="sv-mason-col" key={c}>
                   {col.map(({ w, i }) => (

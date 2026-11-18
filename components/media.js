@@ -3,8 +3,8 @@
 // the apple-design prototype; components/media-inline.js keeps the two the share images need.
 
 export const LOGO_SRC = '/media/logo-src.png'
-export const LANDING_IMG_DESKTOP = '/media/landing-img-desktop.jpg'
-export const LANDING_IMG_MOBILE = '/media/landing-img-mobile.jpg'
+export const LANDING_IMG_DESKTOP = '/media/landing-img-desktop.webp'
+export const LANDING_IMG_MOBILE = '/media/landing-img-mobile.webp'
 export const ICON_SRC = '/media/icon-src.png'
 export const TEAM_PHOTO_GUILLAUME = '/media/team-photo-guillaume.jpg'
 export const TEAM_PHOTO_ALI = '/media/team-photo-ali.jpg'

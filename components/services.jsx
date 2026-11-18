@@ -321,9 +321,10 @@ export function Services({ related = {} }) {
           <PageTitle className="mb-10 md:mb-16">Our services</PageTitle>
 
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: 'spring', bounce: 0, duration: 0.4, delay: 0.25 }}
+            // on screen from the first paint (it settles upward; no waiting on script to fade in)
+            initial={{ y: 14 }}
+            animate={{ y: 0 }}
+            transition={{ type: 'spring', bounce: 0, duration: 0.4, delay: 0.1 }}
             className="w-full max-w-[1400px] rounded-md px-5 md:px-7 sv-ink"
             style={{ background: 'rgb(var(--sv-card))', border: '1px solid rgb(var(--sv-on-card) / 0.45)' }}
           >
@@ -335,7 +336,7 @@ export function Services({ related = {} }) {
                   id={a.anchor}
                   className="sv-svc-row"
                   data-open={isOpen}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0.35, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 + i * 0.15 }}
                 >

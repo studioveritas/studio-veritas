@@ -347,10 +347,11 @@ export function CaseStudy({ work, prev, next, home = '/work' }) {
         .sv-cx-cue { position: absolute; right: var(--gutter); bottom: clamp(96px, 12vh, 140px); display: flex; align-items: center; gap: 10px; font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.75; }
         .sv-cx-cue i { display: block; width: 1px; height: 40px; background: #fff; transform-origin: top; animation: sv-cx-cue 1.8s ease-in-out infinite; }
         @keyframes sv-cx-cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(0); transform-origin: bottom; } }
-        .sv-cx-rv { opacity: 0; transform: translateY(24px); transition: opacity 1s ease, transform 1s cubic-bezier(0.77, 0, 0.18, 1); }
-        .sv-cx[data-ready='1'] .sv-cx-rv { opacity: 1; transform: none; }
-        .sv-cx[data-ready='1'] .d2 { transition-delay: 0.12s; } .sv-cx[data-ready='1'] .d3 { transition-delay: 0.24s; }
-        .sv-cx[data-ready='1'] .d4 { transition-delay: 0.36s; } .sv-cx[data-ready='1'] .d5 { transition-delay: 0.48s; }
+        /* the hero copy rises in from the first paint (pure CSS), not after the page's script has loaded */
+        @keyframes sv-cx-rv { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+        .sv-cx-rv { animation: sv-cx-rv 1s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .sv-cx .d2 { animation-delay: 0.12s; } .sv-cx .d3 { animation-delay: 0.24s; }
+        .sv-cx .d4 { animation-delay: 0.36s; } .sv-cx .d5 { animation-delay: 0.48s; }
 
         /* the pop-outs */
         .sv-cx-body { display: grid; gap: 28px; padding: 6vh var(--gutter) 0; }
@@ -432,7 +433,7 @@ export function CaseStudy({ work, prev, next, home = '/work' }) {
         }
         @media (prefers-reduced-motion: reduce) {
           .sv-cx-stage img, .sv-cx-cue i, .sv-cx-caret::after { animation: none; }
-          .sv-cx-pop, .sv-cx-fig, .sv-cx-rv { transition: none; }
+          .sv-cx-pop, .sv-cx-fig { transition: none; } .sv-cx-rv { animation: none; }
         }
       `}</style>
 

@@ -471,7 +471,7 @@ export function Process() {
               initial={{ opacity: 0, y: 8, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 8, scale: 0.98 }}
-              transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
               className="fixed w-[calc(100%-2rem)] max-w-[300px] max-h-[280px] rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl"
               style={{
                 top: panelPos.top,

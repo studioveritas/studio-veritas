@@ -109,6 +109,7 @@ export function Experience({ workList = '' }) {
     setRevealed(POPUP_PARAGRAPHS.map(() => 0))
     const lengths = POPUP_PARAGRAPHS.map((p) => p.length)
     const total = lengths.reduce((a, b) => a + b, 0)
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setRevealed(lengths); return }
     let current = 0
     const interval = setInterval(() => {
       current += 3
@@ -302,7 +303,7 @@ export function Experience({ workList = '' }) {
               initial={{ opacity: 0, y: 20, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.98 }}
-              transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
               className="fixed bottom-[64px] left-4 md:bottom-[96px] md:left-10 w-[calc(100%-2rem)] max-w-[560px] max-h-[min(70vh,620px)] rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl"
               style={{ zIndex: 50, background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}
             >

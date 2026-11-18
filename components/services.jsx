@@ -60,7 +60,7 @@ function AreaPanel({ area, work, onClose }) {
       initial={{ opacity: 0, y: 20, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 20, scale: 0.98 }}
-      transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+      transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
       className="relative rounded-md p-5 md:p-7 shadow-2xl mb-6 text-white"
       style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)', fontFamily: MONO }}
     >
@@ -107,7 +107,7 @@ function AreaPanel({ area, work, onClose }) {
                 className="sv-tile"
                 initial={{ opacity: 0, y: 20, scale: 0.94 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ type: 'spring', damping: 26, stiffness: 300, delay: i * 0.12 }}
+                transition={{ type: 'spring', bounce: 0, duration: 0.4, delay: i * 0.12 }}
                 onClick={(e) => zoomToCaseStudy(e, w, e.currentTarget.querySelector('.sv-tile-media img'))}
                 aria-label={`${w.client}: ${w.subheading}. Read the case study`}
               >
@@ -323,7 +323,7 @@ export function Services({ related = {} }) {
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ type: 'spring', damping: 28, stiffness: 260, delay: 0.25 }}
+            transition={{ type: 'spring', bounce: 0, duration: 0.4, delay: 0.25 }}
             className="w-full max-w-[1400px] rounded-md px-5 md:px-7 sv-ink"
             style={{ background: '#eeeeee', border: '1px solid rgba(0,0,0,0.45)' }}
           >

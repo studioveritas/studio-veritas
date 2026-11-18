@@ -134,7 +134,7 @@ export function Contact() {
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ type: 'spring', damping: 28, stiffness: 260, delay: 0.25 }}
+            transition={{ type: 'spring', bounce: 0, duration: 0.4, delay: 0.25 }}
             className="w-full max-w-[1400px] mt-4 md:mt-5 rounded-md p-5 md:p-7 sv-ink"
             style={{ background: '#eeeeee', border: '1px solid rgba(0,0,0,0.45)' }}
           >
@@ -218,7 +218,7 @@ export function Contact() {
               initial={{ opacity: 0, y: 20, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.98 }}
-              transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
               className="fixed bottom-20 right-4 md:bottom-28 md:right-10 w-[calc(100%-2rem)] max-w-[300px] max-h-[55%] rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl"
               style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)', zIndex: 50 }}
             >

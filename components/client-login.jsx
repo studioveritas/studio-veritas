@@ -68,7 +68,7 @@ export function ClientLogin({ from = '/clients' }) {
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', damping: 28, stiffness: 260, delay: 0.25 }}
+          transition={{ type: 'spring', bounce: 0, duration: 0.4, delay: 0.25 }}
           className="w-full max-w-[900px] rounded-md p-5 md:p-7 sv-ink"
           style={{ background: '#eeeeee', border: '1px solid rgba(0,0,0,0.45)' }}
         >

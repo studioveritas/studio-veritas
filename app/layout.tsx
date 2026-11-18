@@ -1,4 +1,5 @@
 import './globals.css'
+import { MotionPrefs } from '@/components/motion-prefs'
 import { ChunkLoadErrorHandler } from '@/components/chunk-load-error-handler'
 import AskVeritas from '@/components/ask-veritas/AskVeritas'
 import { CASE_STUDIES, askPromptsFor } from '@/components/work-data'
@@ -17,7 +18,7 @@ export const dynamic = 'force-dynamic'
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
+  // no maximumScale: visitors must be able to pinch-zoom (WCAG 1.4.4)
   viewportFit: 'cover',
   themeColor: '#D8FF00',
 }
@@ -88,6 +89,7 @@ export default function RootLayout({
         <script src="/sv-intro.js" data-auto="" />
       </head>
       <body>
+        <MotionPrefs>
         {children}
         {/* Nav bar (Ask Veritas · wordmark · menu) that follows you down every page, plus the
             eye in the bottom-left corner. See components/site-chrome.jsx. */}
@@ -97,6 +99,7 @@ export default function RootLayout({
         <ThemeSwitch />
         <IntroLoader />
         <ChunkLoadErrorHandler />
+        </MotionPrefs>
       </body>
     </html>
   )

@@ -364,7 +364,7 @@ export default function AskVeritas({
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 }}
             animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.15 } }}
-            transition={reduce ? { duration: 0.15 } : { type: "spring", stiffness: 380, damping: 30 }}
+            transition={reduce ? { duration: 0.15 } : { type: "spring", bounce: 0, duration: 0.35 }}
           >
             <button type="button" className="av-nudge-q" onClick={() => askFromNudge(casePrompts[0])}>
               <span className="av-nudge-k">Ask Veritas</span>
@@ -386,7 +386,7 @@ export default function AskVeritas({
             initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.86, y: 16 }}
             animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 10, transition: { duration: 0.16 } }}
-            transition={reduce ? { duration: 0.15 } : { type: "spring", stiffness: 380, damping: 30 }}
+            transition={reduce ? { duration: 0.15 } : { type: "spring", bounce: 0, duration: 0.35 }}
           >
             <header className="av-head">
               <span className="av-title">Ask Veritas</span>

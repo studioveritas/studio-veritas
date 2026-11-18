@@ -202,9 +202,10 @@ body:has(.sv-cx-arrow-next) .sv-clock { color: #fff; } /* case studies sit on da
 }
 .sv-toggle-knob {
   position: absolute; top: 4px; left: 4px; width: 18px; height: 18px; border-radius: 50%; background: #000;
-  transition: transform .35s cubic-bezier(.3, 1.35, .5, 1);
+  /* position is a spring driven by components/theme-switch.jsx; the press squash is instant */
+  transition: scale .12s ease-out; will-change: transform;
 }
-.sv-toggle[aria-checked="true"] .sv-toggle-knob { transform: translateX(20px); }
+.sv-toggle[data-pressed] .sv-toggle-knob { scale: 1.12 0.92; }
 .sv-toggle:hover::before { box-shadow: 0 0 0 1.5px #fff, 0 0 0 4px rgba(39,93,197,.25); }
 .sv-toggle:focus-visible { outline: none; }
 .sv-toggle:focus-visible::before { box-shadow: 0 0 0 1.5px #fff, 0 0 0 4px #5683dd; }
@@ -229,7 +230,6 @@ body:has(.sv-cx-arrow-next) .sv-clock { color: #fff; } /* case studies sit on da
   .sv-toggle { width: 52px; height: 28px; }
   .sv-toggle::before { border-radius: 14px; }
   .sv-toggle-knob { width: 20px; height: 20px; }
-  .sv-toggle[aria-checked="true"] .sv-toggle-knob { transform: translateX(24px); }
   /* below the nav on a case study, keep clear of the close button */
   body:has(.sv-cx-arrow-next) .sv-daynight { right: max(var(--sv-nav-right), 104px); }
 }
@@ -271,3 +271,65 @@ body:has(.sv-cx-arrow-next) .sv-clock { color: #fff; } /* case studies sit on da
   .sv-clock-dot { animation: none; }
   .sv-toggle-knob { transition: none; }
 }
+
+/* ═══ APPLE-DESIGN PROTOTYPE ═════════════════════════════════════════════════
+   Response, materials, focus and reduced-motion rules (see APPLE-DESIGN-AUDIT.md). */
+
+/* Response: feedback on pointer-DOWN, instantly — not on release, not on hover alone. */
+:is(.sv-cbar-btn, .sv-nav-ask, .sv-nav-burger, .sv-nav-logo, .sv-eye, .sv-foot-trigger, .sv-cpanel-chip, .sv-tile, .sv-nav-tag button, .av-tri) {
+  transition-property: color, background-color, opacity, box-shadow, transform, scale;
+}
+:is(.sv-cbar-btn, .sv-nav-ask, .sv-nav-burger, .sv-nav-logo, .sv-eye, .sv-foot-trigger, .sv-cpanel-chip, .sv-nav-tag button):active {
+  scale: 0.95; transition-duration: 80ms;
+}
+.sv-tile:active { scale: 0.985; transition-duration: 100ms; }
+
+/* Focus you can see: one consistent ring for keyboard users (colour change alone isn't enough). */
+:where(a, button, [role="button"], [role="switch"], input, textarea, select, summary):focus-visible {
+  outline: 2px solid #5683dd !important; outline-offset: 3px; border-radius: 4px;
+}
+
+/* Material: the nav bar becomes a translucent layer — the sky and the work scroll under it
+   instead of being cut off by a solid white slab. A bright top edge reads as light on glass. */
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .sv-nav { transition: background-color .35s ease, box-shadow .35s ease; }
+  :is(html[data-sv-scrolled], html[data-sv-dark-bottom='1']) .sv-nav {
+    background: rgba(255, 255, 255, 0.74) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    backdrop-filter: blur(22px) saturate(180%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 0 0 0.5px rgba(0,0,0,.08), 0 10px 30px -18px rgba(0,0,0,.45) !important;
+  }
+  /* the For Companies / For Agencies buttons sit over content on long pages: a dark glass, not a flat slab */
+  .sv-cbar-btn {
+    background: rgba(0, 0, 0, 0.78);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    backdrop-filter: blur(14px) saturate(160%);
+  }
+  html.sv-night:is([data-sv-scrolled], [data-sv-dark-bottom='1']) .sv-nav { background: rgba(255, 255, 255, 0.82) !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .sv-nav { background: #fff !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  .sv-cbar-btn { background: #000; backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+@media (prefers-contrast: more) {
+  .sv-nav { background: #fff !important; backdrop-filter: none !important; box-shadow: 0 0 0 1.5px #000 !important; }
+  .sv-cbar-btn { background: #000; box-shadow: 0 0 0 1px #fff; }
+}
+
+/* Hit targets: small type, but a 44px-tall finger target via an invisible halo. */
+.sv-cbar-btn, .sv-nav-tag button { position: relative; }
+.sv-cbar-btn::after, .sv-nav-tag button::after { content: ''; position: absolute; inset: -9px -4px; }
+@media (max-width: 767px) {
+  .sv-cbar-btn { font-size: 10.5px; height: 28px; letter-spacing: .05em; }
+}
+
+/* Reduced motion: the full-screen drifting sky is the one thing a vestibular-sensitive visitor
+   most needs stopped. Opacity changes stay; movement goes. */
+@media (prefers-reduced-motion: reduce) {
+  [style*="sv-drift"] { animation: none !important; }
+  .sv-tile:active, :is(.sv-cbar-btn, .sv-nav-ask, .sv-nav-burger):active { scale: none; }
+}
+
+/* Craft: the typing cursor takes no width, so centred copy never reflows (was the home page's 0.11 CLS). */
+.sv-typewriter-cursor { position: relative; display: inline; } /* inline + empty: no width and no extra line-break opportunity */
+.sv-typewriter-cursor::after { position: absolute; left: 2px; bottom: -0.1em; line-height: 1; margin-left: 0 !important; }

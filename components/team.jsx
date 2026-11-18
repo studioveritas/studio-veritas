@@ -192,7 +192,7 @@ export function Team() {
                         initial={{ opacity: 0, y: 20, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.98 }}
-                        transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+                        transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
                         className="w-full max-w-[400px] mt-4"
                       >
                         <div

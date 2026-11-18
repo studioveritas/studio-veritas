@@ -20,6 +20,8 @@ import { LOGO_SRC_BLACK, ICON_SRC_BLACK, PROCESS_ICON_SRC } from './media'
 import { MENU_ITEMS } from './site-nav'
 import { toggleAskVeritas, STATE_EVENT } from './ask-veritas/open'
 import { SERVICE_AREAS } from './services-data'
+import { SPRING, SPRING_FLICK, FADE, project } from './motion'
+import { useReducedMotion } from 'framer-motion'
 
 export const CONTACT_EMAIL = 'info@studio-veritas.com'
 export const LINKEDIN_URL = 'https://www.linkedin.com/company/team-studio-veritas'
@@ -53,6 +55,15 @@ export function SiteNav() {
   const navTag = NAV_TAGS[pathname.replace(/\/$/, '') || '/']
 
   useEffect(() => setMenuOpen(false), [pathname])
+
+  // Material: at rest the nav is the familiar solid white bar; once content scrolls under it
+  // (or it floats over photography) it turns to frosted glass so the page reads through.
+  useEffect(() => {
+    const on = () => document.documentElement.toggleAttribute('data-sv-scrolled', window.scrollY > 8)
+    on()
+    window.addEventListener('scroll', on, { passive: true })
+    return () => window.removeEventListener('scroll', on)
+  }, [pathname])
 
   useEffect(() => {
     const on = (e) => setAskOpen(!!e.detail?.open)
@@ -175,7 +186,7 @@ export function SiteNav() {
             className="sv-nav-tag"
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: 'spring', damping: 26, stiffness: 300, delay: 0.2 }}
+            transition={{ type: 'spring', bounce: 0, duration: 0.4, delay: 0.2 }}
           >
             <p>{navTag}</p>
             <button type="button" onClick={leavePage} aria-label={`Close ${navTag.toLowerCase()} page`}>X</button>
@@ -200,7 +211,7 @@ export function SiteNav() {
             initial={{ opacity: 0, y: -10, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.98 }}
-            transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+            transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
             className="sv-menu rounded-md p-5 md:p-7 shadow-2xl"
             style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)', transformOrigin: 'top right' }}
           >
@@ -287,6 +298,7 @@ export function ContactBar() {
     if (!panel) { setRevealed(0); return }
     setRevealed(0)
     const total = CONTACT_PANELS[panel].body.length
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { setRevealed(total); return }
     let current = 0
     const interval = setInterval(() => {
       current += 3
@@ -351,7 +363,7 @@ export function ContactBar() {
             initial={{ opacity: 0, y: 20, scale: 0.98, x: '-50%' }}
             animate={{ opacity: 1, y: 0, scale: 1, x: '-50%' }}
             exit={{ opacity: 0, y: 20, scale: 0.98, x: '-50%' }}
-            transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+            transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
             className="sv-cpanel rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl"
             style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}
           >
@@ -394,6 +406,16 @@ export function ContactBar() {
 /* --------------------------------------------------------------- footer */
 
 export function SiteFooter({ open, onClose }) {
+  // Apple-style sheet: drag it down to dismiss (1:1, rubber-bands upward), and the flick's
+  // projected landing point decides close vs. stay. The spring carries the release velocity.
+  const reduce = useReducedMotion()
+  const [flicked, setFlicked] = useState(false)
+  useEffect(() => { if (open) setFlicked(false) }, [open])
+  const onDragEnd = (e, info) => {
+    const h = e.currentTarget?.offsetHeight || 300
+    const landing = info.offset.y + project(info.velocity.y)
+    if (landing > h * 0.4) { setFlicked(Math.abs(info.velocity.y) > 300); onClose() }
+  }
   return (
     <>
       <style>{`
@@ -405,6 +427,10 @@ export function SiteFooter({ open, onClose }) {
           border-radius: 6px 6px 0 0; box-shadow: 0 -18px 40px -24px rgba(0,0,0,0.45);
         }
         @media (min-width: 768px) { .sv-foot { left: max(36px, env(safe-area-inset-left)); right: max(36px, env(safe-area-inset-right)); padding: 26px 20px 22px 32px; } }
+        .sv-foot { touch-action: none; }
+        .sv-foot-scrim { position: fixed; inset: 0; z-index: 59; background: rgba(0,0,0,.28); }
+        .sv-foot-grabber { position: absolute; top: 7px; left: 50%; width: 36px; height: 5px; margin-left: -18px; border-radius: 3px; background: rgba(0,0,0,.22); }
+        @media (hover: hover) and (pointer: fine) { .sv-foot-grabber { display: none; } }
         .sv-foot-logo { display: block; height: 30px; width: auto; }
         @media (min-width: 768px) { .sv-foot-logo { height: 62px; } }
         .sv-foot-line { font: 400 13px/1.3 ${MONO}; color: #000; margin-top: 8px; }
@@ -419,14 +445,31 @@ export function SiteFooter({ open, onClose }) {
         .sv-foot-contact a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,0.5); transition: color .2s; }
         .sv-foot-contact a:hover, .sv-foot-contact a:focus-visible { color: #5683DD; outline: none; }
       `}</style>
+      {/* dim to focus: the page steps back while the footer is up; tap it to close */}
+      <motion.div
+        className="sv-foot-scrim"
+        initial={false}
+        animate={{ opacity: open ? 1 : 0 }}
+        transition={reduce ? FADE : SPRING}
+        onClick={onClose}
+        aria-hidden="true"
+        style={{ pointerEvents: open ? 'auto' : 'none' }}
+      />
       <motion.footer
         className="sv-foot"
         initial={false}
         animate={{ y: open ? '0%' : '102%' }}
-        transition={{ type: 'spring', damping: 30, stiffness: 240 }}
+        transition={reduce ? FADE : flicked ? SPRING_FLICK : SPRING}
+        drag={open && !reduce ? 'y' : false}
+        dragDirectionLock
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={{ top: 0.06, bottom: 0.9 }}
+        dragMomentum={false}
+        onDragEnd={onDragEnd}
         aria-hidden={!open}
         inert={!open}
       >
+        <span className="sv-foot-grabber" aria-hidden="true" />
         <button
           onClick={onClose}
           className="absolute top-3 right-3 md:top-5 md:right-5 p-2 touch-manipulation hover:opacity-60 transition-opacity"
@@ -563,7 +606,7 @@ export function PageTag({ label, onClose = leavePage, closeLabel, className = ''
       <motion.div
         initial={{ opacity: 0, y: 10, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ type: 'spring', damping: 26, stiffness: 300, delay: 0.1 }}
+        transition={{ type: 'spring', bounce: 0, duration: 0.4, delay: 0.1 }}
         className={`sv-tag relative rounded-md shadow-2xl px-10 py-5 ${align === 'left' ? 'text-left pl-7' : 'text-center'} ${className}`}
         style={light ? { background: '#f6f4ee', color: '#000' } : { background: '#000', color: ink ? '#ddc9b8' : '#fff', border: '1px solid rgba(255,255,255,0.1)' }}
       >

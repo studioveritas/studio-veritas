@@ -26,6 +26,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { SiteShell } from './site-shell'
 import { paragraphs } from './typed-sections'
 import { zoomArrivalScript, clearZoomArrival, clearZoomOverlays, crossfadeToCaseStudy, HERO_SHADE, SCROLLED_SHADE } from './case-zoom'
+import { useSwipeNav } from './use-swipe-nav'
 
 const MONO = "'IBM Plex Mono', monospace"
 const DISPLAY = "'Chakra Petch', sans-serif"
@@ -189,6 +190,9 @@ export function CaseStudy({ work, prev, next, home = '/work' }) {
   const [ready, setReady] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [zoom, setZoom] = useState(null)
+
+  const articleRef = useRef(null)
+  useSwipeNav(articleRef, { prev, next })
 
   const backToExperience = useCallback(() => { window.location.href = home }, [home])
 
@@ -425,7 +429,7 @@ export function CaseStudy({ work, prev, next, home = '/work' }) {
       `}</style>
 
       <script dangerouslySetInnerHTML={{ __html: zoomArrivalScript(slug) }} />
-      <article className="sv-cx" data-ready={ready ? '1' : '0'} data-scrolled={scrolled ? '1' : '0'} aria-labelledby="sv-cx-title">
+      <article ref={articleRef} style={{ touchAction: 'pan-y' }} className="sv-cx" data-ready={ready ? '1' : '0'} data-scrolled={scrolled ? '1' : '0'} aria-labelledby="sv-cx-title">
         <div className="sv-cx-black" aria-hidden="true" />
         <div className="sv-cx-stage" aria-hidden="true">
           <picture>

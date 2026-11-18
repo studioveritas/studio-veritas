@@ -25,7 +25,9 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { SiteShell } from './site-shell'
 import { paragraphs } from './typed-sections'
-import { zoomArrivalScript, clearZoomArrival, clearZoomOverlays, crossfadeToCaseStudy, HERO_SHADE, SCROLLED_SHADE } from './case-zoom'
+import { zoomArrivalScript, clearZoomArrival, clearZoomOverlays, crossfadeToCaseStudy, markZoomBack, HERO_SHADE, SCROLLED_SHADE } from './case-zoom'
+import { useSwipeNav } from './use-swipe-nav'
+import { usePullToClose } from './use-pull-to-close'
 
 const MONO = "'IBM Plex Mono', monospace"
 const DISPLAY = "'Chakra Petch', sans-serif"
@@ -37,9 +39,10 @@ const TYPE_MS = 12
 
 // `images` entries are a path ('/work/<slug>/image-1.jpg') or { src, alt }.
 const imageList = (work) =>
-  (work.caseStudy.images || []).slice(0, 3).map((im, i) =>
-    typeof im === 'string' ? { src: im, alt: `${work.client}: image ${i + 1}` } : { alt: `${work.client}: image ${i + 1}`, ...im }
-  )
+  (work.caseStudy.images || []).slice(0, 3).map((im, i) => {
+    const item = typeof im === 'string' ? { src: im, alt: `${work.client}: image ${i + 1}` } : { alt: `${work.client}: image ${i + 1}`, ...im }
+    return { ...item, srcSet: work.caseStudy.imageSrcSets?.[item.src] || undefined }
+  })
 
 const isResults = (s) => /^the results$/i.test(s.heading)
 
@@ -156,7 +159,7 @@ function Figure({ im, onOpen, className = '' }) {
   return (
     <figure ref={ref} className={`sv-cx-fig ${className}`} data-in={seen ? '1' : '0'}>
       <button type="button" onClick={() => onOpen(im)} aria-label={`Enlarge: ${im.alt}`}>
-        <img src={im.src} alt={im.alt} loading="lazy" draggable={false} />
+        <img src={im.src} srcSet={im.srcSet} sizes="(min-width: 768px) 60vw, 100vw" alt={im.alt} loading="lazy" decoding="async" draggable={false} />
       </button>
     </figure>
   )
@@ -190,7 +193,16 @@ export function CaseStudy({ work, prev, next, home = '/work' }) {
   const [scrolled, setScrolled] = useState(false)
   const [zoom, setZoom] = useState(null)
 
-  const backToExperience = useCallback(() => { window.location.href = home }, [home])
+  const articleRef = useRef(null)
+  useSwipeNav(articleRef, { prev, next })
+
+  // Leaving for Work: the photo shrinks back into its tile there (spatial consistency).
+  const markBack = useCallback(() => {
+    const img = document.querySelector('.sv-cx-stage img')
+    if (window.scrollY < window.innerHeight * 0.5) markZoomBack(slug, img?.currentSrc || img?.src)
+  }, [slug])
+  const backToExperience = useCallback(() => { markBack(); window.location.href = home }, [home, markBack])
+  usePullToClose(articleRef, backToExperience)
 
   // Entrance, scroll state, and white eye / footer triangle over the dark page.
   useEffect(() => {
@@ -335,10 +347,11 @@ export function CaseStudy({ work, prev, next, home = '/work' }) {
         .sv-cx-cue { position: absolute; right: var(--gutter); bottom: clamp(96px, 12vh, 140px); display: flex; align-items: center; gap: 10px; font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.75; }
         .sv-cx-cue i { display: block; width: 1px; height: 40px; background: #fff; transform-origin: top; animation: sv-cx-cue 1.8s ease-in-out infinite; }
         @keyframes sv-cx-cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(0); transform-origin: bottom; } }
-        .sv-cx-rv { opacity: 0; transform: translateY(24px); transition: opacity 1s ease, transform 1s cubic-bezier(0.77, 0, 0.18, 1); }
-        .sv-cx[data-ready='1'] .sv-cx-rv { opacity: 1; transform: none; }
-        .sv-cx[data-ready='1'] .d2 { transition-delay: 0.12s; } .sv-cx[data-ready='1'] .d3 { transition-delay: 0.24s; }
-        .sv-cx[data-ready='1'] .d4 { transition-delay: 0.36s; } .sv-cx[data-ready='1'] .d5 { transition-delay: 0.48s; }
+        /* the hero copy rises in from the first paint (pure CSS), not after the page's script has loaded */
+        @keyframes sv-cx-rv { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+        .sv-cx-rv { animation: sv-cx-rv 1s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .sv-cx .d2 { animation-delay: 0.12s; } .sv-cx .d3 { animation-delay: 0.24s; }
+        .sv-cx .d4 { animation-delay: 0.36s; } .sv-cx .d5 { animation-delay: 0.48s; }
 
         /* the pop-outs */
         .sv-cx-body { display: grid; gap: 28px; padding: 6vh var(--gutter) 0; }
@@ -420,17 +433,17 @@ export function CaseStudy({ work, prev, next, home = '/work' }) {
         }
         @media (prefers-reduced-motion: reduce) {
           .sv-cx-stage img, .sv-cx-cue i, .sv-cx-caret::after { animation: none; }
-          .sv-cx-pop, .sv-cx-fig, .sv-cx-rv { transition: none; }
+          .sv-cx-pop, .sv-cx-fig { transition: none; } .sv-cx-rv { animation: none; }
         }
       `}</style>
 
       <script dangerouslySetInnerHTML={{ __html: zoomArrivalScript(slug) }} />
-      <article className="sv-cx" data-ready={ready ? '1' : '0'} data-scrolled={scrolled ? '1' : '0'} aria-labelledby="sv-cx-title">
+      <article ref={articleRef} style={{ touchAction: 'pan-y' }} className="sv-cx" data-ready={ready ? '1' : '0'} data-scrolled={scrolled ? '1' : '0'} aria-labelledby="sv-cx-title">
         <div className="sv-cx-black" aria-hidden="true" />
         <div className="sv-cx-stage" aria-hidden="true">
           <picture>
-            {portrait && <source media="(max-width: 767px) and (orientation: portrait)" srcSet={portrait} />}
-            <img src={master} alt="" fetchPriority="high" draggable={false} />
+            {portrait && <source media="(max-width: 767px) and (orientation: portrait)" srcSet={cs.portraitSrcSet || portrait} sizes="100vw" />}
+            <img src={master} srcSet={cs.masterSrcSet || undefined} sizes="(min-width: 1920px) 1920px, 100vw" alt="" fetchPriority="high" draggable={false} />
           </picture>
           <div className="sv-cx-shade" />
         </div>
@@ -476,7 +489,7 @@ export function CaseStudy({ work, prev, next, home = '/work' }) {
           )}
         </div>
 
-        <a className="sv-cx-close" href={home} aria-label="Close case study, back to Work">
+        <a className="sv-cx-close" href={home} onClick={markBack} aria-label="Close case study, back to Work">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" /></svg>
         </a>
         <nav aria-label="Case studies">

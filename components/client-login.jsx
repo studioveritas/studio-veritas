@@ -38,9 +38,9 @@ export function ClientLogin({ from = '/clients' }) {
           .sv-cl-input { font-size: 22px; }
           .sv-cl-btn { font-size: 18px; }
         }
-        .sv-cl-input { width: 100%; background: transparent; color: #fff; border: 0; border-bottom: 1px solid rgba(255,255,255,0.5); padding: 8px 0; border-radius: 0; letter-spacing: 0.08em; }
+        .sv-cl-input { width: 100%; background: transparent; color: rgb(var(--sv-on-pop)); border: 0; border-bottom: 1px solid rgb(var(--sv-on-pop) / 0.5); padding: 8px 0; border-radius: 0; letter-spacing: 0.08em; }
         .sv-cl-input:focus { outline: none; border-bottom-color: #5683DD; }
-        .sv-cl-btn { background: #fff; color: #000; border: 0; border-radius: 4px; padding: 11px 18px 10px; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; transition: background .2s, color .2s; }
+        .sv-cl-btn { background: rgb(var(--sv-on-pop)); color: rgb(var(--sv-pop)); border: 0; border-radius: 4px; padding: 11px 18px 10px; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; transition: background .2s, color .2s; }
         .sv-cl-btn:hover, .sv-cl-btn:focus-visible { background: #5683DD; color: #fff; outline: none; }
         .sv-cl-btn[disabled] { opacity: .6; }
       `}</style>
@@ -68,21 +68,21 @@ export function ClientLogin({ from = '/clients' }) {
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', damping: 28, stiffness: 260, delay: 0.25 }}
+          transition={{ type: 'spring', bounce: 0, duration: 0.4, delay: 0.25 }}
           className="w-full max-w-[900px] rounded-md p-5 md:p-7 sv-ink"
-          style={{ background: '#eeeeee', border: '1px solid rgba(0,0,0,0.45)' }}
+          style={{ background: 'rgb(var(--sv-card))', border: '1px solid rgb(var(--sv-on-card) / 0.45)' }}
         >
           <div className="flex items-start justify-between gap-6">
             <div className="min-w-0">
               <img src={LOGO_SRC_BLACK} alt="Studio Veritas" className="sv-cl-wordmark" style={{ width: 'auto', maxWidth: '100%', display: 'block' }} draggable={false} />
-              <p className="sv-cl-sub mt-3 md:mt-4 text-black" style={{ fontFamily: MONO }}>Access your documents here.</p>
+              <p className="sv-cl-sub mt-3 md:mt-4 text-oncard" style={{ fontFamily: MONO }}>Access your documents here.</p>
             </div>
             <img src={PROCESS_ICON_SRC} alt="" aria-hidden="true" className="sv-cl-icon hidden sm:block flex-shrink-0" style={{ width: 'auto' }} draggable={false} />
           </div>
 
-          <form action={action} className="mt-5 md:mt-6 rounded-md px-5 md:px-7 pt-7 pb-7 md:pt-9 md:pb-9" style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <form action={action} className="mt-5 md:mt-6 rounded-md px-5 md:px-7 pt-7 pb-7 md:pt-9 md:pb-9" style={{ background: 'rgb(var(--sv-pop))', border: '1px solid rgb(var(--sv-on-pop) / 0.1)' }}>
             <input type="hidden" name="from" value={from} />
-            <label htmlFor="sv-cl-password" className="sv-cl-intro block text-white/75 uppercase tracking-wide" style={{ fontFamily: MONO }}>
+            <label htmlFor="sv-cl-password" className="sv-cl-intro block text-onpop/75 uppercase tracking-wide" style={{ fontFamily: MONO }}>
               Enter the password we shared with you
             </label>
             <div className="mt-4 flex items-end gap-4">

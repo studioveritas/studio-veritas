@@ -12,7 +12,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC, ICON_SRC, ICON_SRC_BLACK, LANDING_IMG_DESKTOP, LANDING_IMG_MOBILE } from './media'
-import { SiteFooter } from './site-chrome'
+import { SiteFooter, FooterTrigger } from './site-chrome'
 
 export const CONTACT_EMAIL = 'info@studio-veritas.com'
 
@@ -104,16 +104,7 @@ export function SiteShell({ pageKey, srOnly, children, onEscape }) {
           className="fixed sv-safe-bottom sv-safe-right flex items-center"
           style={{ zIndex: 40 }}
         >
-          <button
-            onClick={() => setFooterOpen(true)}
-            className="sv-foot-trigger p-2 -m-2 touch-manipulation hover:opacity-70 transition-[opacity,color]"
-            aria-label="Open footer"
-            aria-expanded={footerOpen}
-          >
-            <svg width="13" height="11" viewBox="0 0 13 11" fill="none" aria-hidden="true">
-              <polygon points="6.5,0 13,11 0,11" fill="currentColor" />
-            </svg>
-          </button>
+          <FooterTrigger open={footerOpen} onOpen={() => setFooterOpen(true)} />
         </motion.div>
 
         {/* SLIDE-UP FOOTER */}

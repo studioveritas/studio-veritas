@@ -199,7 +199,7 @@ export function NewsArticle({ slug }) {
             className="sv-na-card"
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ type: 'spring', damping: 28, stiffness: 260 }}
+            transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
             aria-labelledby="sv-na-name"
           >
             <header className="sv-na-titlebox">

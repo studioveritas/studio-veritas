@@ -8,5 +8,11 @@ export const metadata = {
 }
 
 export default function NotFound() {
-  return <TruthInvaders mode="404" exitTo="/" />
+  return (
+    <>
+      {/* screen readers and crawlers get a real heading and a way out; the game is canvas */}
+      <h1 className="sr-only">Page not found. <a href="/">Back to Studio Veritas</a></h1>
+      <TruthInvaders mode="404" exitTo="/" />
+    </>
+  )
 }

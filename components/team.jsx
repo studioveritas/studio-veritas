@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC, ICON_SRC, ICON_SRC_BLACK, LANDING_IMG_DESKTOP, LANDING_IMG_MOBILE, TEAM_PHOTO_GUILLAUME, TEAM_PHOTO_ALI } from './media'
-import { SiteFooter, PageTitle } from './site-chrome'
+import { SiteFooter, FooterTrigger, PageTitle } from './site-chrome'
 
 const CONTACT_EMAIL = 'info@studio-veritas.com'
 
@@ -192,16 +192,16 @@ export function Team() {
                         initial={{ opacity: 0, y: 20, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.98 }}
-                        transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+                        transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
                         className="w-full max-w-[400px] mt-4"
                       >
                         <div
-                          className="relative p-5 md:p-7 rounded-md shadow-2xl"
-                          style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}
+                          className="relative p-5 md:p-7 rounded-md shadow-2xl sv-tokens-pop"
+                          style={{ background: 'rgb(var(--sv-pop))', border: '1px solid rgb(var(--sv-on-pop) / 0.1)' }}
                         >
                           <button
                             onClick={() => toggleMember(member.id)}
-                            className="absolute top-3 right-3 text-white/70 hover:text-white transition-colors p-2 touch-manipulation"
+                            className="absolute top-3 right-3 text-onpop/70 hover:text-onpop transition-colors p-2 touch-manipulation"
                             style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                             aria-label="Close"
                           >
@@ -215,7 +215,7 @@ export function Team() {
                           </p>
                           <p
                             style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                            className="whitespace-pre-line text-[13px] md:text-sm text-white/90 leading-relaxed"
+                            className="whitespace-pre-line text-[13px] md:text-sm text-onpop/90 leading-relaxed"
                           >
                             {member.bio.slice(0, revealedMap[member.id] || 0)}
                             {(revealedMap[member.id] || 0) < member.bio.length && <span className="sv-typewriter-cursor" />}
@@ -246,16 +246,7 @@ export function Team() {
           className="sv-contact-row fixed sv-safe-bottom sv-safe-right flex flex-row items-center gap-3 md:gap-4"
           style={{ zIndex: 40 }}
         >
-          <button
-            onClick={() => setFooterOpen(true)}
-            className="p-2 -m-2 touch-manipulation hover:opacity-70 transition-opacity"
-            aria-label="Open footer"
-            aria-expanded={footerOpen}
-          >
-            <svg width="13" height="11" viewBox="0 0 13 11" fill="none" aria-hidden="true">
-              <polygon points="6.5,0 13,11 0,11" fill="#000000" />
-            </svg>
-          </button>
+          <FooterTrigger open={footerOpen} onOpen={() => setFooterOpen(true)} />
         </motion.div>
 
         {/* SLIDE-UP FOOTER */}

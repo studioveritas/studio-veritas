@@ -136,7 +136,7 @@ export function News() {
         }
         .sv-nw-box-ink { background: #000; color: ${BROWN}; }
         .sv-nw-name { margin: 0; font-family: ${MONO}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; font-size: 15px; line-height: 1.25; transition: color 0.2s; }
-        .sv-nw-title { margin: 3px 0 0; font-family: ${MONO}; font-weight: 400; font-size: 11.5px; line-height: 1.4; }
+        .sv-nw-title { margin: 3px 0 0; font-family: ${MONO}; font-weight: 400; font-size: var(--sv-t-sm); line-height: 1.4; }
         .sv-nw-soon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.18); }
         .sv-nw-soon span { color: ${BROWN}; font-family: ${MONO}; font-weight: 500; text-transform: uppercase; font-size: clamp(22px, 1.9vw, 36px); line-height: 1; white-space: nowrap; }
 
@@ -161,7 +161,7 @@ export function News() {
           .sv-mason-col { gap: 14px; }
           .sv-nw-box { left: 10px; bottom: 10px; max-width: calc(100% - 20px); padding: 9px 14px 10px; }
           .sv-nw-name { font-size: clamp(15px, 1.04vw, 20px); }
-          .sv-nw-title { font-size: clamp(11.5px, 0.73vw, 14px); }
+          .sv-nw-title { font-size: clamp(var(--sv-t-sm), 0.73vw, 0.875rem); }
           .sv-more-row { margin-top: clamp(40px, 2.6vw, 52px); }
           .sv-nw-more { min-width: 260px; padding: 14px 22px; font-size: 16px; }
         }
@@ -172,7 +172,7 @@ export function News() {
         <section className="sv-nw-band" aria-labelledby="sv-nw-title">
           <div className="sv-nw-inner">
             <div className="sv-nw-head" id="sv-nw-title">
-              <PageTag label="News + Insights" tone="ink" align="left" closeLabel="Close News + Insights" />
+              <PageTag label="News + Insights" tone="ink" align="left" />
             </div>
 
             <div className="sv-mason" key={cols}>

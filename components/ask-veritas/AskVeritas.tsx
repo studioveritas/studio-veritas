@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useDragControls, type PanInfo } from "framer-motion";
+import { project, haptic } from "@/components/motion";
 import { usePathname } from "next/navigation";
 import { getArticle, askPromptsForArticle, NEWS_PROMPTS } from "@/components/news-data";
 import { PROCESS, processReady } from "@/lib/ask-veritas/process";
@@ -156,6 +157,34 @@ export default function AskVeritas({
         : [];
   const [nudge, setNudge] = useState(false);
 
+  // Phones: the panel is a sheet from the bottom edge with two resting heights (half and
+  // full). Drag the grabber/header between them; a downward flick past half closes it.
+  // The flick's projected landing picks the detent, and the spring keeps the finger's speed.
+  const [sheet, setSheet] = useState(false);
+  const [detent, setDetent] = useState<"half" | "full">("half");
+  const [vh, setVh] = useState(800);
+  const dragCtl = useDragControls();
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const on = () => { setSheet(mq.matches); setVh(window.innerHeight); };
+    on();
+    mq.addEventListener("change", on);
+    window.addEventListener("resize", on);
+    return () => { mq.removeEventListener("change", on); window.removeEventListener("resize", on); };
+  }, []);
+  const sheetH = Math.round(vh * 0.9);
+  const halfY = sheetH - Math.round(vh * 0.56); // how far down the full-height sheet sits at "half"
+  const sheetY = detent === "full" ? 0 : halfY;
+  const onSheetDragEnd = (_e: unknown, info: PanInfo) => {
+    const at = sheetY + info.offset.y;
+    const landing = at + project(info.velocity.y);
+    const points: [number, "full" | "half" | "close"][] = [[0, "full"], [halfY, "half"], [sheetH, "close"]];
+    const [, pick] = points.reduce((best, p) => (Math.abs(p[0] - landing) < Math.abs(best[0] - landing) ? p : best));
+    if (pick === "close") { haptic(); close(); return; }
+    if (pick !== detent) haptic(6);
+    setDetent(pick);
+  };
+
   const idRef = useRef(1);
   const scroller = useRef<HTMLDivElement>(null);
   const askRef = useRef<HTMLTextAreaElement>(null);
@@ -174,6 +203,7 @@ export default function AskVeritas({
     (m: AskMode) => {
       opener.current = (document.activeElement as HTMLElement) ?? null;
       setMode(m === "process" && !guide ? "ask" : m);
+      setDetent("half");
       setOpen(true);
     },
     [guide]
@@ -217,9 +247,12 @@ export default function AskVeritas({
 
   useEffect(() => {
     if (!open) return;
+    // On phones the sheet opens at half height with the suggestions in view; the keyboard
+    // (and full height) waits until the visitor taps the input. Focus goes to the sheet itself.
+    if (sheet) { const t = setTimeout(() => document.querySelector<HTMLElement>(".av-grab")?.focus({ preventScroll: true }), 60); return () => clearTimeout(t); }
     const t = setTimeout(() => (mode === "truth" ? claimRef.current : askRef.current)?.focus(), 60);
     return () => clearTimeout(t);
-  }, [open, mode]);
+  }, [open, mode, sheet]);
 
   const post = async (payload: object): Promise<{ ok: boolean; reply: string }> => {
     try {
@@ -364,7 +397,7 @@ export default function AskVeritas({
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 }}
             animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.15 } }}
-            transition={reduce ? { duration: 0.15 } : { type: "spring", stiffness: 380, damping: 30 }}
+            transition={reduce ? { duration: 0.15 } : { type: "spring", bounce: 0, duration: 0.35 }}
           >
             <button type="button" className="av-nudge-q" onClick={() => askFromNudge(casePrompts[0])}>
               <span className="av-nudge-k">Ask Veritas</span>
@@ -382,13 +415,43 @@ export default function AskVeritas({
           <motion.section
             role="dialog"
             aria-label="Ask Veritas, an AI assistant"
-            className={`av-panel av-${side}`}
-            initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.86, y: 16 }}
-            animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 10, transition: { duration: 0.16 } }}
-            transition={reduce ? { duration: 0.15 } : { type: "spring", stiffness: 380, damping: 30 }}
+            className={sheet ? "av-panel av-sheet" : `av-panel av-${side}`}
+            {...(sheet
+              ? {
+                  style: { height: sheetH },
+                  // the part below the screen edge is padded away, so the input always sits in view
+                  initial: reduce ? { opacity: 0, y: sheetY, paddingBottom: sheetY } : { y: sheetH, paddingBottom: sheetY },
+                  animate: { opacity: 1, y: sheetY, paddingBottom: sheetY },
+                  exit: reduce ? { opacity: 0 } : { y: sheetH },
+                  drag: reduce ? false : ("y" as const),
+                  dragControls: dragCtl,
+                  dragListener: false,
+                  dragConstraints: { top: 0, bottom: sheetH },
+                  dragElastic: { top: 0.04, bottom: 0.6 },
+                  dragMomentum: false,
+                  onDragEnd: onSheetDragEnd,
+                }
+              : {
+                  initial: reduce ? { opacity: 0 } : { opacity: 0, scale: 0.86, y: 16 },
+                  animate: reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 },
+                  exit: reduce ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 10, transition: { duration: 0.16 } },
+                })}
+            transition={reduce ? { duration: 0.15 } : { type: "spring", bounce: 0, duration: 0.35 }}
           >
-            <header className="av-head">
+            {sheet && (
+              <div
+                className="av-grab"
+                onPointerDown={(e) => dragCtl.start(e)}
+                onClick={() => setDetent((d) => (d === "half" ? "full" : "half"))}
+                role="button"
+                tabIndex={0}
+                aria-label={detent === "half" ? "Expand Ask Veritas" : "Shrink Ask Veritas"}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setDetent((d) => (d === "half" ? "full" : "half")); } }}
+              >
+                <span />
+              </div>
+            )}
+            <header className="av-head" onPointerDown={(e) => { if (sheet && !(e.target as HTMLElement).closest("button")) dragCtl.start(e); }}>
               <span className="av-title">Ask Veritas</span>
               <span className="av-badge">AI</span>
               <button type="button" className="av-close" aria-label="Close" onClick={close}>
@@ -462,6 +525,7 @@ export default function AskVeritas({
                   ) : (
                     <>
                       <textarea
+                        onFocus={() => sheet && setDetent("full")}
                         ref={askRef}
                         rows={1}
                         value={input}
@@ -513,6 +577,7 @@ export default function AskVeritas({
                   ) : (
                     <>
                       <textarea
+                        onFocus={() => sheet && setDetent("full")}
                         ref={claimRef}
                         rows={2}
                         value={claim}

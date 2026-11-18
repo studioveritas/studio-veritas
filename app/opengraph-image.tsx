@@ -2,7 +2,7 @@
 // the landing sky with the black wordmark, as on the home page.
 
 import { ImageResponse } from 'next/og'
-import { LANDING_IMG_DESKTOP, LOGO_SRC_BLACK } from '@/components/media'
+import { LANDING_IMG_DESKTOP, LOGO_SRC_BLACK } from '@/components/media-inline'
 import { OG_SIZE, OG_TYPE, ogFonts } from '@/lib/og'
 
 export const size = OG_SIZE

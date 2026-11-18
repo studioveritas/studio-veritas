@@ -1,4 +1,5 @@
 import './globals.css'
+import { MotionPrefs } from '@/components/motion-prefs'
 import { ChunkLoadErrorHandler } from '@/components/chunk-load-error-handler'
 import AskVeritas from '@/components/ask-veritas/AskVeritas'
 import { CASE_STUDIES, askPromptsFor } from '@/components/work-data'
@@ -12,12 +13,13 @@ import { IntroLoader } from '@/components/intro-loader'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { SV_SUN_SCRIPT } from '@/lib/sv-sun'
 
-export const dynamic = 'force-dynamic'
+// No blanket force-dynamic: public pages are pre-rendered and served from the CDN; the client
+// space and /api/ask read cookies or call out, so Next renders them per request on its own.
 
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
+  // no maximumScale: visitors must be able to pinch-zoom (WCAG 1.4.4)
   viewportFit: 'cover',
   themeColor: '#D8FF00',
 }
@@ -66,20 +68,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Fonts loaded once, here, via real <link> tags — not the @import
-            previously duplicated inside every page's own <style> block.
-            @import is asynchronous and lower-priority than <link>, so on a
-            cold production load the labels below could paint in a fallback
-            font (different width/letter-spacing) before swapping to IBM
-            Plex Mono, which is what was likely causing the Principles page
-            labels to look shifted relative to the triangle. preconnect
-            gets the connection warmed up before the stylesheet is requested. */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
-        />
+        {/* Fonts are self-hosted (app/globals.css @font-face, files in public/fonts). The two
+            weights on every first screen are preloaded so text paints in IBM Plex Mono at once. */}
+        <link rel="preload" href="/fonts/ibm-plex-mono-latin-500-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        {/* The sky isn't preloaded: it's atmosphere, and on Work and case studies it would compete with the photos people came for. */}
         {/* Day / night: decided by the sun (or the visitor's toggle) before first paint — lib/sv-sun.js */}
         <script dangerouslySetInnerHTML={{ __html: SV_SUN_SCRIPT }} />
         {/* First-load sticker intro (home page, once per session). Blocking on purpose:
@@ -88,6 +81,7 @@ export default function RootLayout({
         <script src="/sv-intro.js" data-auto="" />
       </head>
       <body>
+        <MotionPrefs>
         {children}
         {/* Nav bar (Ask Veritas · wordmark · menu) that follows you down every page, plus the
             eye in the bottom-left corner. See components/site-chrome.jsx. */}
@@ -97,6 +91,7 @@ export default function RootLayout({
         <ThemeSwitch />
         <IntroLoader />
         <ChunkLoadErrorHandler />
+        </MotionPrefs>
       </body>
     </html>
   )

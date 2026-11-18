@@ -17,7 +17,9 @@
 // The theme itself is the class `sv-night` on <html> (set before first paint by the
 // head script in app/layout.tsx); every night style lives in app/globals.css.
 
-import { useEffect, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { motion, useMotionValue, animate, useReducedMotion } from 'framer-motion'
+import { SPRING_SNAP, SPRING_FLICK, FADE, nearestSnap, rubberband, releaseVelocity, haptic } from './motion'
 
 export const THEME_KEY = 'sv-theme'
 
@@ -66,6 +68,7 @@ export function ThemeSwitch() {
   const [night, setNight] = useState(false)
   const [now, setNow] = useState(null)
   const [city, setCity] = useState(null)
+  const [peek, setPeek] = useState(false)
   const field = useMemo(() => stars(150, 23), [])
 
   useEffect(() => {
@@ -86,9 +89,11 @@ export function ThemeSwitch() {
       }
     }
     tick()
-    const id = window.setInterval(tick, 1000)
+    // Restraint: minutes only, so the clock changes once a minute, not every second.
+    // While the visitor hovers or focuses it, it ticks by the second (see `peek`).
+    const id = window.setInterval(tick, peek ? 1000 : 15000)
     return () => window.clearInterval(id)
-  }, [])
+  }, [peek])
 
   const toggle = () => {
     const next = !night
@@ -110,15 +115,10 @@ export function ThemeSwitch() {
 
   return (
     <>
-      <div className="sv-stars" aria-hidden="true">
-        {field.map((s, i) => (
-          <span key={i} style={{ left: s.left, top: s.top, width: s.size, height: s.size, animationDelay: s.delay, animationDuration: s.dur }} />
-        ))}
-        <i className="sv-shoot" />
-      </div>
+      <Stars field={field} />
 
-      <div className={`sv-daynight${inAms ? '' : ' is-dual'}`}>
-        <p className={`sv-clock${inAms ? '' : ' is-dual'}`} aria-label={`Local time: ${spoken}`}>
+      <div className={`sv-daynight${inAms ? '' : ' is-dual'}`} onPointerEnter={() => setPeek(true)} onPointerLeave={() => setPeek(false)} onFocus={() => setPeek(true)} onBlur={() => setPeek(false)}>
+        <p className={`sv-clock${inAms ? '' : ' is-dual'}`} tabIndex={0} aria-label={`Local time: ${spoken}`}>
           {clocks.map((c, k) => (
             <span key={c.code} className="sv-clock-item" aria-hidden="true">
               {k > 0 ? <span className="sv-clock-sep">·</span> : null}
@@ -126,23 +126,108 @@ export function ThemeSwitch() {
               <span className="sv-clock-city">{c.code}</span>
               <time suppressHydrationWarning>
                 {c.h}<span className="sv-clock-colon">:</span>{c.m}
-                {inAms ? <>:{c.s}</> : null}
+                {peek ? <span className="sv-clock-s">:{c.s}</span> : null}
               </time>
             </span>
           ))}
         </p>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={night}
-          aria-label="Night mode"
-          title={night ? 'Switch to day' : 'Switch to night'}
-          onClick={toggle}
-          className="sv-toggle"
-        >
-          <span className="sv-toggle-knob" aria-hidden="true" />
-        </button>
+        <Toggle night={night} onChange={(v) => { if (v !== night) toggle() }} />
       </div>
     </>
   )
 }
+
+// The pill toggle (Apple-style): press feedback on pointer-down, the knob follows the
+// finger 1:1 from where it was grabbed, rubber-bands past either end, and on release
+// the flick's velocity is projected forward to choose day or night. Tap still toggles.
+// The knob is a spring, so a second tap mid-travel simply reverses it from where it is.
+function Toggle({ night, onChange }) {
+  const btn = useRef(null)
+  const knob = useRef(null)
+  const x = useMotionValue(0)
+  const reduce = useReducedMotion()
+  const drag = useRef(null) // { id, startX, startKnob, travel, moved, samples }
+
+  const travel = () => {
+    const b = btn.current, k = knob.current
+    if (!b || !k) return 20
+    return b.clientWidth - k.offsetWidth - 2 * k.offsetLeft
+  }
+  // keep the knob in sync with the theme (including the sun flipping it at dusk)
+  useEffect(() => {
+    if (drag.current) return
+    animate(x, night ? travel() : 0, reduce ? FADE : SPRING_SNAP)
+  }, [night]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const down = (e) => {
+    if (e.button > 0) return
+    btn.current.setPointerCapture(e.pointerId)
+    x.stop() // grab it mid-flight, from where it is on screen
+    drag.current = { id: e.pointerId, startX: e.clientX, startKnob: x.get(), travel: travel(), moved: false, samples: [[e.clientX, e.timeStamp]] }
+    btn.current.dataset.pressed = '1'
+  }
+  const move = (e) => {
+    const d = drag.current
+    if (!d || e.pointerId !== d.id) return
+    const dx = e.clientX - d.startX
+    if (!d.moved && Math.abs(dx) < 4) return // hysteresis before it becomes a drag
+    d.moved = true
+    let v = d.startKnob + dx
+    if (v < 0) v = rubberband(v, d.travel)
+    else if (v > d.travel) v = d.travel + rubberband(v - d.travel, d.travel)
+    x.set(v)
+    d.samples.push([e.clientX, e.timeStamp])
+    if (d.samples.length > 5) d.samples.shift()
+  }
+  const up = (e) => {
+    const d = drag.current
+    if (!d || e.pointerId !== d.id) return
+    drag.current = null
+    delete btn.current.dataset.pressed
+    if (!d.moved) { haptic(); onChange(!night); return } // a tap
+    const velocity = releaseVelocity(d.samples, e.timeStamp)
+    // a small control coasts less far than a page: snappier deceleration (0.99) for the projection
+    const end = nearestSnap(x.get(), velocity, [0, d.travel], 0.99)
+    const nextNight = end > 0
+    // hand the finger's velocity to the spring so there's no seam; a little bounce only because it was thrown
+    animate(x, end, reduce ? FADE : { ...(Math.abs(velocity) > 200 ? SPRING_FLICK : SPRING_SNAP), velocity })
+    if (nextNight !== night) { haptic(); onChange(nextNight) }
+  }
+  const cancel = () => {
+    drag.current = null
+    if (btn.current) delete btn.current.dataset.pressed
+    animate(x, night ? travel() : 0, SPRING_SNAP)
+  }
+
+  return (
+    <button
+      ref={btn}
+      type="button"
+      role="switch"
+      aria-checked={night}
+      aria-label="Night mode"
+      title={night ? 'Switch to day' : 'Switch to night'}
+      onPointerDown={down}
+      onPointerMove={move}
+      onPointerUp={up}
+      onPointerCancel={cancel}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChange(!night) } }}
+      className="sv-toggle"
+      style={{ touchAction: 'none' }}
+    >
+      <motion.span ref={knob} className="sv-toggle-knob" aria-hidden="true" style={{ x }} />
+    </button>
+  )
+}
+
+// The starfield never changes, so it renders once and is left alone by the clock.
+const Stars = memo(function Stars({ field }) {
+  return (
+    <div className="sv-stars" aria-hidden="true">
+      {field.map((s, i) => (
+        <span key={i} style={{ left: s.left, top: s.top, width: s.size, height: s.size, animationDelay: s.delay, animationDuration: s.dur }} />
+      ))}
+      <i className="sv-shoot" />
+    </div>
+  )
+})

@@ -16,9 +16,10 @@ import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { SiteShell } from './site-shell'
 import { useColumns } from './use-columns'
+import { SPRING } from './motion'
 import { PageTag } from './site-chrome'
 import { LogoTicker } from './logo-ticker'
-import { zoomToCaseStudy, clearZoomOverlays } from './case-zoom'
+import { zoomToCaseStudy, clearZoomOverlays, zoomBackArrival } from './case-zoom'
 
 const MONO = "'IBM Plex Mono', monospace"
 const PAGE = 9 // tiles per load
@@ -100,6 +101,9 @@ export function Work({ items: WORK, tags: TAGS, label = 'Work', children = null 
       if (found) setTag(found)
     } catch {}
   }, [])
+
+  // Arriving back from a case study: its photo shrinks into its tile (components/case-zoom.js).
+  useEffect(() => { requestAnimationFrame(() => zoomBackArrival()) }, [])
 
   // Coming back with the Back button can restore this page as it was left, mid-zoom: clear it.
   useEffect(() => {
@@ -201,7 +205,22 @@ export function Work({ items: WORK, tags: TAGS, label = 'Work', children = null 
           transition: color 0.2s, text-decoration-color 0.2s;
         }
         .sv-filter sup { font-size: 0.62em; margin-left: 3px; letter-spacing: 0; vertical-align: 0.6em; opacity: 0.55; }
-        .sv-filter[aria-pressed='true'] { color: #5683DD; text-decoration-color: currentColor; }
+        .sv-filter { position: relative; }
+        .sv-filter[aria-pressed='true'] { color: #5683DD; }
+        .sv-filter-line { position: absolute; left: 6px; right: 6px; bottom: -1px; height: 1px; background: currentColor; }
+        /* phones: one swipeable rail. Native scrolling brings the platform's own momentum and the
+           snap lands a flick on a filter; the edges fade where the rail runs under them. */
+        @media (max-width: 767px) {
+          .sv-filters {
+            flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity;
+            scrollbar-width: none; margin: 0 calc(-1 * 12px); padding: 0 12px;
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 24px), transparent);
+                    mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 24px), transparent);
+          }
+          .sv-filters::-webkit-scrollbar { display: none; }
+          .sv-filter { flex: none; scroll-snap-align: center; min-height: 44px; padding: 0 8px; }
+          .sv-filter-line { bottom: 10px; left: 8px; right: 8px; }
+        }
         .sv-filter:focus-visible { outline: none; color: #5683DD; }
         @media (hover: hover) { .sv-filter:hover { color: #5683DD; } }
         .sv-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }
@@ -225,7 +244,7 @@ export function Work({ items: WORK, tags: TAGS, label = 'Work', children = null 
           margin: 0; font-family: ${MONO}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em;
           font-size: 15px; line-height: 1.25; transition: color 0.2s;
         }
-        .sv-tile-sub { margin: 3px 0 0; font-family: ${MONO}; font-weight: 400; font-size: 11.5px; line-height: 1.4; }
+        .sv-tile-sub { margin: 3px 0 0; font-family: ${MONO}; font-weight: 400; font-size: var(--sv-t-sm); line-height: 1.4; }
         .sv-tile-soon {
           position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
           background: rgba(0, 0, 0, 0.33); opacity: 0; transition: opacity 0.25s;
@@ -268,7 +287,7 @@ export function Work({ items: WORK, tags: TAGS, label = 'Work', children = null 
           .sv-mason-col { gap: 14px; }
           .sv-tile-box { left: 10px; bottom: 10px; max-width: calc(100% - 20px); padding: 9px 14px 10px; }
           .sv-tile-name { font-size: clamp(15px, 1.04vw, 20px); }
-          .sv-tile-sub { font-size: clamp(11.5px, 0.73vw, 14px); }
+          .sv-tile-sub { font-size: clamp(var(--sv-t-sm), 0.73vw, 0.875rem); }
           .sv-more-row { margin-top: clamp(48px, 3.4vw, 64px); }
           .sv-more { min-width: 260px; padding: 14px 22px; font-size: 16px; }
           .sv-work-after { height: 180px; }
@@ -283,14 +302,19 @@ export function Work({ items: WORK, tags: TAGS, label = 'Work', children = null 
         <section ref={band} className="sv-work-band" aria-labelledby="sv-work-title">
           <div className="sv-work-inner">
             <div className="sv-work-head">
-              <PageTag label={label} tone="light" align="left" closeLabel={`Close the ${label.toLowerCase()} page`} />
+              <PageTag label={label} tone="light" align="left" />
               <div className="sv-filters" role="group" aria-label="Filter the work">
-                <button type="button" className="sv-filter" aria-pressed={tag === null} onClick={() => choose(null)}>
-                  All<sup>{WORK.length}</sup>
-                </button>
-                {filters.map((f) => (
-                  <button key={f.tag} type="button" className="sv-filter" aria-pressed={tag === f.tag} onClick={() => choose(f.tag)}>
-                    {f.tag}<sup>{f.count}</sup>
+                {[{ tag: null, label: 'All', count: WORK.length }, ...filters.map((f) => ({ ...f, label: f.tag }))].map((f) => (
+                  <button
+                    key={f.label}
+                    type="button"
+                    className="sv-filter"
+                    aria-pressed={tag === f.tag}
+                    onClick={(e) => { choose(f.tag); e.currentTarget.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }) }}
+                  >
+                    {f.label}<sup>{f.count}</sup>
+                    {/* the underline travels to the chosen filter (one spring, no overshoot) */}
+                    {tag === f.tag && <motion.span layoutId="sv-filter-line" className="sv-filter-line" transition={SPRING} aria-hidden="true" />}
                   </button>
                 ))}
               </div>

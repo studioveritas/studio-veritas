@@ -25,8 +25,9 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { SiteShell } from './site-shell'
 import { paragraphs } from './typed-sections'
-import { zoomArrivalScript, clearZoomArrival, clearZoomOverlays, crossfadeToCaseStudy, HERO_SHADE, SCROLLED_SHADE } from './case-zoom'
+import { zoomArrivalScript, clearZoomArrival, clearZoomOverlays, crossfadeToCaseStudy, markZoomBack, HERO_SHADE, SCROLLED_SHADE } from './case-zoom'
 import { useSwipeNav } from './use-swipe-nav'
+import { usePullToClose } from './use-pull-to-close'
 
 const MONO = "'IBM Plex Mono', monospace"
 const DISPLAY = "'Chakra Petch', sans-serif"
@@ -195,7 +196,13 @@ export function CaseStudy({ work, prev, next, home = '/work' }) {
   const articleRef = useRef(null)
   useSwipeNav(articleRef, { prev, next })
 
-  const backToExperience = useCallback(() => { window.location.href = home }, [home])
+  // Leaving for Work: the photo shrinks back into its tile there (spatial consistency).
+  const markBack = useCallback(() => {
+    const img = document.querySelector('.sv-cx-stage img')
+    if (window.scrollY < window.innerHeight * 0.5) markZoomBack(slug, img?.currentSrc || img?.src)
+  }, [slug])
+  const backToExperience = useCallback(() => { markBack(); window.location.href = home }, [home, markBack])
+  usePullToClose(articleRef, backToExperience)
 
   // Entrance, scroll state, and white eye / footer triangle over the dark page.
   useEffect(() => {
@@ -481,7 +488,7 @@ export function CaseStudy({ work, prev, next, home = '/work' }) {
           )}
         </div>
 
-        <a className="sv-cx-close" href={home} aria-label="Close case study, back to Work">
+        <a className="sv-cx-close" href={home} onClick={markBack} aria-label="Close case study, back to Work">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" /></svg>
         </a>
         <nav aria-label="Case studies">

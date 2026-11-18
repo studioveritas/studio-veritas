@@ -23,6 +23,11 @@ const config: Config = {
         mono: ['IBM Plex Mono', 'monospace'],
       },
       colors: {
+        // Night-mode tokens (app/globals.css): black pop-outs, light cards, the nav bar.
+        pop: 'rgb(var(--sv-pop) / <alpha-value>)',
+        onpop: 'rgb(var(--sv-on-pop) / <alpha-value>)',
+        card: 'rgb(var(--sv-card) / <alpha-value>)',
+        oncard: 'rgb(var(--sv-on-card) / <alpha-value>)',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

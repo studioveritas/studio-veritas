@@ -11,7 +11,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LANDING_IMG_DESKTOP, LANDING_IMG_MOBILE } from './media'
-import { SiteFooter, PageTitle, openContactPanel } from './site-chrome'
+import { SiteFooter, FooterTrigger, PageTitle, openContactPanel } from './site-chrome'
 import { SERVICE_AREAS } from './services-data'
 import { zoomToCaseStudy } from './case-zoom'
 
@@ -61,12 +61,12 @@ function AreaPanel({ area, work, onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 20, scale: 0.98 }}
       transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-      className="relative rounded-md p-5 md:p-7 shadow-2xl mb-6 text-white"
-      style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)', fontFamily: MONO }}
+      className="relative rounded-md p-5 md:p-7 shadow-2xl sv-tokens-pop mb-6 text-onpop"
+      style={{ background: 'rgb(var(--sv-pop))', border: '1px solid rgb(var(--sv-on-pop) / 0.1)', fontFamily: MONO }}
     >
       <button
         onClick={onClose}
-        className="absolute top-3 right-3 text-white/70 hover:text-white transition-colors p-2 touch-manipulation"
+        className="absolute top-3 right-3 text-onpop/70 hover:text-onpop transition-colors p-2 touch-manipulation"
         style={{ fontFamily: MONO }}
         aria-label="Close"
       >
@@ -226,13 +226,13 @@ export function Services({ related = {} }) {
         .sv-typewriter-cursor::after { content: '\\2588'; animation: sv-blink 0.8s step-end infinite; margin-left: 2px; }
 
         /* the three areas: Principles label style */
-        .sv-svc-row { border-bottom: 1px solid rgba(0,0,0,0.45); scroll-margin-top: 130px; }
+        .sv-svc-row { border-bottom: 1px solid rgb(var(--sv-on-card) / 0.45); scroll-margin-top: 130px; }
         .sv-svc-row:last-child { border-bottom: 0; }
-        .sv-svc-btn { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 24px; width: 100%; padding: 22px 0; text-align: left; color: #000; transition: color .2s; }
+        .sv-svc-btn { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 24px; width: 100%; padding: 22px 0; text-align: left; color: rgb(var(--sv-on-card)); transition: color .2s; }
         .sv-svc-btn:focus-visible { outline: none; color: #5683DD; }
         .sv-svc-row[data-open='true'] .sv-svc-btn { color: #5683DD; }
         .sv-svc-label { font-family: ${MONO}; font-weight: 500; font-size: 16pt; line-height: 1.15; letter-spacing: 0.1em; text-transform: uppercase; }
-        .sv-svc-desc { display: none; max-width: 280px; text-align: right; font: 400 14px/1.4 ${MONO}; color: rgba(0,0,0,0.72); transition: color .2s; }
+        .sv-svc-desc { display: none; max-width: 280px; text-align: right; font: 400 14px/1.4 ${MONO}; color: rgb(var(--sv-on-card) / 0.72); transition: color .2s; }
         .sv-svc-row[data-open='true'] .sv-svc-desc { color: #5683DD; }
         .sv-svc-plus { display: block; flex: none; width: 12px; height: 12px; transition: transform .3s cubic-bezier(0.22,1,0.36,1); }
         .sv-svc-row[data-open='true'] .sv-svc-plus { transform: rotate(45deg); }
@@ -249,15 +249,15 @@ export function Services({ related = {} }) {
         .sv-svc-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px 40px; padding-right: 24px; }
         @media (min-width: 768px) { .sv-svc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
         .sv-svc-name { margin: 0 0 8px; font: 500 11px/1.4 ${MONO}; letter-spacing: 0.2em; text-transform: uppercase; color: #5683DD; }
-        .sv-svc-body { margin: 0; font: 400 13px/1.625 ${MONO}; color: rgba(255,255,255,0.9); }
+        .sv-svc-body { margin: 0; font: 400 13px/1.625 ${MONO}; color: rgb(var(--sv-on-pop) / 0.9); }
         @media (min-width: 768px) { .sv-svc-name { font-size: 12px; } .sv-svc-body { font-size: 14px; } }
         .sv-svc-ghost { color: transparent; }
-        .sv-svc-link { display: inline-block; font: 400 13px/1.4 ${MONO}; color: #fff; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(255,255,255,0.4); transition: color .2s, text-decoration-color .2s; }
+        .sv-svc-link { display: inline-block; font: 400 13px/1.4 ${MONO}; color: rgb(var(--sv-on-pop)); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgb(var(--sv-on-pop) / 0.4); transition: color .2s, text-decoration-color .2s; }
         @media (min-width: 768px) { .sv-svc-link { font-size: 14px; } }
-        .sv-svc-link:hover, .sv-svc-link:focus-visible { color: #5683DD; text-decoration-color: #fff; outline: none; }
+        .sv-svc-link:hover, .sv-svc-link:focus-visible { color: #5683DD; text-decoration-color: rgb(var(--sv-on-pop)); outline: none; }
 
         /* related work: the Work page tiles, popped out */
-        .sv-svc-work { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding-top: 24px; border-top: 1px dashed rgba(255,255,255,0.3); }
+        .sv-svc-work { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding-top: 24px; border-top: 1px dashed rgb(var(--sv-on-pop) / 0.3); }
         @media (min-width: 768px) { .sv-svc-work { grid-template-columns: repeat(2, 240px); gap: 16px; } }
         .sv-tile { display: block; color: #fff; text-decoration: none; outline: none; transform-origin: 50% 100%; }
         .sv-tile-media { position: relative; overflow: hidden; border-radius: 3px; background: #141414; aspect-ratio: 4 / 5; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
@@ -325,7 +325,7 @@ export function Services({ related = {} }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: 'spring', bounce: 0, duration: 0.4, delay: 0.25 }}
             className="w-full max-w-[1400px] rounded-md px-5 md:px-7 sv-ink"
-            style={{ background: '#eeeeee', border: '1px solid rgba(0,0,0,0.45)' }}
+            style={{ background: 'rgb(var(--sv-card))', border: '1px solid rgb(var(--sv-on-card) / 0.45)' }}
           >
             {SERVICE_AREAS.map((a, i) => {
               const isOpen = open === a.id
@@ -371,16 +371,7 @@ export function Services({ related = {} }) {
           className="sv-contact-row fixed sv-safe-bottom sv-safe-right flex flex-row items-center gap-3 md:gap-4"
           style={{ zIndex: 40 }}
         >
-          <button
-            onClick={() => setFooterOpen(true)}
-            className="p-2 -m-2 touch-manipulation hover:opacity-70 transition-opacity"
-            aria-label="Open footer"
-            aria-expanded={footerOpen}
-          >
-            <svg width="13" height="11" viewBox="0 0 13 11" fill="none" aria-hidden="true">
-              <polygon points="6.5,0 13,11 0,11" fill="#000000" />
-            </svg>
-          </button>
+          <FooterTrigger open={footerOpen} onOpen={() => setFooterOpen(true)} />
         </motion.div>
 
         {/* SLIDE-UP FOOTER */}

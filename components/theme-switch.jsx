@@ -17,9 +17,9 @@
 // The theme itself is the class `sv-night` on <html> (set before first paint by the
 // head script in app/layout.tsx); every night style lives in app/globals.css.
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { motion, useMotionValue, animate, useReducedMotion } from 'framer-motion'
-import { SPRING_SNAP, SPRING_FLICK, FADE, nearestSnap, rubberband, releaseVelocity } from './motion'
+import { SPRING_SNAP, SPRING_FLICK, FADE, nearestSnap, rubberband, releaseVelocity, haptic } from './motion'
 
 export const THEME_KEY = 'sv-theme'
 
@@ -68,6 +68,7 @@ export function ThemeSwitch() {
   const [night, setNight] = useState(false)
   const [now, setNow] = useState(null)
   const [city, setCity] = useState(null)
+  const [peek, setPeek] = useState(false)
   const field = useMemo(() => stars(150, 23), [])
 
   useEffect(() => {
@@ -88,9 +89,11 @@ export function ThemeSwitch() {
       }
     }
     tick()
-    const id = window.setInterval(tick, 1000)
+    // Restraint: minutes only, so the clock changes once a minute, not every second.
+    // While the visitor hovers or focuses it, it ticks by the second (see `peek`).
+    const id = window.setInterval(tick, peek ? 1000 : 15000)
     return () => window.clearInterval(id)
-  }, [])
+  }, [peek])
 
   const toggle = () => {
     const next = !night
@@ -112,15 +115,10 @@ export function ThemeSwitch() {
 
   return (
     <>
-      <div className="sv-stars" aria-hidden="true">
-        {field.map((s, i) => (
-          <span key={i} style={{ left: s.left, top: s.top, width: s.size, height: s.size, animationDelay: s.delay, animationDuration: s.dur }} />
-        ))}
-        <i className="sv-shoot" />
-      </div>
+      <Stars field={field} />
 
-      <div className={`sv-daynight${inAms ? '' : ' is-dual'}`}>
-        <p className={`sv-clock${inAms ? '' : ' is-dual'}`} aria-label={`Local time: ${spoken}`}>
+      <div className={`sv-daynight${inAms ? '' : ' is-dual'}`} onPointerEnter={() => setPeek(true)} onPointerLeave={() => setPeek(false)} onFocus={() => setPeek(true)} onBlur={() => setPeek(false)}>
+        <p className={`sv-clock${inAms ? '' : ' is-dual'}`} tabIndex={0} aria-label={`Local time: ${spoken}`}>
           {clocks.map((c, k) => (
             <span key={c.code} className="sv-clock-item" aria-hidden="true">
               {k > 0 ? <span className="sv-clock-sep">·</span> : null}
@@ -128,7 +126,7 @@ export function ThemeSwitch() {
               <span className="sv-clock-city">{c.code}</span>
               <time suppressHydrationWarning>
                 {c.h}<span className="sv-clock-colon">:</span>{c.m}
-                {inAms ? <>:{c.s}</> : null}
+                {peek ? <span className="sv-clock-s">:{c.s}</span> : null}
               </time>
             </span>
           ))}
@@ -186,14 +184,14 @@ function Toggle({ night, onChange }) {
     if (!d || e.pointerId !== d.id) return
     drag.current = null
     delete btn.current.dataset.pressed
-    if (!d.moved) { onChange(!night); return } // a tap
+    if (!d.moved) { haptic(); onChange(!night); return } // a tap
     const velocity = releaseVelocity(d.samples, e.timeStamp)
     // a small control coasts less far than a page: snappier deceleration (0.99) for the projection
     const end = nearestSnap(x.get(), velocity, [0, d.travel], 0.99)
     const nextNight = end > 0
     // hand the finger's velocity to the spring so there's no seam; a little bounce only because it was thrown
     animate(x, end, reduce ? FADE : { ...(Math.abs(velocity) > 200 ? SPRING_FLICK : SPRING_SNAP), velocity })
-    if (nextNight !== night) onChange(nextNight)
+    if (nextNight !== night) { haptic(); onChange(nextNight) }
   }
   const cancel = () => {
     drag.current = null
@@ -221,3 +219,15 @@ function Toggle({ night, onChange }) {
     </button>
   )
 }
+
+// The starfield never changes, so it renders once and is left alone by the clock.
+const Stars = memo(function Stars({ field }) {
+  return (
+    <div className="sv-stars" aria-hidden="true">
+      {field.map((s, i) => (
+        <span key={i} style={{ left: s.left, top: s.top, width: s.size, height: s.size, animationDelay: s.delay, animationDuration: s.dur }} />
+      ))}
+      <i className="sv-shoot" />
+    </div>
+  )
+})

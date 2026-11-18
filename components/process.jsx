@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC, ICON_SRC, ICON_SRC_BLACK, PROCESS_ICON_SRC, LANDING_IMG_DESKTOP, LANDING_IMG_MOBILE } from './media'
-import { SiteFooter, PageTitle } from './site-chrome'
+import { SiteFooter, FooterTrigger, PageTitle } from './site-chrome'
 
 const CONTACT_EMAIL = 'info@studio-veritas.com'
 
@@ -472,19 +472,19 @@ export function Process() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 8, scale: 0.98 }}
               transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-              className="fixed w-[calc(100%-2rem)] max-w-[300px] max-h-[280px] rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl"
+              className="fixed w-[calc(100%-2rem)] max-w-[300px] max-h-[280px] rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl sv-tokens-pop"
               style={{
                 top: panelPos.top,
                 left: panelPos.left,
-                background: '#000',
-                border: '1px solid rgba(255,255,255,0.1)',
+                background: 'rgb(var(--sv-pop))',
+                border: '1px solid rgb(var(--sv-on-pop) / 0.1)',
                 WebkitOverflowScrolling: 'touch',
                 zIndex: 50,
               }}
             >
               <button
                 onClick={() => setActive(null)}
-                className="absolute top-3 right-3 text-white/70 hover:text-white transition-colors p-2 touch-manipulation"
+                className="absolute top-3 right-3 text-onpop/70 hover:text-onpop transition-colors p-2 touch-manipulation"
                 style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                 aria-label="Close"
               >
@@ -498,7 +498,7 @@ export function Process() {
               </p>
               <p
                 style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                className="whitespace-pre-line text-[13px] md:text-sm text-white/90 leading-relaxed pr-6"
+                className="whitespace-pre-line text-[13px] md:text-sm text-onpop/90 leading-relaxed pr-6"
               >
                 {activeStep.body.slice(0, revealed)}
                 {revealed < activeStep.body.length && <span className="sv-typewriter-cursor" />}
@@ -515,16 +515,7 @@ export function Process() {
           className="sv-contact-row fixed sv-safe-bottom sv-safe-right flex flex-row items-center gap-3 md:gap-4"
           style={{ zIndex: 40 }}
         >
-          <button
-            onClick={() => setFooterOpen(true)}
-            className="p-2 -m-2 touch-manipulation hover:opacity-70 transition-opacity"
-            aria-label="Open footer"
-            aria-expanded={footerOpen}
-          >
-            <svg width="13" height="11" viewBox="0 0 13 11" fill="none" aria-hidden="true">
-              <polygon points="6.5,0 13,11 0,11" fill="#000000" />
-            </svg>
-          </button>
+          <FooterTrigger open={footerOpen} onOpen={() => setFooterOpen(true)} />
         </motion.div>
 
         {/* SLIDE-UP FOOTER */}

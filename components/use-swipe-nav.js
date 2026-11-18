@@ -8,7 +8,7 @@
 //   • grab it again mid-spring and it stops where it is and follows you
 import { useEffect } from 'react'
 import { animate } from 'framer-motion'
-import { SPRING, project, rubberband, prefersReducedMotion, releaseVelocity } from './motion'
+import { SPRING, project, rubberband, prefersReducedMotion, releaseVelocity, haptic } from './motion'
 
 export function useSwipeNav(rootRef, { prev, next }) {
   useEffect(() => {
@@ -64,6 +64,7 @@ export function useSwipeNav(rootRef, { prev, next }) {
       const ctl = animate(current, to, { ...opts, onUpdate: (x) => { current = x; setX(x) } })
       running = [ctl]
       if (target) {
+        haptic()
         layers().forEach((el) => animate(el, { opacity: 0 }, { duration: 0.25 }))
         ctl.then(() => { window.location.href = target.href })
       }

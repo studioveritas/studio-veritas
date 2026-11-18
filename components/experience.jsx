@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC, LOGO_SRC_BLACK, ICON_SRC, ICON_SRC_BLACK, LANDING_IMG_DESKTOP, LANDING_IMG_MOBILE } from './media'
-import { SiteFooter, ABOUT_EVENT } from './site-chrome'
+import { SiteFooter, FooterTrigger, ABOUT_EVENT } from './site-chrome'
 
 
 const CONTACT_EMAIL = 'info@studio-veritas.com'
@@ -304,12 +304,12 @@ export function Experience({ workList = '' }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.98 }}
               transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-              className="fixed bottom-[64px] left-4 md:bottom-[96px] md:left-10 w-[calc(100%-2rem)] max-w-[560px] max-h-[min(70vh,620px)] rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl"
-              style={{ zIndex: 50, background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}
+              className="fixed bottom-[64px] left-4 md:bottom-[96px] md:left-10 w-[calc(100%-2rem)] max-w-[560px] max-h-[min(70vh,620px)] rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl sv-tokens-pop"
+              style={{ zIndex: 50, background: 'rgb(var(--sv-pop))', border: '1px solid rgb(var(--sv-on-pop) / 0.1)' }}
             >
               <button
                 onClick={() => setInfoOpen(false)}
-                className="absolute top-3 right-3 text-white/70 hover:text-white transition-colors p-2 touch-manipulation"
+                className="absolute top-3 right-3 text-onpop/70 hover:text-onpop transition-colors p-2 touch-manipulation"
                 style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                 aria-label="Close"
               >
@@ -321,19 +321,19 @@ export function Experience({ workList = '' }) {
               >
                 Studio Veritas
               </p>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", WebkitOverflowScrolling: 'touch' }} className="text-[13px] md:text-sm text-white/90 leading-relaxed space-y-4 pr-6">
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", WebkitOverflowScrolling: 'touch' }} className="text-[13px] md:text-sm text-onpop/90 leading-relaxed space-y-4 pr-6">
                 {POPUP_PARAGRAPHS.map((p, idx) => {
                   const chars = revealed?.[idx] ?? 0
                   const isActive = chars > 0 && chars < p.length
                   return (
-                    <p key={idx} className={`whitespace-pre-line transition-colors hover:text-white ${chars === 0 ? 'opacity-0' : 'opacity-100'}`}>
+                    <p key={idx} className={`whitespace-pre-line transition-colors hover:text-onpop ${chars === 0 ? 'opacity-0' : 'opacity-100'}`}>
                       {p.slice(0, chars)}
                       {isActive && <span className="sv-typewriter-cursor" />}
                     </p>
                   )
                 })}
               </div>
-              <div style={{ fontFamily: "'Chakra Petch', sans-serif" }} className="mt-6 text-sm font-bold text-white tracking-wider">SV</div>
+              <div style={{ fontFamily: "'Chakra Petch', sans-serif" }} className="mt-6 text-sm font-bold text-onpop tracking-wider">SV</div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -348,16 +348,7 @@ export function Experience({ workList = '' }) {
           data-sv-intro-step="2"
         >
           <div className="sv-contact-row flex flex-row items-center gap-3 md:gap-4 flex-shrink-0">
-            <button
-              onClick={() => setFooterOpen(true)}
-              className="p-2 -m-2 touch-manipulation hover:opacity-70 transition-opacity"
-              aria-label="Open footer"
-              aria-expanded={footerOpen}
-            >
-              <svg width="13" height="11" viewBox="0 0 13 11" fill="none" aria-hidden="true">
-                <polygon points="6.5,0 13,11 0,11" fill="#000000" />
-              </svg>
-            </button>
+            <FooterTrigger open={footerOpen} onOpen={() => setFooterOpen(true)} />
           </div>
         </motion.div>
 

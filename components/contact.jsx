@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LOGO_SRC, LOGO_SRC_BLACK, ICON_SRC, ICON_SRC_BLACK, PROCESS_ICON_SRC, LANDING_IMG_DESKTOP, LANDING_IMG_MOBILE } from './media'
-import { SiteFooter, PageTitle } from './site-chrome'
+import { SiteFooter, FooterTrigger, PageTitle } from './site-chrome'
 
 const CONTACT_EMAIL = 'info@studio-veritas.com'
 const LINKEDIN_URL = 'https://www.linkedin.com/company/team-studio-veritas'
@@ -136,7 +136,7 @@ export function Contact() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: 'spring', bounce: 0, duration: 0.4, delay: 0.25 }}
             className="w-full max-w-[1400px] mt-4 md:mt-5 rounded-md p-5 md:p-7 sv-ink"
-            style={{ background: '#eeeeee', border: '1px solid rgba(0,0,0,0.45)' }}
+            style={{ background: 'rgb(var(--sv-card))', border: '1px solid rgb(var(--sv-on-card) / 0.45)' }}
           >
             <div className="flex items-start justify-between gap-6">
               <div className="min-w-0">
@@ -148,7 +148,7 @@ export function Contact() {
                   draggable={false}
                 />
                 <p
-                  className="sv-contact-subline mt-3 md:mt-4 text-black"
+                  className="sv-contact-subline mt-3 md:mt-4 text-oncard"
                   style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                 >
                   Your team for Strategy + Design + Innovation
@@ -167,18 +167,18 @@ export function Contact() {
             {/* Details module */}
             <div
               className="relative mt-5 md:mt-6 rounded-md px-5 md:px-7 pt-12 pb-8 md:pt-11 md:pb-9"
-              style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}
+              style={{ background: 'rgb(var(--sv-pop))', border: '1px solid rgb(var(--sv-on-pop) / 0.1)' }}
             >
               <button
                 onClick={closeContact}
-                className="absolute top-2 left-2 md:top-3 md:left-3 text-white/80 hover:text-white transition-colors p-2 text-sm md:text-lg leading-none"
+                className="absolute top-2 left-2 md:top-3 md:left-3 text-onpop/80 hover:text-onpop transition-colors p-2 text-sm md:text-lg leading-none"
                 style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                 aria-label="Close contact page"
               >
                 X
               </button>
               <address
-                className="sv-contact-details not-italic text-right text-white uppercase flex flex-col items-end"
+                className="sv-contact-details not-italic text-right text-onpop uppercase flex flex-col items-end"
                 style={{ fontFamily: "'IBM Plex Mono', monospace" }}
               >
                 <span>Guillaume Furminger + Ali Marmaduke</span>
@@ -198,16 +198,7 @@ export function Contact() {
           className="sv-contact-row fixed sv-safe-bottom sv-safe-right flex flex-row items-center gap-3 md:gap-4"
           style={{ zIndex: 40 }}
         >
-          <button
-            onClick={() => setFooterOpen(true)}
-            className="p-2 -m-2 touch-manipulation hover:opacity-70 transition-opacity"
-            aria-label="Open footer"
-            aria-expanded={footerOpen}
-          >
-            <svg width="13" height="11" viewBox="0 0 13 11" fill="none" aria-hidden="true">
-              <polygon points="6.5,0 13,11 0,11" fill="#000000" />
-            </svg>
-          </button>
+          <FooterTrigger open={footerOpen} onOpen={() => setFooterOpen(true)} />
         </motion.div>
 
         {/* CONTACT PANEL */}
@@ -219,26 +210,26 @@ export function Contact() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.98 }}
               transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-              className="fixed bottom-20 right-4 md:bottom-28 md:right-10 w-[calc(100%-2rem)] max-w-[300px] max-h-[55%] rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl"
-              style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)', zIndex: 50 }}
+              className="fixed bottom-20 right-4 md:bottom-28 md:right-10 w-[calc(100%-2rem)] max-w-[300px] max-h-[55%] rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl sv-tokens-pop"
+              style={{ background: 'rgb(var(--sv-pop))', border: '1px solid rgb(var(--sv-on-pop) / 0.1)', zIndex: 50 }}
             >
               <button
                 onClick={() => setContactPanel(null)}
-                className="absolute top-3 right-3 text-white/70 hover:text-white transition-colors p-2 touch-manipulation"
+                className="absolute top-3 right-3 text-onpop/70 hover:text-onpop transition-colors p-2 touch-manipulation"
                 style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                 aria-label="Close"
               >
                 ✕
               </button>
               <p style={{ fontFamily: "'IBM Plex Mono', monospace", color: '#5683DD', letterSpacing: '0.2em' }} className="text-[11px] md:text-xs font-medium uppercase mb-3">{CONTACT_PANELS[contactPanel].heading}</p>
-              <p style={{ fontFamily: "'IBM Plex Mono', monospace" }} className="whitespace-pre-line text-[13px] md:text-sm text-white/90 leading-relaxed pr-6">
+              <p style={{ fontFamily: "'IBM Plex Mono', monospace" }} className="whitespace-pre-line text-[13px] md:text-sm text-onpop/90 leading-relaxed pr-6">
                 {CONTACT_PANELS[contactPanel].body.slice(0, contactRevealed)}
                 {contactRevealed < CONTACT_PANELS[contactPanel].body.length && <span className="sv-typewriter-cursor" />}
               </p>
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
                 style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                className="inline-block mt-6 text-[13px] md:text-sm text-white underline underline-offset-4 decoration-white/40 hover:decoration-white hover:text-[#5683DD] transition-colors"
+                className="inline-block mt-6 text-[13px] md:text-sm text-onpop underline underline-offset-4 decoration-onpop/40 hover:decoration-onpop hover:text-[#5683DD] transition-colors"
               >
                 Contact Us →
               </a>

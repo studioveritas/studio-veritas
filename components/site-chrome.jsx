@@ -20,7 +20,7 @@ import { LOGO_SRC_BLACK, ICON_SRC_BLACK, PROCESS_ICON_SRC } from './media'
 import { MENU_ITEMS } from './site-nav'
 import { toggleAskVeritas, STATE_EVENT } from './ask-veritas/open'
 import { SERVICE_AREAS } from './services-data'
-import { SPRING, SPRING_FLICK, FADE, project } from './motion'
+import { SPRING, SPRING_FLICK, FADE, project, haptic } from './motion'
 import { useReducedMotion } from 'framer-motion'
 
 export const CONTACT_EMAIL = 'info@studio-veritas.com'
@@ -39,6 +39,32 @@ const MONO = "'IBM Plex Mono', monospace"
 // Pages whose black title tag lives in the nav bar.
 export const NAV_TAGS = { '/team': 'Team', '/principles': 'Principles', '/services': 'Services', '/contact': 'Contact Us', '/clients/login': 'Client login' }
 
+// Wayfinding: the corner of a page tag is a back arrow that names where it goes
+// ("Back to Work"), instead of an unexplained X. Same behaviour as before: back to
+// wherever the visitor came from on this site, or home.
+export function backTarget() {
+  if (typeof window === 'undefined') return 'Home'
+  try {
+    const ref = document.referrer && new URL(document.referrer)
+    if (!ref || ref.origin !== window.location.origin || ref.pathname === window.location.pathname) return 'Home'
+    if (ref.pathname === '/') return 'Home'
+    const hit = MENU_ITEMS.find((m) => ref.pathname === m.href || ref.pathname.startsWith(m.href + '/'))
+    return hit ? hit.label : 'previous page'
+  } catch (e) { return 'Home' }
+}
+export function BackGlyph({ size = 11 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 12 12" fill="none" aria-hidden="true" style={{ display: 'block' }}>
+      <path d="M7.5 1.5 3 6l4.5 4.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" />
+    </svg>
+  )
+}
+function useBackLabel() {
+  const [label, setLabel] = useState('Home')
+  useEffect(() => setLabel(backTarget()), [])
+  return label
+}
+
 // X on a page tag: back to wherever the visitor came from on this site, or home.
 export function leavePage() {
   const cameFromSite = document.referrer && document.referrer.startsWith(window.location.origin)
@@ -53,6 +79,7 @@ export function SiteNav() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [askOpen, setAskOpen] = useState(false)
   const navTag = NAV_TAGS[pathname.replace(/\/$/, '') || '/']
+  const backLabel = useBackLabel()
 
   useEffect(() => setMenuOpen(false), [pathname])
 
@@ -94,11 +121,11 @@ export function SiteNav() {
           top: var(--sv-nav-top); left: 50%; transform: translateX(-50%);
           width: var(--sv-nav-w); height: var(--sv-nav-h);
           display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center;
-          padding: 0 14px; background: #fff; border-radius: 8px;
+          padding: 0 14px; background: rgb(var(--sv-bar)); border-radius: 8px;
           box-shadow: 0 6px 24px -14px rgba(0,0,0,0.35);
         }
         @media (min-width: 768px) { .sv-nav { padding: 0 26px; } }
-        .sv-nav-ask { justify-self: start; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 8px; margin-left: -8px; background: none; border: 0; color: #000; font: 500 11px/1 ${MONO}; letter-spacing: 0.2em; text-transform: uppercase; transition: color .2s; }
+        .sv-nav-ask { justify-self: start; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 8px; margin-left: -8px; background: none; border: 0; color: rgb(var(--sv-on-bar)); font: 500 11px/1 ${MONO}; letter-spacing: 0.2em; text-transform: uppercase; transition: color .2s; }
         .sv-nav-ask svg { display: block; flex: none; transition: transform .35s cubic-bezier(0.22,1,0.36,1); }
         .sv-nav-ask[aria-expanded="true"] svg { transform: rotate(180deg); }
         /* the label only ever shows on desktop hover; on small screens it must not take space, or it pushes the wordmark off centre */
@@ -110,27 +137,27 @@ export function SiteNav() {
         }
         .sv-nav-logo { display: block; transition: opacity .2s; }
         .sv-nav-logo:hover, .sv-nav-logo:focus-visible { opacity: .6; outline: none; }
-        .sv-nav-logo img { display: block; height: 24px; width: auto; }
+        .sv-nav-logo img { display: block; height: 24px; width: auto; filter: var(--sv-logo-filter); }
         @media (min-width: 768px) { .sv-nav-logo img { height: 34px; } }
         .sv-nav-right { justify-self: end; display: flex; align-items: center; gap: 10px; min-width: 0; position: relative; }
         @media (min-width: 768px) { .sv-nav-right { gap: 22px; } }
-        .sv-nav-tag { display: flex; align-items: center; background: #000; color: #fff; border-radius: 4px; white-space: nowrap; box-shadow: 0 6px 18px -10px rgba(0,0,0,.5); }
+        .sv-nav-tag { display: flex; align-items: center; background: rgb(var(--sv-pop)); color: rgb(var(--sv-on-pop)); border-radius: 4px; white-space: nowrap; box-shadow: 0 6px 18px -10px rgba(0,0,0,.5); }
         /* phones: no room beside the wordmark, so the tag hangs just under the bar's right edge */
-        .sv-nav-tag { position: absolute; top: calc(100% + 8px); right: 0; padding: 6px 24px 5px 10px; }
+        .sv-nav-tag { position: absolute; top: calc(100% + 8px); right: 0; padding: 6px 10px 5px 26px; }
         .sv-nav-tag p { font: 500 15px/1 ${MONO}; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; }
-        .sv-nav-tag button { position: absolute; top: 0; right: 0; padding: 3px 6px 9px 9px; background: none; border: 0; color: rgba(255,255,255,.8); font: 400 10px/1 ${MONO}; transition: color .2s; }
+        .sv-nav-tag button { position: absolute; top: 0; bottom: 0; left: 0; width: 24px; display: flex; align-items: center; justify-content: center; padding: 0; background: none; border: 0; color: rgb(var(--sv-on-pop) / .8); transition: color .2s; }
         .sv-nav-tag button:hover, .sv-nav-tag button:focus-visible { color: #5683DD; outline: none; }
         @media (min-width: 768px) {
-          .sv-nav-tag { position: relative; top: auto; right: auto; box-shadow: none; padding: 5px 22px 4px 10px; }
+          .sv-nav-tag { position: relative; top: auto; right: auto; box-shadow: none; padding: 5px 10px 4px 26px; }
           .sv-nav-tag p { font-size: 16px; }
         }
         @media (min-width: 1024px) {
-          .sv-nav-tag { padding: 6px 26px 5px 12px; }
+          .sv-nav-tag { padding: 6px 12px 5px 32px; }
           .sv-nav-tag p { font-size: 22px; }
-          .sv-nav-tag button { font-size: 11px; padding: 3px 7px 10px 10px; }
+          .sv-nav-tag button { width: 30px; }
         }
         .sv-nav-burger { justify-self: end; display: flex; flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; align-items: flex-end; padding: 0 8px; margin-right: -8px; background: none; border: 0; }
-        .sv-nav-burger span { display: block; width: 24px; height: 2px; background: #000; transition: background-color .2s, transform .25s, opacity .2s; }
+        .sv-nav-burger span { display: block; width: 24px; height: 2px; background: rgb(var(--sv-on-bar)); transition: background-color .2s, transform .25s, opacity .2s; }
         @media (min-width: 768px) { .sv-nav-burger span { width: 36px; height: 2.5px; } .sv-nav-burger { gap: 7px; width: 56px; } }
         .sv-nav-burger:hover span, .sv-nav-burger:focus-visible span, .sv-nav-burger[aria-expanded="true"] span { background: #5683DD; }
         .sv-nav-burger:focus-visible { outline: none; }
@@ -188,8 +215,8 @@ export function SiteNav() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: 'spring', bounce: 0, duration: 0.4, delay: 0.2 }}
           >
+            <button type="button" onClick={leavePage} aria-label={`Back to ${backLabel}`} title={`Back to ${backLabel}`}><BackGlyph /></button>
             <p>{navTag}</p>
-            <button type="button" onClick={leavePage} aria-label={`Close ${navTag.toLowerCase()} page`}>X</button>
           </motion.div>
         )}
         <button
@@ -212,12 +239,12 @@ export function SiteNav() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.98 }}
             transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-            className="sv-menu rounded-md p-5 md:p-7 shadow-2xl"
-            style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)', transformOrigin: 'top right' }}
+            className="sv-menu rounded-md p-5 md:p-7 shadow-2xl sv-tokens-pop"
+            style={{ background: 'rgb(var(--sv-pop))', border: '1px solid rgb(var(--sv-on-pop) / 0.1)', transformOrigin: 'top right' }}
           >
             <button
               onClick={() => setMenuOpen(false)}
-              className="absolute top-3 right-3 text-white/70 hover:text-white transition-colors p-2 touch-manipulation"
+              className="absolute top-3 right-3 text-onpop/70 hover:text-onpop transition-colors p-2 touch-manipulation"
               aria-label="Close menu"
             >
               ✕
@@ -230,8 +257,8 @@ export function SiteNav() {
                     key={item.href}
                     href={item.href}
                     aria-current={here ? 'page' : undefined}
-                    className="text-sm md:text-base uppercase tracking-[0.15em] py-3 transition-colors text-white/95 hover:text-[#5683DD]"
-                    style={{ borderBottom: i < MENU_ITEMS.length - 1 ? '1px dashed rgba(255,255,255,0.3)' : 'none', color: here ? '#5683DD' : undefined }}
+                    className="text-sm md:text-base uppercase tracking-[0.15em] py-3 transition-colors text-onpop/95 hover:text-[#5683DD]"
+                    style={{ borderBottom: i < MENU_ITEMS.length - 1 ? '1px dashed rgb(var(--sv-on-pop) / 0.3)' : 'none', color: here ? '#5683DD' : undefined }}
                   >
                     {item.label}
                   </a>
@@ -320,7 +347,7 @@ export function ContactBar() {
       <style>{`
         .sv-cbar { position: fixed; z-index: 41; left: 50%; transform: translateX(-50%); bottom: max(16px, env(safe-area-inset-bottom)); display: flex; gap: 6px; }
         @media (min-width: 768px) { .sv-cbar { bottom: max(28px, env(safe-area-inset-bottom)); gap: 8px; } }
-        .sv-cbar-btn { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px 0 8px; background: #000; color: #fff; border: 0; border-radius: 3px;
+        .sv-cbar-btn { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px 0 8px; background: rgb(var(--sv-pop)); color: rgb(var(--sv-on-pop)); border: 0; border-radius: 3px;
           font: 500 9px/1 ${MONO}; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; transition: color .2s, background .2s, box-shadow .2s; }
         @media (min-width: 768px) { .sv-cbar-btn { height: 32px; padding: 0 18px 0 13px; gap: 10px; font-size: 13px; } }
         .sv-cbar-btn svg { width: 8px; height: 8px; }
@@ -329,10 +356,10 @@ export function ContactBar() {
         .sv-cbar-btn:hover, .sv-cbar-btn:focus-visible { color: #5683DD; outline: none; }
         .sv-cbar-btn[aria-expanded="true"] { color: #5683DD; }
         .sv-cbar-btn[aria-expanded="true"] svg { transform: rotate(45deg); }
-        html[data-sv-dark-bottom='1'] .sv-cbar-btn { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35); }
+        html[data-sv-dark-bottom='1'] .sv-cbar-btn { box-shadow: inset 0 0 0 1px rgb(var(--sv-on-pop) / 0.35); }
         @keyframes sv-cbar-blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
         .sv-cpanel .sv-typewriter-cursor::after { content: '\\2588'; animation: sv-cbar-blink 0.8s step-end infinite; margin-left: 2px; }
-        .sv-cpanel-chip { padding: 6px; margin: -6px; background: none; border: 0; color: #fff; font: 500 13px/1 ${MONO}; letter-spacing: .08em; text-transform: uppercase; transition: color .2s; }
+        .sv-cpanel-chip { padding: 6px; margin: -6px; background: none; border: 0; color: rgb(var(--sv-on-pop)); font: 500 13px/1 ${MONO}; letter-spacing: .08em; text-transform: uppercase; transition: color .2s; }
         .sv-cpanel-chip:hover, .sv-cpanel-chip:focus-visible, .sv-cpanel-chip[aria-pressed="true"] { color: #5683DD; outline: none; }
         .sv-cpanel { position: fixed; z-index: 50; left: 50%; bottom: calc(max(16px, env(safe-area-inset-bottom)) + 38px); width: min(340px, calc(100% - 2rem)); max-height: 55%; }
         @media (min-width: 768px) { .sv-cpanel { bottom: calc(max(28px, env(safe-area-inset-bottom)) + 46px); } }
@@ -364,24 +391,24 @@ export function ContactBar() {
             animate={{ opacity: 1, y: 0, scale: 1, x: '-50%' }}
             exit={{ opacity: 0, y: 20, scale: 0.98, x: '-50%' }}
             transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-            className="sv-cpanel rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl"
-            style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}
+            className="sv-cpanel rounded-md p-5 md:p-7 overflow-y-auto shadow-2xl sv-tokens-pop"
+            style={{ background: 'rgb(var(--sv-pop))', border: '1px solid rgb(var(--sv-on-pop) / 0.1)' }}
           >
             <button
               onClick={() => setPanel(null)}
-              className="absolute top-3 right-3 text-white/70 hover:text-white transition-colors p-2 touch-manipulation"
+              className="absolute top-3 right-3 text-onpop/70 hover:text-onpop transition-colors p-2 touch-manipulation"
               style={{ fontFamily: MONO }}
               aria-label="Close"
             >
               ✕
             </button>
             <p style={{ fontFamily: MONO, color: '#5683DD', letterSpacing: '0.2em' }} className="text-[11px] md:text-xs font-medium uppercase mb-3">{CONTACT_PANELS[panel].heading}</p>
-            <p style={{ fontFamily: MONO }} className="whitespace-pre-line text-[13px] md:text-sm text-white/90 leading-relaxed pr-6">
+            <p style={{ fontFamily: MONO }} className="whitespace-pre-line text-[13px] md:text-sm text-onpop/90 leading-relaxed pr-6">
               {CONTACT_PANELS[panel].body.slice(0, revealed)}
               {revealed < CONTACT_PANELS[panel].body.length && <span className="sv-typewriter-cursor" />}
             </p>
             {panel === 'companies' && area && (
-              <div role="group" aria-label="Service area" className="flex flex-wrap gap-x-4 gap-y-1.5 mt-5 pt-4" style={{ borderTop: '1px dashed rgba(255,255,255,0.3)' }}>
+              <div role="group" aria-label="Service area" className="flex flex-wrap gap-x-4 gap-y-1.5 mt-5 pt-4" style={{ borderTop: '1px dashed rgb(var(--sv-on-pop) / 0.3)' }}>
                 {SERVICE_AREAS.map((a, i) => (
                   <button key={a.id} type="button" className="sv-cpanel-chip" aria-pressed={area === a.id} onClick={() => setArea(a.id)}>
                     ({i + 1}) {a.title}
@@ -392,7 +419,7 @@ export function ContactBar() {
             <a
               href={`mailto:${CONTACT_EMAIL}${panel === 'companies' && area ? `?subject=${encodeURIComponent(`${SERVICE_AREAS.find((a) => a.id === area)?.title} enquiry`)}` : ''}`}
               style={{ fontFamily: MONO }}
-              className="inline-block mt-6 text-[13px] md:text-sm text-white underline underline-offset-4 decoration-white/40 hover:decoration-white hover:text-[#5683DD] transition-colors"
+              className="inline-block mt-6 text-[13px] md:text-sm text-onpop underline underline-offset-4 decoration-onpop/40 hover:decoration-onpop hover:text-[#5683DD] transition-colors"
             >
               Contact Us →
             </a>
@@ -400,6 +427,27 @@ export function ContactBar() {
         )}
       </AnimatePresence>
     </>
+  )
+}
+
+/* ------------------------------------------------------- footer trigger */
+
+// The small triangle that opens the footer, bottom-right on every page. One component, so
+// every page looks and behaves the same (it was six hand-copied buttons). It points up when
+// the footer is closed; the footer's own triangle points down to close it.
+export function FooterTrigger({ open, onOpen }) {
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="sv-foot-trigger p-2 -m-2 touch-manipulation hover:opacity-70 transition-[opacity,color]"
+      aria-label="Open footer"
+      aria-expanded={open}
+    >
+      <svg width="13" height="11" viewBox="0 0 13 11" fill="none" aria-hidden="true">
+        <polygon points="6.5,0 13,11 0,11" fill="currentColor" />
+      </svg>
+    </button>
   )
 }
 
@@ -414,7 +462,7 @@ export function SiteFooter({ open, onClose }) {
   const onDragEnd = (e, info) => {
     const h = e.currentTarget?.offsetHeight || 300
     const landing = info.offset.y + project(info.velocity.y)
-    if (landing > h * 0.4) { setFlicked(Math.abs(info.velocity.y) > 300); onClose() }
+    if (landing > h * 0.4) { haptic(); setFlicked(Math.abs(info.velocity.y) > 300); onClose() }
   }
   return (
     <>
@@ -423,26 +471,27 @@ export function SiteFooter({ open, onClose }) {
           position: fixed; z-index: 60; bottom: 0;
           left: max(12px, env(safe-area-inset-left)); right: max(12px, env(safe-area-inset-right));
           padding: 18px 16px max(16px, env(safe-area-inset-bottom));
-          background: #eeeeee; border: 1px solid rgba(0,0,0,0.45); border-bottom: 0;
+          background: rgb(var(--sv-card)); color: rgb(var(--sv-on-card)); border: 1px solid rgb(var(--sv-on-card) / 0.45); border-bottom: 0;
           border-radius: 6px 6px 0 0; box-shadow: 0 -18px 40px -24px rgba(0,0,0,0.45);
         }
         @media (min-width: 768px) { .sv-foot { left: max(36px, env(safe-area-inset-left)); right: max(36px, env(safe-area-inset-right)); padding: 26px 20px 22px 32px; } }
         .sv-foot { touch-action: none; }
         .sv-foot-scrim { position: fixed; inset: 0; z-index: 59; background: rgba(0,0,0,.28); }
-        .sv-foot-grabber { position: absolute; top: 7px; left: 50%; width: 36px; height: 5px; margin-left: -18px; border-radius: 3px; background: rgba(0,0,0,.22); }
+        .sv-foot-grabber { position: absolute; top: 7px; left: 50%; width: 36px; height: 5px; margin-left: -18px; border-radius: 3px; background: rgb(var(--sv-on-card) / .22); }
         @media (hover: hover) and (pointer: fine) { .sv-foot-grabber { display: none; } }
+        .sv-foot-logo, .sv-foot-eye { filter: var(--sv-logo-filter); }
         .sv-foot-logo { display: block; height: 30px; width: auto; }
         @media (min-width: 768px) { .sv-foot-logo { height: 62px; } }
-        .sv-foot-line { font: 400 13px/1.3 ${MONO}; color: #000; margin-top: 8px; }
+        .sv-foot-line { font: 400 13px/1.3 ${MONO}; color: rgb(var(--sv-on-card)); margin-top: 8px; }
         @media (min-width: 768px) { .sv-foot-line { font-size: 22px; margin-top: 12px; } }
         .sv-foot-eye { display: none; height: 92px; width: auto; }
         @media (min-width: 768px) { .sv-foot-eye { display: block; } }
-        .sv-foot-strip { position: relative; margin-top: 14px; padding: 34px 16px 16px; background: #000; border-radius: 6px; color: #fff; font-family: ${MONO}; display: flex; flex-direction: column; gap: 14px; }
-        @media (min-width: 768px) { .sv-foot-strip { margin: 20px 12px 0 -12px; padding: 38px 26px 20px 34px; flex-direction: row; justify-content: space-between; align-items: flex-end; gap: 40px; } }
-        .sv-foot-about { font-size: 11.5px; line-height: 1.55; max-width: 640px; margin: 0; color: rgba(255,255,255,0.92); }
+        .sv-foot-strip { position: relative; margin-top: 14px; padding: 18px 16px 16px; background: rgb(var(--sv-pop)); border-radius: 6px; color: rgb(var(--sv-on-pop)); font-family: ${MONO}; display: flex; flex-direction: column; gap: 14px; }
+        @media (min-width: 768px) { .sv-foot-strip { margin: 20px 12px 0 -12px; padding: 24px 26px 20px 34px; flex-direction: row; justify-content: space-between; align-items: flex-end; gap: 40px; } }
+        .sv-foot-about { font-size: var(--sv-t-sm); line-height: 1.55; max-width: 640px; margin: 0; color: rgb(var(--sv-on-pop) / 0.92); }
         .sv-foot-contact { font-size: 11px; line-height: 1.55; text-align: right; text-transform: uppercase; white-space: nowrap; margin: 0; font-style: normal; display: flex; flex-direction: column; align-items: flex-end; }
         @media (min-width: 768px) { .sv-foot-about { font-size: 14px; } .sv-foot-contact { font-size: 14px; } }
-        .sv-foot-contact a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,0.5); transition: color .2s; }
+        .sv-foot-contact a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgb(var(--sv-on-pop) / 0.5); transition: color .2s; }
         .sv-foot-contact a:hover, .sv-foot-contact a:focus-visible { color: #5683DD; outline: none; }
       `}</style>
       {/* dim to focus: the page steps back while the footer is up; tap it to close */}
@@ -476,7 +525,7 @@ export function SiteFooter({ open, onClose }) {
           aria-label="Close footer"
         >
           <svg width="20" height="13" viewBox="0 0 18 11" fill="none" aria-hidden="true">
-            <polygon points="0,0 18,0 9,11" fill="#000" />
+            <polygon points="0,0 18,0 9,11" fill="currentColor" />
           </svg>
         </button>
 
@@ -489,18 +538,10 @@ export function SiteFooter({ open, onClose }) {
         </div>
 
         <div className="sv-foot-strip">
-          <button
-            onClick={onClose}
-            className="absolute top-1.5 left-1.5 md:top-2 md:left-2 text-white/80 hover:text-white transition-colors p-2 text-sm leading-none"
-            style={{ fontFamily: MONO }}
-            aria-label="Close footer"
-          >
-            X
-          </button>
+          {/* one way to close: the triangle (and a drag down, a tap outside, Escape) */}
           <p className="sv-foot-about">
-            Studio Veritas is an agile strategy, design and innovation team. We partner to isolate the fundamental truths
-            behind a brand. We deliver nimble, sharp decision-making to solve complex challenges and drive lasting
-            commercial growth.
+            Studio Veritas is a small team of big agency talent. No layers, no waste. Just sharp strategy and big ideas.
+            One idea. Everywhere.
           </p>
           <address className="sv-foot-contact">
             <span>Guillaume Furminger + Ali Marmaduke</span>
@@ -596,6 +637,7 @@ export function PageTitle({ children, className = '', delay = 450, speed = 55, s
 export function PageTag({ label, onClose = leavePage, closeLabel, className = '', tone = 'dark', align = 'center' }) {
   const light = tone === 'light'
   const ink = tone === 'ink'
+  const backLabel = useBackLabel()
   return (
     <>
       <style>{`
@@ -607,7 +649,7 @@ export function PageTag({ label, onClose = leavePage, closeLabel, className = ''
         initial={{ opacity: 0, y: 10, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ type: 'spring', bounce: 0, duration: 0.4, delay: 0.1 }}
-        className={`sv-tag relative rounded-md shadow-2xl px-10 py-5 ${align === 'left' ? 'text-left pl-7' : 'text-center'} ${className}`}
+        className={`sv-tag relative rounded-md shadow-2xl px-10 py-5 ${align === 'left' ? 'text-left pl-11 md:pl-12' : 'text-center'} ${className}`}
         style={light ? { background: '#f6f4ee', color: '#000' } : { background: '#000', color: ink ? '#ddc9b8' : '#fff', border: '1px solid rgba(255,255,255,0.1)' }}
       >
         <h1
@@ -618,11 +660,11 @@ export function PageTag({ label, onClose = leavePage, closeLabel, className = ''
         </h1>
         <button
           onClick={onClose}
-          className={`absolute top-1 right-1.5 md:top-1.5 md:right-2 transition-colors p-2 text-sm md:text-[17px] leading-none ${light ? 'text-black/80 hover:text-[#5683DD]' : ink ? 'text-[#ddc9b8] hover:text-white' : 'text-white/80 hover:text-white'}`}
-          style={{ fontFamily: MONO }}
-          aria-label={closeLabel || `Close ${label.toLowerCase()} page`}
+          className={`absolute left-1.5 top-1/2 -translate-y-1/2 md:left-2.5 transition-colors p-2 leading-none ${light ? 'text-black/80 hover:text-[#5683DD]' : ink ? 'text-[#ddc9b8] hover:text-white' : 'text-white/80 hover:text-white'}`}
+          aria-label={closeLabel || `Back to ${backLabel}`}
+          title={closeLabel || `Back to ${backLabel}`}
         >
-          X
+          <BackGlyph size={16} />
         </button>
       </motion.div>
     </>

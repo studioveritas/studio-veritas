@@ -13,7 +13,8 @@ import { IntroLoader } from '@/components/intro-loader'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { SV_SUN_SCRIPT } from '@/lib/sv-sun'
 
-export const dynamic = 'force-dynamic'
+// No blanket force-dynamic: public pages are pre-rendered and served from the CDN; the client
+// space and /api/ask read cookies or call out, so Next renders them per request on its own.
 
 export const viewport = {
   width: 'device-width',

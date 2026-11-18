@@ -40,3 +40,13 @@ export function releaseVelocity(samples, now) {
   if (now - b[1] > 80 || b[1] <= a[1]) return 0
   return ((b[0] - a[0]) / (b[1] - a[1])) * 1000
 }
+
+// Haptics (Apple's three rules): only on a real commit (a snap, a page change, a dismiss),
+// fired on the same frame as the visual, and never for visitors who asked for less motion.
+// Vibration works on Android browsers; elsewhere this does nothing.
+export function haptic(ms = 10) {
+  try {
+    if (prefersReducedMotion()) return
+    if (typeof navigator !== 'undefined' && navigator.vibrate && window.matchMedia?.('(pointer: coarse)').matches) navigator.vibrate(ms)
+  } catch (e) {}
+}

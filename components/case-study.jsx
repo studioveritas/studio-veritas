@@ -38,9 +38,10 @@ const TYPE_MS = 12
 
 // `images` entries are a path ('/work/<slug>/image-1.jpg') or { src, alt }.
 const imageList = (work) =>
-  (work.caseStudy.images || []).slice(0, 3).map((im, i) =>
-    typeof im === 'string' ? { src: im, alt: `${work.client}: image ${i + 1}` } : { alt: `${work.client}: image ${i + 1}`, ...im }
-  )
+  (work.caseStudy.images || []).slice(0, 3).map((im, i) => {
+    const item = typeof im === 'string' ? { src: im, alt: `${work.client}: image ${i + 1}` } : { alt: `${work.client}: image ${i + 1}`, ...im }
+    return { ...item, srcSet: work.caseStudy.imageSrcSets?.[item.src] || undefined }
+  })
 
 const isResults = (s) => /^the results$/i.test(s.heading)
 
@@ -157,7 +158,7 @@ function Figure({ im, onOpen, className = '' }) {
   return (
     <figure ref={ref} className={`sv-cx-fig ${className}`} data-in={seen ? '1' : '0'}>
       <button type="button" onClick={() => onOpen(im)} aria-label={`Enlarge: ${im.alt}`}>
-        <img src={im.src} alt={im.alt} loading="lazy" draggable={false} />
+        <img src={im.src} srcSet={im.srcSet} sizes="(min-width: 768px) 60vw, 100vw" alt={im.alt} loading="lazy" decoding="async" draggable={false} />
       </button>
     </figure>
   )
@@ -433,8 +434,8 @@ export function CaseStudy({ work, prev, next, home = '/work' }) {
         <div className="sv-cx-black" aria-hidden="true" />
         <div className="sv-cx-stage" aria-hidden="true">
           <picture>
-            {portrait && <source media="(max-width: 767px) and (orientation: portrait)" srcSet={portrait} />}
-            <img src={master} alt="" fetchPriority="high" draggable={false} />
+            {portrait && <source media="(max-width: 767px) and (orientation: portrait)" srcSet={cs.portraitSrcSet || portrait} sizes="100vw" />}
+            <img src={master} srcSet={cs.masterSrcSet || undefined} sizes="(min-width: 1920px) 1920px, 100vw" alt="" fetchPriority="high" draggable={false} />
           </picture>
           <div className="sv-cx-shade" />
         </div>

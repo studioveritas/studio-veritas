@@ -92,3 +92,6 @@ console.log(`Done:
   public/work/${slug}/hero.jpg   ->  hero: '/work/${slug}/hero.jpg'
   public/work/${slug}/tile.jpg   ->  img:  '/work/${slug}/tile.jpg'
   public/work/${slug}/portrait.jpg -> portrait: '/work/${slug}/portrait.jpg'`)
+
+// Phone-sized WebP copies for the Work grid and the case study (scripts/work-image-variants.mjs).
+await import('./work-image-variants.mjs')

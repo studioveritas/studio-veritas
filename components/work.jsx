@@ -33,7 +33,16 @@ function Tile({ work, order, index }) {
   const inner = (
     <>
       <div className={`sv-tile-media sv-tile-${shapeOf(work, index)}`}>
-        <img src={work.src} alt="" loading={order < 6 ? 'eager' : 'lazy'} draggable={false} />
+        <img
+          src={work.src}
+          srcSet={work.srcSet || undefined}
+          sizes="(min-width: 1024px) 31vw, (min-width: 600px) 46vw, 92vw"
+          alt=""
+          loading={order < 6 ? 'eager' : 'lazy'}
+          fetchPriority={order < 3 ? 'high' : undefined}
+          decoding="async"
+          draggable={false}
+        />
         {!live && (
           <div className="sv-tile-soon" aria-hidden="true">
             <span>Coming soon</span>

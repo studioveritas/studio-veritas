@@ -20,11 +20,22 @@ const START_SCALE = 1.02 // the master image's drift starts here on the case stu
 // The phone rule matches the <source> on the case study page.
 const PHONE_PORTRAIT = '(max-width: 767px) and (orientation: portrait)'
 
+// The candidate a browser would take from `srcset` at full-screen width, so the zoom
+// preloads the exact file the case study page then shows (one download, not two).
+export function pickFromSrcSet(srcSet, fallback) {
+  if (!srcSet || typeof window === 'undefined') return fallback
+  const need = window.innerWidth * Math.min(window.devicePixelRatio || 1, 2)
+  const list = srcSet.split(',').map((s) => s.trim().split(/\s+/)).map(([u, w]) => [u, parseInt(w, 10)]).sort((a, b) => a[1] - b[1])
+  return (list.find(([, w]) => w >= need) || list[list.length - 1])[0]
+}
+
 export function masterOf(work) {
   const cs = work.caseStudy || {}
   const phone = typeof window !== 'undefined' && window.matchMedia?.(PHONE_PORTRAIT).matches
   const portrait = cs.masterPortrait || work.portrait
-  const src = phone && portrait ? portrait : cs.hero?.startsWith('/') ? cs.hero : null
+  const src = phone && portrait
+    ? (cs.masterPortrait ? pickFromSrcSet(cs.portraitSrcSet, portrait) : work.srcSet ? pickFromSrcSet(work.srcSet, portrait) : portrait)
+    : cs.hero?.startsWith('/') ? pickFromSrcSet(cs.heroSrcSet, cs.hero) : null
   return { src, position: phone && portrait ? '50% 50%' : cs.masterPosition || '50% 50%' }
 }
 
